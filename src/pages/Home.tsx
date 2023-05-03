@@ -88,6 +88,7 @@ const Home: FC = () => {
             <div className="pb-[75px]">
               {temp_db.map((idx: any) => (
                 <PatientThumbnail
+                  key={idx.name + idx.telephone}
                   name={idx.name}
                   newdiease={idx.newdiease}
                   telephone={idx.telephone}
