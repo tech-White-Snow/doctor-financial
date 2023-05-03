@@ -85,7 +85,7 @@ const Signin: FC = () => {
               Wrong Password!
             </div>
             <div>
-              <div>
+              <div className="flex justify-center">
                 <img src={warningImage} />
               </div>
               <div className="text-xs text-black text-opacity-70 text-center ">
