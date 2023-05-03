@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "../../components/Header";
 
-import closeIcon from "../../assets/close_ico.svg";
-import warningImage from "../../assets/warning_img.svg";
+import closeIcon from "../../assets/icons/close_ico.svg";
+import warningImage from "../../assets/icons/warning_img.svg";
 
 const Signin: FC = () => {
   const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);

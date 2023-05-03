@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import backwardIcon from "../assets/backward_ico.svg";
+import backwardIcon from "../assets/icons/backward_ico.svg";
 
 interface HeaderProps {
   title: string;

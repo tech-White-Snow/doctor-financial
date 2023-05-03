@@ -11,7 +11,7 @@ const Router: FC = () => {
     <BrowserRouter>
       <div className="container max-w-3xl h-screen mx-auto">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/splash" element={<Splash />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
