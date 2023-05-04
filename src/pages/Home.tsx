@@ -26,7 +26,7 @@ const Home: FC = () => {
       telephone: "67123456",
       age: 52,
       sex: 1,
-      doctor: "黃文智醫師",
+      doctor: "黃文智醫",
       date: "9-9-2022 / 10:30 a.m.",
     },
     {
@@ -35,7 +35,7 @@ const Home: FC = () => {
       telephone: "67123456",
       age: 52,
       sex: 1,
-      doctor: "黃文智醫師",
+      doctor: "黃文醫師",
       date: "9-9-2022 / 10:30 a.m.",
     },
   ];
@@ -88,7 +88,7 @@ const Home: FC = () => {
             <div className="pb-[75px]">
               {temp_db.map((idx: any) => (
                 <PatientThumbnail
-                  key={idx.name + idx.telephone}
+                  key={idx.name + idx.telephone + idx.doctor}
                   name={idx.name}
                   newdiease={idx.newdiease}
                   telephone={idx.telephone}
