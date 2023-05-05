@@ -1,24 +1,24 @@
 import { FC } from "react";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import Theme from "../assets/color";
+import Theme from "../../assets/color";
 
-import Avatar1 from "../assets/avatar1.svg";
-import DashBack from "../assets/img/alert_board.png";
+import Avatar1 from "../../assets/avatar1.svg";
+import DashBack from "../../assets/img/alert_board.png";
 
-import shareIcon from "../assets/icons/share_ico.svg";
-import printIcon from "../assets/icons/print_ico.svg";
+import shareIcon from "../../assets/icons/share_ico.svg";
+import printIcon from "../../assets/icons/print_ico.svg";
 
-import NavBar from "../components/NavBar";
-import Header from "../components/Header";
-import PatientResultItem from "../components/patient/PatientResultItem";
+import NavBar from "../../components/NavBar";
+import Header from "../../components/Header";
+import PatientResultItem from "../../components/patient/PatientResultItem";
 
 const PatientDetailPage: FC = () => {
   const location = useLocation();
   const context = location.state;
 
-  console.log(context);
+  const navigate = useNavigate();
 
   const docHistory = ["處方", "收據", "到診症明書"];
 
@@ -94,11 +94,19 @@ const PatientDetailPage: FC = () => {
                       {idx}
                     </div>
                     <div className="w-1/2 flex flex-row">
-                      <div className="grow text-[#25747B]">View</div>
-                      <div className="grow">
+                      <div
+                        className="grow text-[#25747B]"
+                        onClick={() => navigate("/prescription")}
+                      >
+                        View
+                      </div>
+                      <div
+                        className="grow"
+                        onClick={() => navigate("/receipt")}
+                      >
                         <img src={shareIcon} />
                       </div>
-                      <div className="grow">
+                      <div className="grow" onClick={() => navigate("/recipe")}>
                         <img src={printIcon} />
                       </div>
                     </div>
@@ -123,7 +131,10 @@ const PatientDetailPage: FC = () => {
                       既往史
                     </div>
                     <div className="w-1/2 flex flex-row">
-                      <div className="border-b border-b-[#25747B] text-[#25747B] ml-2">
+                      <div
+                        className="border-b border-b-[#25747B] text-[#25747B] ml-2"
+                        onClick={() => navigate("/pasthistory")}
+                      >
                         View
                       </div>
                     </div>
@@ -133,7 +144,10 @@ const PatientDetailPage: FC = () => {
                       病歷相簿
                     </div>
                     <div className="w-1/2 flex flex-row">
-                      <div className="border-b border-b-[#25747B] text-[#25747B] ml-2">
+                      <div
+                        className="border-b border-b-[#25747B] text-[#25747B] ml-2"
+                        onClick={() => navigate("/patientalbum")}
+                      >
                         View
                       </div>
                     </div>

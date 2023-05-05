@@ -1,13 +1,13 @@
 import { FC } from "react";
 
-import Theme from "../assets/color";
+import Theme from "../../assets/color";
 
-import Avatar1 from "../assets/avatar1.svg";
-import DashBack from "../assets/img/alert_board.png";
+import Avatar1 from "../../assets/avatar1.svg";
+import DashBack from "../../assets/img/alert_board.png";
 
-import NavBar from "../components/NavBar";
-import Header from "../components/Header";
-import PatientThumbnail from "../components/patient/PatientThumbnail";
+import NavBar from "../../components/NavBar";
+import Header from "../../components/Header";
+import PatientThumbnail from "../../components/patient/PatientThumbnail";
 
 const PatientList: FC = () => {
   const temp_db = [
