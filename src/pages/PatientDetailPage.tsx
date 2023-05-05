@@ -28,7 +28,7 @@ const PatientDetailPage: FC = () => {
         {/* Header */}
         <Header title="Admin" />
         {/* Main Page */}
-        <div className="px-4 pt-3">
+        <div className="px-4 py-3">
           {/* Patient Detail Information */}
           <div className="w-full font-mont">
             {/* Name + Age + Date */}
@@ -89,7 +89,7 @@ const PatientDetailPage: FC = () => {
               </div>
               <div className="text-sm px-3">
                 {docHistory.map((idx: any) => (
-                  <div className="py-1.5 my-1 flex flex-row">
+                  <div className="py-1.5 my-1 flex flex-row" key={idx}>
                     <div className="w-1/2 text-black text-opacity-60">
                       {idx}
                     </div>

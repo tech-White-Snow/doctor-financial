@@ -10,6 +10,7 @@ import PatientList from "pages/PatientList";
 import SearchPage from "pages/SearchPage";
 import SearchResultPage from "pages/SearchResultPage";
 import PatientDetailPage from "pages/PatientDetailPage";
+import EditAccountPage from "pages/EditAccountPage";
 
 const Router: FC = () => {
   return (
@@ -26,6 +27,7 @@ const Router: FC = () => {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/searchresult" element={<SearchResultPage />} />
           <Route path="/patientdetail" element={<PatientDetailPage />} />
+          <Route path="/editprofile" element={<EditAccountPage />} />
         </Routes>
       </div>
     </BrowserRouter>
