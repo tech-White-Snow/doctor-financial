@@ -9,6 +9,8 @@ import warningImage from "../../assets/icons/warning_img.svg";
 
 const Signin: FC = () => {
   const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);
+  const [currentEmail, setCurrentEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
 
   const navigate = useNavigate();
 
@@ -32,13 +34,24 @@ const Signin: FC = () => {
               Email
             </div>
             <div className="pt-2">
-              <input className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2" />
+              <input
+                className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2"
+                onChange={(ev: any) => {
+                  setCurrentEmail(ev.target.value);
+                }}
+              />
             </div>
             <div className="text-[12px] font-monto text-600 text-[#64B3EC] pt-2">
               Password
             </div>
             <div className="pt-2 relative">
-              <input className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2 pr-10" />
+              <input
+                type="password"
+                className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2 pr-10"
+                onChange={(ev: any) => {
+                  setCurrentPassword(ev.target.value);
+                }}
+              />
               <div
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
                 onClick={() => console.log("Show Password")}
@@ -51,8 +64,12 @@ const Signin: FC = () => {
             <div
               className="rounded-[10px] bg-[#64B3EC] hover:bg-[#6D7D8B] text-white text-center text-sm p-3"
               onClick={() => {
-                console.log("show wrong password modal!");
-                setShowWrongPasswordModal(true);
+                if (
+                  currentEmail == "yukko@gmail.com" &&
+                  currentPassword == "123456"
+                )
+                  navigate("/home");
+                else setShowWrongPasswordModal(true);
               }}
             >
               Log In
