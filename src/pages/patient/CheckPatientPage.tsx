@@ -242,7 +242,7 @@ const CheckPatient: FC = () => {
                     {Array.from(
                       { length: storeMedicineInfoCount },
                       (_, index) => index
-                    ).map((idx) => (
+                    ).map((idx: any) => (
                       <div className="flex flex-row justify-between py-2">
                         <div className="grow">
                           <span className="p-2 bg-[#EAF4FB]">
