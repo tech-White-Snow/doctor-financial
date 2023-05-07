@@ -14,7 +14,7 @@ import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
-const RecipePage: FC = () => {
+const PreviewMedicinePage: FC = () => {
   const temp_data = {
     name: "陳小明",
     newdiease: true,
@@ -35,7 +35,7 @@ const RecipePage: FC = () => {
         {/* Header */}
         <Header title="到診證明書" />
         {/* Main Page */}
-        <div className="m-4 p-3 mb-[80px] rounded-lg shadow-lg bg-white">
+        <div className="m-4 p-3 mb-[160px] rounded-lg shadow-lg">
           {/* Title */}
           <div className="text-center">
             <div
@@ -101,17 +101,14 @@ const RecipePage: FC = () => {
               地址: 油麻地彌敦道546號旺角大樓5D 電話: 2788 2951
             </div>
           </div>
-          {/* Assistant Tools */}
-          <div className="flex flex-row justify-end">
-            <div className="p-3" onClick={() => navigate("/prescription")}>
-              <img src={editIcon} />
-            </div>
-            <div className="p-3" onClick={() => navigate("/receipt")}>
-              <img src={shareIcon} />
-            </div>
-            <div className="p-3" onClick={() => navigate("/recipe")}>
-              <img src={printIcon} />
-            </div>
+        </div>
+        <div className="absolute w-full px-5 py-3 bottom-[80px]">
+          <div
+            className="p-3 text-center text-white rounded-xl"
+            style={{ backgroundColor: Theme.COLOR_DEFAULT }}
+            onClick={() => navigate("/home")}
+          >
+            Confirm
           </div>
         </div>
         {/* NavBar */}
@@ -121,4 +118,4 @@ const RecipePage: FC = () => {
   );
 };
 
-export default RecipePage;
+export default PreviewMedicinePage;

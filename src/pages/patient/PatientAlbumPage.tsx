@@ -1,5 +1,7 @@
 import { FC } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import Theme from "../../assets/color";
 
 import Avatar1 from "../../assets/avatar1.svg";
@@ -24,6 +26,8 @@ const PatientAlbumPage: FC = () => {
     date: "9-9-2022 / 10:30 a.m.",
     content: "This caption is about ...",
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="relative">
@@ -52,23 +56,31 @@ const PatientAlbumPage: FC = () => {
             className="text-xs pt-8 px-3"
             style={{ color: Theme.COLOR_DEFAULT }}
           >
-            <div className="text-[#276D36]">{temp_data.content}</div>
-            <div className="flex flex-row pt-2 justify-between">
-              <div className="flex flex-row">
-                <div className="px-2">
-                  <img src={BlankImage} />
+            <div className="relative">
+              <div className="text-[#276D36]">{temp_data.content}</div>
+              <div className="flex flex-row pt-2 justify-between">
+                <div className="flex flex-row">
+                  <div className="px-2">
+                    <img src={BlankImage} />
+                  </div>
+                  <div className="px-2">
+                    <img src={BlankImage} />
+                  </div>
                 </div>
-                <div className="px-2">
-                  <img src={BlankImage} />
+                <div className="flex flex-row items-end">
+                  <div className="px-1 pb-1">
+                    <img src={uploadIcon} />
+                  </div>
+                  <div className="px-1">
+                    <img src={cameraIcon} />
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-row items-end">
-                <div className="px-1 pb-1">
-                  <img src={uploadIcon} />
-                </div>
-                <div className="px-1">
-                  <img src={cameraIcon} />
-                </div>
+              <div
+                className="absolute top-2 right-1"
+                onClick={() => navigate("/editalbum")}
+              >
+                <img src={editIcon} />
               </div>
             </div>
           </div>

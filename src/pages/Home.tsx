@@ -1,8 +1,11 @@
 import { FC } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import Theme from "../assets/color";
 
 import Avatar1 from "../assets/avatar1.svg";
+import AvatarSample from "../assets/img/profile_sample.jpeg";
 
 import DashBack from "../assets/img/alert_board.png";
 
@@ -40,6 +43,8 @@ const Home: FC = () => {
     },
   ];
 
+  const navigate = useNavigate();
+
   return (
     <div className="relative">
       <div className="h-screen overflow-y-auto">
@@ -56,8 +61,11 @@ const Home: FC = () => {
               </div>
             </div>
             <div className="relative">
-              <div className="w-12 h-12 rounded-full border border-white">
-                <img src={Avatar1} />
+              <div
+                className="rounded-full border border-white"
+                onClick={() => navigate("/editprofile")}
+              >
+                <img src={AvatarSample} className="w-12 h-12 rounded-full" />
               </div>
               <div
                 className="absolute w-2 h-2 top-1 right-1 rounded-full"

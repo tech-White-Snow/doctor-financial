@@ -35,7 +35,7 @@ const PrescriptionPage: FC = () => {
         {/* Header */}
         <Header title="到診證明書" />
         {/* Main Page */}
-        <div className="p-4 pb-[80px]">
+        <div className="m-4 p-3 mb-[80px] shadow-lg rounded-lg">
           {/* Title */}
           <div className="text-center">
             <div

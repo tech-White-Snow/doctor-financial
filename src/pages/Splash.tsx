@@ -1,15 +1,20 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
 const Splash: FC = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const redirectTimeout = setTimeout(() => {
+      navigate("/signin");
+    }, 2000);
+
+    return () => clearTimeout(redirectTimeout);
+  }, [navigate]);
+
   return (
-    <div
-      className="h-screen flex flex-col justify-between"
-      onClick={() => navigate("/signin")}
-    >
+    <div className="h-screen flex flex-col justify-between">
       <div className="grow font-bold font-sans flex flex-col justify-center">
         <div className="text-center text-5xl text-[#64B3EC]">福氣堂</div>
         <div className="text-center text-lg text-[#6D7D8B] tracking-[1rem] pt-2 pl-4">

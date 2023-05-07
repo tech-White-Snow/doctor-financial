@@ -94,19 +94,31 @@ const PatientDetailPage: FC = () => {
                       {idx}
                     </div>
                     <div className="w-1/2 flex flex-row">
-                      <div
-                        className="grow text-[#25747B]"
-                        onClick={() => navigate("/prescription")}
-                      >
-                        View
+                      <div className="grow text-[#25747B]">
+                        <span
+                          onClick={() =>
+                            navigate(
+                              idx == "處方"
+                                ? "/recipe"
+                                : idx == "收據"
+                                ? "/receipt"
+                                : "/prescription"
+                            )
+                          }
+                        >
+                          View
+                        </span>
                       </div>
                       <div
                         className="grow"
-                        onClick={() => navigate("/receipt")}
+                        // onClick={() => navigate("/receipt")}
                       >
                         <img src={shareIcon} />
                       </div>
-                      <div className="grow" onClick={() => navigate("/recipe")}>
+                      <div
+                        className="grow"
+                        // onClick={() => navigate("/recipe")}
+                      >
                         <img src={printIcon} />
                       </div>
                     </div>

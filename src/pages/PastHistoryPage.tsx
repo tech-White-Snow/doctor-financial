@@ -54,8 +54,8 @@ const PastHistoryPage: FC = () => {
           </div>
         </div>
         {/* Edit Box */}
-        <div className="absolute bottom-[80px] right-3">
-          <div>
+        <div className="absolute bottom-[80px] right-3 p-4">
+          <div className="flex justify-end p-1">
             <img src={editIcon} />
           </div>
           <div className="pt-3" style={{ color: Theme.COLOR_DEFAULT }}>
