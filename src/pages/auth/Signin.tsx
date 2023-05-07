@@ -11,6 +11,7 @@ const Signin: FC = () => {
   const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);
   const [currentEmail, setCurrentEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -46,15 +47,17 @@ const Signin: FC = () => {
             </div>
             <div className="pt-2 relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2 pr-10"
                 onChange={(ev: any) => {
                   setCurrentPassword(ev.target.value);
                 }}
               />
               <div
-                className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
-                onClick={() => console.log("Show Password")}
+                className="absolute right-3 top-[26px] text-[10px] text-[#25747B] hover:cursor-pointer"
+                tabIndex={0}
+                onFocus={() => setShowPassword(true)}
+                onBlur={() => setShowPassword(false)}
               >
                 Show
               </div>
