@@ -243,7 +243,10 @@ const CheckPatient: FC = () => {
                       { length: storeMedicineInfoCount },
                       (_: any, index: any) => index
                     ).map((idx: any) => (
-                      <div className="flex flex-row justify-between py-2">
+                      <div
+                        className="flex flex-row justify-between py-2"
+                        key={"medicinetype" + idx}
+                      >
                         <div className="grow">
                           <span className="p-2 bg-[#EAF4FB]">
                             <input
