@@ -88,7 +88,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
           <div className="relative m-3 px-9 py-5 bg-[#D3E7F6] rounded-lg text-[#25617B]">
             <div className="flex flex-row bg-[#D3E7F6] bg-opacity-40 font-sans font-bold text-sm">
               <div>{name}</div>
-              <div>{telephone}</div>
+              <div className="pl-2">{telephone}</div>
             </div>
             <div
               className="absolute top-5 right-5 font-mont"

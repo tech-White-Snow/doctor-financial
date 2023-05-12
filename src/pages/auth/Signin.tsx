@@ -26,9 +26,9 @@ const Signin: FC = () => {
             <div className="font-bold text-center text-5xl text-[#64B3EC]">
               福氣堂
             </div>
-            <div className="font-bold text-center text-lg text-[#6D7D8B] tracking-[1rem] pt-2 pl-4">
+            {/* <div className="font-bold text-center text-lg text-[#6D7D8B] tracking-[1rem] pt-2 pl-4">
               忠醫診所
-            </div>
+            </div> */}
           </div>
           <div className="grow flex flex-col justify-center">
             <div className="text-[12px] font-monto text-600 text-[#64B3EC]">
@@ -90,7 +90,7 @@ const Signin: FC = () => {
       <div
         className={
           "absolute w-full h-screen bg-[#0C2036] bg-opacity-50 top-0 flex flex-col justify-center " +
-          (showWrongPasswordModal ? "visible" : "invisible")
+          (showWrongPasswordModal ? "" : "hidden")
         }
       >
         <div className="bg-white rounded-2xl h-2/3 mx-6 relative px-3 pt-2 pb-5 flex flex-col">

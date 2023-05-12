@@ -28,7 +28,7 @@ const PatientDetailPage: FC = () => {
         {/* Header */}
         <Header title="Admin" />
         {/* Main Page */}
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 pb-[80px]">
           {/* Patient Detail Information */}
           <div className="w-full font-mont">
             {/* Name + Age + Date */}
@@ -105,20 +105,15 @@ const PatientDetailPage: FC = () => {
                                 : "/prescription"
                             )
                           }
+                          className="hover:cursor-pointer"
                         >
                           View
                         </span>
                       </div>
-                      <div
-                        className="grow"
-                        // onClick={() => navigate("/receipt")}
-                      >
+                      <div className="grow">
                         <img src={shareIcon} />
                       </div>
-                      <div
-                        className="grow"
-                        // onClick={() => navigate("/recipe")}
-                      >
+                      <div className="grow">
                         <img src={printIcon} />
                       </div>
                     </div>
@@ -144,7 +139,20 @@ const PatientDetailPage: FC = () => {
                     </div>
                     <div className="w-1/2 flex flex-row">
                       <div
-                        className="border-b border-b-[#25747B] text-[#25747B] ml-2"
+                        className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
+                        onClick={() => navigate("/pasthistory")}
+                      >
+                        View
+                      </div>
+                    </div>
+                  </div>
+                  <div className="py-1.5 my-1 flex flex-row">
+                    <div className="w-1/2 text-[#0C2036] text-opacity-60">
+                      現病史
+                    </div>
+                    <div className="w-1/2 flex flex-row">
+                      <div
+                        className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
                         onClick={() => navigate("/pasthistory")}
                       >
                         View
@@ -157,7 +165,7 @@ const PatientDetailPage: FC = () => {
                     </div>
                     <div className="w-1/2 flex flex-row">
                       <div
-                        className="border-b border-b-[#25747B] text-[#25747B] ml-2"
+                        className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
                         onClick={() => navigate("/patientalbum")}
                       >
                         View
@@ -169,6 +177,8 @@ const PatientDetailPage: FC = () => {
             </div>
           </div>
         </div>
+        {/* Nav Bar */}
+        <NavBar status={4} />
       </div>
     </div>
   );

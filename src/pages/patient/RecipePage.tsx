@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ import DashBack from "../../assets/img/alert_board.png";
 import editIcon from "../../assets/icons/edit_ico1.svg";
 import shareIcon from "../../assets/icons/share_ico.svg";
 import printIcon from "../../assets/icons/print_ico.svg";
+import checkIcon from "../../assets/icons/check_ico.svg";
 
 import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
@@ -29,13 +30,15 @@ const RecipePage: FC = () => {
 
   const navigate = useNavigate();
 
+  const [isFollowedUp, setIsFollowedUp] = useState(true);
+
   return (
     <div className="relative">
       <div className="h-screen overflow-y-auto bg-[#FAFCFF]">
         {/* Header */}
         <Header title="到診證明書" />
         {/* Main Page */}
-        <div className="m-4 p-3 mb-[80px] rounded-lg shadow-lg bg-white">
+        <div className="m-4 p-3 rounded-lg shadow-lg bg-white">
           {/* Title */}
           <div className="text-center">
             <div
@@ -45,13 +48,7 @@ const RecipePage: FC = () => {
               福氣堂
             </div>
             <div
-              className="font-bold font-sans text-lg tracking-[1rem] pl-4 pt-2"
-              style={{ color: Theme.COLOR_GRAY }}
-            >
-              忠醫診所
-            </div>
-            <div
-              className="font-bold font-mont text-lg pt-2"
+              className="font-bold font-mont text-lg pt-5"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">處方</span>
@@ -86,32 +83,62 @@ const RecipePage: FC = () => {
                 </div>
               </div>
               {/* Diagnosis */}
-              <div className="py-1 pt-3 text-black text-opacity-60">
-                <span>醫師編號:</span>
-                <span className="pl-2">{temp_data.doctorID}</span>
+              <div
+                className="py-1 pt-3 text-black text-opacity-60 font-mont"
+                style={{ color: Theme.COLOR_DEFAULT }}
+              >
+                主診醫師：
               </div>
-              <div className="py-1 text-black text-opacity-60">
-                <span style={{ color: Theme.COLOR_DEFAULT }}>簽發日期:</span>
-                <span className="pl-2 text-black text-opacity-60">
-                  {temp_data.date}
-                </span>
+              <div className="pb-1 text-black text-opacity-60 flex flex-row justify-between">
+                <div>
+                  <span>醫師編號:</span>
+                  <span className="pl-2">{temp_data.doctorID}</span>
+                </div>
+                <div className="flex flex-row">
+                  <div
+                    className="relative w-[18px] h-[18px] hover:cursor-pointer"
+                    style={{
+                      background: !isFollowedUp ? Theme.COLOR_DEFAULT : "",
+                    }}
+                    onClick={() => setIsFollowedUp(!isFollowedUp)}
+                  >
+                    {isFollowedUp ? (
+                      <img
+                        src={checkIcon}
+                        className="absolute top-0 left-0 w-[18px] h-[18px]"
+                      />
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                  <div
+                    className="font-mont text-[13px] pl-2"
+                    style={{ color: Theme.COLOR_DEFAULT }}
+                  >
+                    需要覆診
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="p-3 text-xs" style={{ color: Theme.COLOR_DEFAULT }}>
-              地址: 油麻地彌敦道546號旺角大樓5D 電話: 2788 2951
+            <div
+              className="p-3 text-xs flex justify-between"
+              style={{ color: Theme.COLOR_DEFAULT }}
+            >
+              <div>地址: 油麻地彌敦道546號旺角大樓5D</div>
+              <div>電話: 2788 2951</div>
             </div>
           </div>
-          {/* Assistant Tools */}
-          <div className="flex flex-row justify-end">
-            <div className="p-3" onClick={() => navigate("/prescription")}>
-              <img src={editIcon} />
-            </div>
-            <div className="p-3" onClick={() => navigate("/receipt")}>
-              <img src={shareIcon} />
-            </div>
-            <div className="p-3" onClick={() => navigate("/recipe")}>
-              <img src={printIcon} />
-            </div>
+        </div>
+        {/* Assistant Tools */}
+        <div className="mb-[70px] p-4 flex flex-row justify-end">
+          <div className="p-3" onClick={() => navigate("/checkpatient")}>
+            <img src={editIcon} />
+          </div>
+          <div className="p-3" onClick={() => navigate("/receipt")}>
+            <img src={shareIcon} />
+          </div>
+          <div className="p-3" onClick={() => navigate("/recipe")}>
+            <img src={printIcon} />
           </div>
         </div>
         {/* NavBar */}

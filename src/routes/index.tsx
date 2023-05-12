@@ -28,8 +28,8 @@ const Router: FC = () => {
       <div className="container max-w-3xl h-screen mx-auto">
         <Routes>
           {/* Authentication */}
-          <Route path="/" element={<Splash />} />
-          <Route path="/signin" element={<Signin />} />
+          {/* <Route path="/" element={<Splash />} /> */}
+          <Route path="/" element={<Signin />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           {/* Main Page */}
           <Route path="/home" element={<Home />} />

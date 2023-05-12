@@ -30,16 +30,6 @@ interface MedicineInfo {
 const CheckPatient: FC = () => {
   const navigate = useNavigate();
 
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
-
-  const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
-    []
-  );
-  const [storeMedicineInfoCount, setStoreMedicineInfoCount] = useState(0);
-
-  const [currentSelect, setCurrentSelect] = useState(0);
-
   const context = {
     name: "張小梅",
     email: "eamil@email.com",
@@ -50,7 +40,42 @@ const CheckPatient: FC = () => {
     date: "DD-MM-YYYY  HH:MM",
     sex: 1,
     age: 38,
+    history: [
+      {
+        context:
+          "This part is the first update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+        date: "02-04-2022",
+      },
+      {
+        context:
+          "This part is the second update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+        date: "05-03-2022",
+      },
+      {
+        context:
+          "This part is the third update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+        date: "07-01-2022",
+      },
+      {
+        context:
+          "This part is the last update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+        date: "09-09-2022",
+      },
+    ],
   };
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
+
+  const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
+    []
+  );
+  const [storeMedicineInfoCount, setStoreMedicineInfoCount] = useState(0);
+
+  const [currentSelect, setCurrentSelect] = useState(0);
+  const [curHistoryViewState, setCurHistoryViewState] = useState(
+    context.history.length - 1
+  );
 
   return (
     <div className="relative">
@@ -75,14 +100,8 @@ const CheckPatient: FC = () => {
           className="relative w-full mt-3 text-[13px] font-semibold pb-[160px]"
           style={{ color: Theme.COLOR_DEFAULT }}
         >
-          <div className="flex flex-row justify-between px-3">
-            <div className="flex flex-row">
-              <div>
-                <input type="checkbox" />
-              </div>
-              <div className="px-2">需要覆診</div>
-            </div>
-            <div className="font-normal">{context.date}</div>
+          <div className="flex flex-row justify-between font-normal px-3">
+            {context.date}
           </div>
           <div className="pt-2">
             {/* 既往史 */}
@@ -134,9 +153,22 @@ const CheckPatient: FC = () => {
               {currentSelect == 2 ? (
                 <div className="p-3 font-sans">
                   <div className="flex flex-row">
-                    <div className="p-1 flex flex-col justify-center">
-                      <img src={prevvIcon} className="w-8 h-8" />
-                    </div>
+                    {curHistoryViewState > 0 ? (
+                      <div
+                        className="p-1 flex flex-col justify-center"
+                        onClick={() =>
+                          setCurHistoryViewState(
+                            curHistoryViewState > 0
+                              ? curHistoryViewState - 1
+                              : 0
+                          )
+                        }
+                      >
+                        <img src={prevvIcon} className="w-8 h-8" />
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                     <div
                       className="flex flex-col p-6"
                       style={{
@@ -144,18 +176,27 @@ const CheckPatient: FC = () => {
                         color: Theme.COLOR_DARKGREEN,
                       }}
                     >
-                      <div>
-                        Record if the patients has special disease or allergy in
-                        the past. For no accident mistake, this part need an
-                        edit btn for edit.
-                      </div>
+                      <div>{context.history[curHistoryViewState].context}</div>
                       <div className="pt-2 self-end">
-                        Last update: DD/MM/YYYY
+                        Last update: {context.history[curHistoryViewState].date}
                       </div>
                     </div>
-                    <div className="p-1 flex flex-col justify-center">
-                      <img src={nexttIcon} className="w-8 h-8" />
-                    </div>
+                    {curHistoryViewState < context.history.length - 1 ? (
+                      <div
+                        className="p-1 flex flex-col justify-center"
+                        onClick={() =>
+                          setCurHistoryViewState(
+                            curHistoryViewState < context.history.length - 1
+                              ? curHistoryViewState + 1
+                              : context.history.length - 1
+                          )
+                        }
+                      >
+                        <img src={nexttIcon} className="w-8 h-8" />
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               ) : (
@@ -207,7 +248,7 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(4)}
               >
-                <div className="font-mont">備註</div>
+                <div className="font-mont">診斷</div>
                 <div className="flex flex-row justify-center">
                   <img src={downIcon} />
                 </div>
@@ -308,8 +349,30 @@ const CheckPatient: FC = () => {
                         color: Theme.COLOR_DARKGREEN,
                       }}
                     >
-                      <div>_____日藥 / 每日 _____次 / 共 _____包</div>
-                      <div className="pt-1"> _____餐 _____服</div>
+                      <div>
+                        <span className="px-1">
+                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                        </span>
+                        日藥 / 每日
+                        <span className="px-1">
+                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                        </span>
+                        次 / 共
+                        <span className="px-1">
+                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                        </span>
+                        包
+                      </div>
+                      <div className="pt-1">
+                        <span className="px-1">
+                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                        </span>
+                        餐
+                        <span className="px-1">
+                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                        </span>
+                        服
+                      </div>
                     </div>
                   </div>
                 </div>

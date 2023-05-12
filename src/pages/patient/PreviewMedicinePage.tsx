@@ -97,8 +97,12 @@ const PreviewMedicinePage: FC = () => {
                 </span>
               </div>
             </div>
-            <div className="p-3 text-xs" style={{ color: Theme.COLOR_DEFAULT }}>
-              地址: 油麻地彌敦道546號旺角大樓5D 電話: 2788 2951
+            <div
+              className="p-3 text-xs flex flex-row justify-between"
+              style={{ color: Theme.COLOR_DEFAULT }}
+            >
+              <div>地址: 油麻地彌敦道546號旺角大樓5D</div>
+              <div>電話: 2788 2951</div>
             </div>
           </div>
         </div>
