@@ -143,6 +143,7 @@ const PatientRecordPage: FC = () => {
                 {temp_data.map((idx: any, kkk: any) => (
                   <div
                     className="absolute p-4 rounded-xl border border-[#D3E7F6] shadow-lg bg-white"
+                    key={idx.date + kkk}
                     style={{ top: kkk * 75 + 20, zIndex: kkk }}
                     onClick={() => showCurrentSearchSelectedHandle(idx, kkk)}
                   >
