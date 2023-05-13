@@ -34,7 +34,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
   return (
     <div>
       <div
-        className="px-2 py-3 my-3 shadow-lg rounded-xl hover:bg-[#BBBBBB]"
+        className="px-2 py-3 my-3 shadow-lg rounded-xl hover:bg-[#D3E7F6]"
         onClick={() => setIsCheckPatientOpen(true)}
       >
         <div className="relative h-32 flex">

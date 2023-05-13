@@ -65,7 +65,7 @@ const Signin: FC = () => {
           </div>
           <div className="grow flex flex-col justify-center">
             <div
-              className="rounded-[10px] bg-[#64B3EC] hover:bg-[#6D7D8B] text-white text-center text-sm p-3"
+              className="rounded-[10px] bg-[#64B3EC] hover:bg-[#D3E7F6] text-white text-center text-sm p-3"
               onClick={() => {
                 if (
                   currentEmail == "yukko@gmail.com" &&
@@ -78,7 +78,7 @@ const Signin: FC = () => {
               Log In
             </div>
             <div
-              className="text-[10px] text-black p-3 text-center hover:bg-[#6D7D8B]"
+              className="text-[10px] text-black p-3 text-center hover:bg-[#D3E7F6] rounded-[10px] mt-2"
               onClick={() => navigate("/forgotpassword")}
             >
               Forgot Password

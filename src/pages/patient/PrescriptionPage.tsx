@@ -38,11 +38,16 @@ const PrescriptionPage: FC = () => {
 
   return (
     <div className="relative">
-      <div className="h-screen overflow-y-auto">
+      <div className="relative h-screen overflow-y-auto">
         {/* Header */}
         <Header title="到診證明書" />
         {/* Main Page */}
-        <div className="m-4 p-3 mb-[80px] shadow-lg rounded-lg">
+        <div
+          className={
+            "m-4 p-3 shadow-lg rounded-lg " +
+            (!isEditMode ? "mb-[80px]" : "mb-[160px]")
+          }
+        >
           {/* Title */}
           <div className="text-center">
             <div
@@ -151,21 +156,38 @@ const PrescriptionPage: FC = () => {
             </div>
           </div>
           {/* Assistant Tools */}
-          <div className="flex flex-row justify-end">
-            <div className="p-3" onClick={() => setIsEditMode(!isEditMode)}>
-              <img src={editIcon} />
+          {!isEditMode ? (
+            <div className="flex flex-row justify-end">
+              <div className="p-3" onClick={() => setIsEditMode(true)}>
+                <img src={editIcon} />
+              </div>
+              <div className="p-3" onClick={() => navigate("/receipt")}>
+                <img src={shareIcon} />
+              </div>
+              <div className="p-3" onClick={() => navigate("/recipe")}>
+                <img src={printIcon} />
+              </div>
             </div>
-            <div className="p-3" onClick={() => navigate("/receipt")}>
-              <img src={shareIcon} />
-            </div>
-            <div className="p-3" onClick={() => navigate("/recipe")}>
-              <img src={printIcon} />
-            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
+      {isEditMode ? (
+        <div className="absolute w-full px-3 bottom-[80px]">
+          <div
+            className="p-3 text-center text-white rounded-xl"
+            style={{ backgroundColor: Theme.COLOR_DEFAULT }}
+            onClick={() => setIsEditMode(false)}
+          >
+            Confirm
           </div>
         </div>
-        {/* NavBar */}
-        <NavBar status={4} />
-      </div>
+      ) : (
+        <></>
+      )}
+      {/* NavBar */}
+      <NavBar status={4} />
     </div>
   );
 };

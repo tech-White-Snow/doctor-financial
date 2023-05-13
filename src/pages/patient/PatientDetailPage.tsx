@@ -87,7 +87,7 @@ const PatientDetailPage: FC = () => {
                 <div className="grow">Document</div>
                 <div className="grow">Action</div>
               </div>
-              <div className="text-sm px-3">
+              <div className="text-xs px-3">
                 {docHistory.map((idx: any) => (
                   <div className="py-1.5 my-1 flex flex-row" key={idx}>
                     <div className="w-1/2 text-black text-opacity-60">

@@ -94,7 +94,7 @@ const RecipePage: FC = () => {
                   <span>醫師編號:</span>
                   <span className="pl-2">{temp_data.doctorID}</span>
                 </div>
-                <div className="flex flex-row">
+                {/* <div className="flex flex-row">
                   <div
                     className="relative w-[18px] h-[18px] hover:cursor-pointer"
                     style={{
@@ -117,7 +117,7 @@ const RecipePage: FC = () => {
                   >
                     需要覆診
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div

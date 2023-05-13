@@ -38,7 +38,7 @@ const ReceiptPage: FC = () => {
 
   return (
     <div className="relative">
-      <div className="h-screen overflow-y-auto">
+      <div className="relative h-screen overflow-y-auto">
         {/* Header */}
         <Header title="到診證明書" />
         {/* Main Page */}
@@ -160,7 +160,7 @@ const ReceiptPage: FC = () => {
         </div>
         {/* Assistant Tools */}
         <div className="mb-[70px] p-4 flex flex-row justify-end">
-          <div className="p-3" onClick={() => setIsEditMode(!isEditMode)}>
+          <div className="p-3" onClick={() => setIsEditMode(true)}>
             <img src={editIcon} />
           </div>
           <div className="p-3" onClick={() => navigate("/receipt")}>
@@ -170,9 +170,22 @@ const ReceiptPage: FC = () => {
             <img src={printIcon} />
           </div>
         </div>
-        {/* NavBar */}
-        <NavBar status={4} />
       </div>
+      {isEditMode ? (
+        <div className="absolute w-full px-3 bottom-[80px]">
+          <div
+            className="p-3 text-center text-white rounded-xl"
+            style={{ backgroundColor: Theme.COLOR_DEFAULT }}
+            onClick={() => setIsEditMode(false)}
+          >
+            Confirm
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
+      {/* NavBar */}
+      <NavBar status={4} />
     </div>
   );
 };
