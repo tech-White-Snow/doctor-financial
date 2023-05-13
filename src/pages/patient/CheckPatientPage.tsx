@@ -64,7 +64,7 @@ const CheckPatient: FC = () => {
     ],
   };
 
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [isPastHistoryEditMode, setIsPastHistoryEditMode] = useState(false);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
   const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
@@ -129,9 +129,21 @@ const CheckPatient: FC = () => {
                       the past. For no accident mistake, this part need an edit
                       btn for edit.
                     </div>
-                    <div className="pt-6 self-end">
-                      <img src={editIcon2} />
-                    </div>
+                    {isPastHistoryEditMode ? (
+                      <div
+                        className="mt-6 px-2 py-1 self-end bg-[#64B3EC] rounded-lg text-white"
+                        onClick={() => setIsPastHistoryEditMode(false)}
+                      >
+                        Save
+                      </div>
+                    ) : (
+                      <div
+                        className="pt-6 self-end"
+                        onClick={() => setIsPastHistoryEditMode(true)}
+                      >
+                        <img src={editIcon2} />
+                      </div>
+                    )}
                     <div className="pt-2 self-end">Last update: DD/MM/YYYY</div>
                   </div>
                 </div>
@@ -300,18 +312,47 @@ const CheckPatient: FC = () => {
                 <></>
               )}
             </div>
-            {/* 方藥/穴位 */}
+            {/* 證型 */}
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(6)}
+              >
+                <div className="font-mont">證型</div>
+                <div className="flex flex-row justify-center">
+                  <img src={downIcon} />
+                </div>
+              </div>
+              {currentSelect == 6 ? (
+                <div className="p-3">
+                  <div className="font-sans flex flex-row">
+                    <div
+                      className="w-full rounded-lg"
+                      style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                    >
+                      <textarea
+                        className="w-full h-[80px] resize-none focus:outline-none p-2 rounded-lg"
+                        style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            {/* 方藥/穴位 */}
+            <div>
+              <div
+                className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
+                onClick={() => setCurrentSelect(7)}
               >
                 <div className="font-mont">方藥/穴位</div>
                 <div className="flex flex-row justify-center">
                   <img src={downIcon} />
                 </div>
               </div>
-              {currentSelect == 6 ? (
+              {currentSelect == 7 ? (
                 <div className="px-5 py-3">
                   <div className="flex flex-col">
                     {Array.from(
@@ -366,14 +407,14 @@ const CheckPatient: FC = () => {
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
-                onClick={() => setCurrentSelect(7)}
+                onClick={() => setCurrentSelect(8)}
               >
                 <div className="font-mont">備註</div>
                 <div className="flex flex-row justify-center">
                   <img src={downIcon} />
                 </div>
               </div>
-              {currentSelect == 7 ? (
+              {currentSelect == 8 ? (
                 <div className="p-3">
                   <div className="font-sans flex flex-row">
                     <div
@@ -428,7 +469,7 @@ const CheckPatient: FC = () => {
         </div>
       </div>
       {/* NavBar */}
-      {!isEditMode ? <NavBar status={2} /> : <></>}
+      <NavBar status={2} />
     </div>
   );
 };

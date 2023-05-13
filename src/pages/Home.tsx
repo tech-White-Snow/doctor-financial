@@ -84,7 +84,7 @@ const Home: FC = () => {
               <img src={DashBack} className="w-full h-40" />
             </div>
             <div className="absolute w-full h-40 top-0 left-0 flex flex-col justify-center text-sm text-white text-center font-mont">
-              <div>今天已預約的病人： 12人</div>
+              <div>今天已預約的病人： {temp_db.length}人</div>
               <div className="pt-1">最近的預約時間：10:30 a.m.</div>
             </div>
           </div>
