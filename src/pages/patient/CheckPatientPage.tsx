@@ -167,7 +167,7 @@ const CheckPatient: FC = () => {
                         <img src={prevvIcon} className="w-8 h-8" />
                       </div>
                     ) : (
-                      <></>
+                      <div className="w-8 p-1"></div>
                     )}
                     <div
                       className="flex flex-col p-6"
@@ -195,7 +195,7 @@ const CheckPatient: FC = () => {
                         <img src={nexttIcon} className="w-8 h-8" />
                       </div>
                     ) : (
-                      <></>
+                      <div className="w-8 p-1"></div>
                     )}
                   </div>
                 </div>
@@ -242,13 +242,13 @@ const CheckPatient: FC = () => {
                 <></>
               )}
             </div>
-            {/* 備註 */}
+            {/* 病名/證型 */}
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(4)}
               >
-                <div className="font-mont">診斷</div>
+                <div className="font-mont">病名/證型</div>
                 <div className="flex flex-row justify-center">
                   <img src={downIcon} />
                 </div>
@@ -257,9 +257,43 @@ const CheckPatient: FC = () => {
                 <div className="p-3">
                   <div className="font-sans flex flex-row">
                     <div
-                      className="w-full h-[80px]"
+                      className="w-full rounded-lg"
                       style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
-                    ></div>
+                    >
+                      <input
+                        className="w-full focus:outline-none p-2 rounded-lg"
+                        style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            {/* 診斷 */}
+            <div>
+              <div
+                className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
+                onClick={() => setCurrentSelect(5)}
+              >
+                <div className="font-mont">診斷</div>
+                <div className="flex flex-row justify-center">
+                  <img src={downIcon} />
+                </div>
+              </div>
+              {currentSelect == 5 ? (
+                <div className="p-3">
+                  <div className="font-sans flex flex-row">
+                    <div
+                      className="w-full rounded-lg"
+                      style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                    >
+                      <textarea
+                        className="w-full h-[80px] resize-none focus:outline-none p-2 rounded-lg"
+                        style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                      />
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -270,14 +304,14 @@ const CheckPatient: FC = () => {
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
-                onClick={() => setCurrentSelect(5)}
+                onClick={() => setCurrentSelect(6)}
               >
                 <div className="font-mont">方藥/穴位</div>
                 <div className="flex flex-row justify-center">
                   <img src={downIcon} />
                 </div>
               </div>
-              {currentSelect == 5 ? (
+              {currentSelect == 6 ? (
                 <div className="px-5 py-3">
                   <div className="flex flex-col">
                     {Array.from(
@@ -332,14 +366,14 @@ const CheckPatient: FC = () => {
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
-                onClick={() => setCurrentSelect(6)}
+                onClick={() => setCurrentSelect(7)}
               >
                 <div className="font-mont">備註</div>
                 <div className="flex flex-row justify-center">
                   <img src={downIcon} />
                 </div>
               </div>
-              {currentSelect == 6 ? (
+              {currentSelect == 7 ? (
                 <div className="p-3">
                   <div className="font-sans flex flex-row">
                     <div

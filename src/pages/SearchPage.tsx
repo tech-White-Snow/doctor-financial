@@ -92,7 +92,7 @@ const SearchPage: FC = () => {
             </div>
           </div>
         </div>
-        <div className="absolute w-full bottom-8 px-3">
+        <div className="absolute w-full bottom-[80px] px-3">
           <div
             className="rounded-[10px] bg-[#64B3EC] hover:bg-[#6D7D8B] text-white text-center text-sm p-3"
             onClick={() => navigate("/searchresult")}
@@ -100,6 +100,8 @@ const SearchPage: FC = () => {
             Search
           </div>
         </div>
+        {/* NavBar */}
+        <NavBar status={3} />
       </div>
     </div>
   );

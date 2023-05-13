@@ -23,7 +23,7 @@ const NavBar: FC<NavBarProps> = ({ status }) => {
 
   return (
     <div
-      className="absolute w-full h-[75px] bg-white z-10 bottom-0 text-center text-xs font-mont flex items-center rounded-tl-lg rounded-tr-lg"
+      className="absolute w-full h-[75px] bg-white z-20 bottom-0 text-center text-xs font-mont flex items-center rounded-tl-lg rounded-tr-lg"
       style={{ color: Theme.COLOR_DEFAULT }}
     >
       <div className="grow" onClick={() => navigate("/home")}>

@@ -21,6 +21,7 @@ import RecipePage from "pages/patient/RecipePage";
 import CheckPatientPage from "pages/patient/CheckPatientPage";
 import UpdateAlbumPage from "pages/patient/UpdateAlbumPage";
 import PreviewMedicinePage from "pages/patient/PreviewMedicinePage";
+import PatientRecordPage from "pages/patient/PatientRecordPage";
 
 const Router: FC = () => {
   return (
@@ -48,6 +49,7 @@ const Router: FC = () => {
           <Route path="/checkpatient" element={<CheckPatientPage />} />
           <Route path="/editalbum" element={<UpdateAlbumPage />} />
           <Route path="/previewmedicine" element={<PreviewMedicinePage />} />
+          <Route path="/patientrecord" element={<PatientRecordPage />} />
         </Routes>
       </div>
     </BrowserRouter>

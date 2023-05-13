@@ -153,7 +153,7 @@ const PatientDetailPage: FC = () => {
                     <div className="w-1/2 flex flex-row">
                       <div
                         className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
-                        onClick={() => navigate("/pasthistory")}
+                        onClick={() => navigate("/patientrecord")}
                       >
                         View
                       </div>

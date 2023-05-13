@@ -29,12 +29,12 @@ const ReceiptPage: FC = () => {
   };
   const navigate = useNavigate();
 
-  // const [isEditMode, setIsEditMode] = useState(false);
-  // const [curDate, setCurDate] = useState("9-9-2022");
-  // const [curName, setCurName] = useState("陳小明");
-  // const [curDiagnosis, setCurDiagnosis] = useState("這是既往史");
-  // const [curToll, setCurToll] = useState(5);
-  // const [curDoctorID, setCurDoctorID] = useState("006073");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [curDate, setCurDate] = useState("9-9-2022");
+  const [curName, setCurName] = useState("陳小明");
+  const [curDiagnosis, setCurDiagnosis] = useState("這是既往史");
+  const [curToll, setCurToll] = useState(5);
+  const [curDoctorID, setCurDoctorID] = useState("006073");
 
   return (
     <div className="relative">
@@ -70,45 +70,46 @@ const ReceiptPage: FC = () => {
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>診症日期:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {/* <input
+                  <input
                     type="text"
+                    className="focus:outline-none"
                     value={curDate}
                     onChange={(ev) => setCurDate(ev.target.value)}
-                  /> */}
-                  {temp_data.date}
+                    readOnly={!isEditMode}
+                  />
                 </span>
               </div>
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>病人姓名:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {/* <input
+                  <input
                     type="text"
+                    className="focus:outline-none"
                     value={curName}
                     onChange={(ev) => setCurName(ev.target.value)}
-                  /> */}
-                  {temp_data.name}
+                  />
                 </span>
               </div>
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>診斷:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {/* <input
+                  <input
                     type="text"
+                    className="focus:outline-none"
                     value={curDiagnosis}
                     onChange={(ev) => setCurDiagnosis(ev.target.value)}
-                  /> */}
-                  {temp_data.diagnosis}
+                  />
                 </span>
               </div>
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>收費:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {/* <input
+                  <input
                     type="text"
+                    className="focus:outline-none"
                     value={curToll}
                     onChange={(ev: any) => setCurToll(ev.target.value)}
-                  /> */}
-                  {temp_data.toll}
+                  />
                 </span>
               </div>
               {/* Diagnosis */}
@@ -118,33 +119,33 @@ const ReceiptPage: FC = () => {
               >
                 <div>醫師簽名：</div>
                 <div className="grow h-40">
-                  {/* <textarea
+                  <textarea
                     className="w-full h-40 p-2 border-black border-opacity-60 resize-none rounded-xl focus:outline-none"
                     style={{ color: Theme.COLOR_GRAY }}
                     readOnly={!isEditMode}
-                  /> */}
+                  />
                 </div>
               </div>
               <div className="py-1 text-black text-opacity-60">
                 <span>醫師編號:</span>
                 <span className="pl-2">
-                  {/* <input
+                  <input
                     type="text"
+                    className="focus:outline-none"
                     value={curDoctorID}
                     onChange={(ev) => setCurDoctorID(ev.target.value)}
-                  /> */}
-                  {temp_data.doctorID}
+                  />
                 </span>
               </div>
               <div className="py-1 text-black text-opacity-60">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>簽發日期:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {/* <input
+                  <input
                     type="text"
+                    className="focus:outline-none"
                     value={curDate}
                     onChange={(ev) => setCurDate(ev.target.value)}
-                  /> */}
-                  {temp_data.date}
+                  />
                 </span>
               </div>
             </div>
@@ -159,10 +160,7 @@ const ReceiptPage: FC = () => {
         </div>
         {/* Assistant Tools */}
         <div className="mb-[70px] p-4 flex flex-row justify-end">
-          <div
-            className="p-3"
-            // onClick={() => setIsEditMode(!isEditMode)}
-          >
+          <div className="p-3" onClick={() => setIsEditMode(!isEditMode)}>
             <img src={editIcon} />
           </div>
           <div className="p-3" onClick={() => navigate("/receipt")}>
