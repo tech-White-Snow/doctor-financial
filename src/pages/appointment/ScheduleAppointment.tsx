@@ -52,11 +52,11 @@ const ScheduleAppointment: FC = () => {
               <div className="">病人紀錄</div>
             </div>
             {temp_db.map((idx, kkk) => (
-              <div className="px-3 py-1 flex justify-between">
-                <div
-                  className="flex flex-row"
-                  key={idx.name + idx.telephone + kkk}
-                >
+              <div
+                className="px-3 py-1 flex justify-between"
+                key={idx.name + idx.telephone + kkk}
+              >
+                <div className="flex flex-row">
                   <div>{idx.name}</div>
                   <div className="pl-2">{idx.telephone}</div>
                 </div>
