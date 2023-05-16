@@ -129,23 +129,37 @@ const CheckPatient: FC = () => {
                       the past. For no accident mistake, this part need an edit
                       btn for edit.
                     </div>
-                    {isPastHistoryEditMode ? (
-                      <div
-                        className="mt-6 px-2 py-1 self-end bg-[#64B3EC] rounded-lg text-white"
-                        onClick={() => setIsPastHistoryEditMode(false)}
-                      >
-                        Save
-                      </div>
-                    ) : (
+                    {!isPastHistoryEditMode ? (
                       <div
                         className="pt-6 self-end"
                         onClick={() => setIsPastHistoryEditMode(true)}
                       >
                         <img src={editIcon2} />
                       </div>
+                    ) : (
+                      <></>
                     )}
                     <div className="pt-2 self-end">Last update: DD/MM/YYYY</div>
                   </div>
+                  {/*  */}
+                  {isPastHistoryEditMode ? (
+                    <div className="flex py-2 font-normal">
+                      <div
+                        className="grow p-3 rounded-lg text-center bg-[#D3E7F6]"
+                        onClick={() => setIsPastHistoryEditMode(false)}
+                      >
+                        Cancel
+                      </div>
+                      <div
+                        className="grow p-3 ml-2 rounded-lg text-center text-white bg-[#64B3EC]"
+                        onClick={() => setIsPastHistoryEditMode(false)}
+                      >
+                        Confirm
+                      </div>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ) : (
                 <></>

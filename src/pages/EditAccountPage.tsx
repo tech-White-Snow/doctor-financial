@@ -1,12 +1,12 @@
 import { FC, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../assets/color";
 
 import nextIcon from "../assets/icons/next_ico.svg";
 import editIcon from "../assets/icons/edit_ico.svg";
-import editIcon1 from "../assets/icons/edit_ico1.svg";
+import editIcon1 from "../assets/icons/edit_ico2.svg";
 import downIcon from "../assets/icons/down_ico.svg";
 import profileImage from "../assets/img/profile_sample.jpeg";
 
@@ -16,23 +16,34 @@ import NavBar from "../components/NavBar";
 const EditAccountPage: FC = () => {
   const navigate = useNavigate();
 
-  const [isEditMode, setIsEditMode] = useState(false);
+  const location = useLocation();
+  const accountMode = location.state.mode; // 1 : viewMode 2: addMode
+
+  console.log("accountMode -> ", accountMode);
+
+  const [isEditMode, setIsEditMode] = useState(accountMode == 2);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
-  const context = {
-    name: "ryangwong",
-    email: "eamil@email.com",
-    password: "123456",
-    accountType: 1,
-    fullname: "Ryang",
-    doctorID: "006073",
-  };
+  const [userName, setUserName] = useState(location.state.name);
+  const [userEmail, setUserEmail] = useState("email@email.com");
+  const [password, setPassword] = useState("123456");
+  const [confirmedPassword, setConfirmedPassword] = useState("123456");
+  const [fullName, setFullName] = useState("黃文智");
+  const [doctorID, setDoctorID] = useState("006073");
 
   return (
     <div className="relative">
       <div className="relative h-screen overflow-y-auto">
         {/* Header */}
-        <Header title={!isEditMode ? "Account" : "Edit Account"} />
+        <Header
+          title={
+            accountMode == 2
+              ? "Add Account"
+              : isEditMode
+              ? "Edit Profile"
+              : "Profile"
+          }
+        />
         {!isEditMode ? (
           <div
             className="absolute top-8 right-4 p-1.5 border border-white rounded-lg"
@@ -44,24 +55,26 @@ const EditAccountPage: FC = () => {
           <></>
         )}
         {/* Account Detail */}
-        <div className="relative w-full mt-3 text-xs font-medium pb-[60px]">
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Username</div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
-              <input
-                className="hover:outline-none"
-                value={context.name}
-                disabled={!isEditMode}
-              />
-            </div>
-          </div>
+        <div
+          className={
+            "relative w-full mt-3 text-xs font-medium text-black text-opacity-70 " +
+            (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[120px]")
+          }
+        >
           <div className="relative flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Profile</div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
+            <div className="w-1/2 pt-2">Profile Picture</div>
+            <div
+              className="relative w-12"
+              style={{ color: Theme.COLOR_DEFAULT }}
+            >
               <img src={profileImage} className="w-12 h-12 rounded-full" />
+              <div
+                className="absolute right-1 top-1 w-2 h-2 rounded-full"
+                style={{ background: Theme.COLOR_RED }}
+              ></div>
             </div>
             {isEditMode ? (
-              <div className="absolute right-7 top-7">
+              <div className="absolute right-7 top-7 w-6 h-6">
                 <img src={editIcon1} />
               </div>
             ) : (
@@ -69,11 +82,23 @@ const EditAccountPage: FC = () => {
             )}
           </div>
           <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+            <div className="w-1/2">Username</div>
+            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
+              <input
+                className="hover:outline-none"
+                value={userName}
+                onChange={(ev) => setUserName(ev.target.value)}
+                disabled={!isEditMode}
+              />
+            </div>
+          </div>
+          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
             <div className="w-1/2">Email</div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
                 className="hover:outline-none"
-                value={context.email}
+                value={userEmail}
+                onChange={(ev) => setUserEmail(ev.target.value)}
                 disabled={!isEditMode}
               />
             </div>
@@ -84,7 +109,8 @@ const EditAccountPage: FC = () => {
               <input
                 className="hover:outline-none"
                 type="password"
-                value={context.password}
+                value={password}
+                onChange={(ev) => setPassword(ev.target.value)}
                 disabled={!isEditMode}
               />
             </div>
@@ -96,7 +122,8 @@ const EditAccountPage: FC = () => {
                 <input
                   className="hover:outline-none"
                   type="password"
-                  value={context.password}
+                  value={confirmedPassword}
+                  onChange={(ev) => setConfirmedPassword(ev.target.value)}
                   disabled={!isEditMode}
                 />
               </div>
@@ -105,37 +132,12 @@ const EditAccountPage: FC = () => {
             <></>
           )}
           <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Account Type</div>
-            <div
-              className="relative w-1/2"
-              style={{ color: Theme.COLOR_DEFAULT }}
-            >
-              <div
-                className="flex flex-row"
-                onClick={() => setIsAccountTypeOpen(!isAccountTypeOpen)}
-              >
-                <div>{context.accountType == 1 ? "Doctor" : "Admin"}</div>
-                <div className="pl-3 self-center">
-                  <img src={downIcon} />
-                </div>
-              </div>
-              <div
-                className={
-                  "absolute top-4 px-4 bg-white border " +
-                  (isAccountTypeOpen ? "" : "hidden")
-                }
-              >
-                <div className="py-1">Doctor</div>
-                <div className="py-1">Admin</div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
             <div className="w-1/2">Full name</div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
                 className="hover:outline-none"
-                value={context.fullname}
+                value={fullName}
+                onChange={(ev) => setFullName(ev.target.value)}
                 disabled={!isEditMode}
               />
             </div>
@@ -145,7 +147,8 @@ const EditAccountPage: FC = () => {
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
                 className="hover:outline-none"
-                value={context.doctorID}
+                value={doctorID}
+                onChange={(ev) => setDoctorID(ev.target.value)}
                 disabled={!isEditMode}
               />
             </div>
@@ -156,7 +159,7 @@ const EditAccountPage: FC = () => {
               <div
                 className="p-3 text-center text-white rounded-xl"
                 style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-                onClick={() => setIsEditMode(false)}
+                onClick={() => navigate("/viewaccount")}
               >
                 Confirm
               </div>
@@ -165,9 +168,9 @@ const EditAccountPage: FC = () => {
             <></>
           )}
         </div>
-        {/* NavBar */}
-        {!isEditMode ? <NavBar status={4} /> : <></>}
       </div>
+      {/* NavBar */}
+      <NavBar status={4} />
     </div>
   );
 };

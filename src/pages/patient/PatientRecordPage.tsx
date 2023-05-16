@@ -23,7 +23,7 @@ const PatientRecordPage: FC = () => {
       sex: 1,
       date: "3-2-2022",
       content:
-        "這是既往史，這是既往史，往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史。",
+        "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史",
     },
     {
       name: "陳小明",
@@ -31,7 +31,7 @@ const PatientRecordPage: FC = () => {
       sex: 1,
       date: "5-6-2022",
       content:
-        "這是既往史，這是既往史，這是既往史，這是既史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史。",
+        "现病史：患者于4日前无明显诱因于黎明前发作剧烈脘腹痛，持续约1小时缓解，4日来日日如此，多项检查（腹部超声、CT、生化检查等）均无明显异常，西医治疗无从入手，而求诊于中医。",
     },
     {
       name: "陳小明",
@@ -39,7 +39,7 @@ const PatientRecordPage: FC = () => {
       sex: 1,
       date: "8-9-2022",
       content:
-        "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史。",
+        "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史",
     },
     {
       name: "陳小明",
@@ -47,7 +47,7 @@ const PatientRecordPage: FC = () => {
       sex: 1,
       date: "10-12-2022",
       content:
-        "是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史。",
+        "现病史：患者于4日前无明显诱因于黎明前发作剧烈脘腹痛，持续约1小时缓解，4日来日日如此，多项检查（腹部超声、CT、生化检查等）均无明显异常，西医治疗无从入手，而求诊于中医。",
     },
   ];
 
@@ -106,22 +106,22 @@ const PatientRecordPage: FC = () => {
             >
               {currentSelected > 0 ? (
                 <div
-                  className="px-2 flex items-center"
+                  className="w-12 px-2 flex items-center justify-left"
                   onClick={() =>
                     setCurrentSelected(
                       currentSelected > 0 ? currentSelected - 1 : 0
                     )
                   }
                 >
-                  <img src={prevvIcon} className="w-20" />
+                  <img src={prevvIcon} />
                 </div>
               ) : (
-                <div className="w-20 mx-2"></div>
+                <div className="w-12"></div>
               )}
               <div>{temp_data[currentSelected].content}</div>
               {currentSelected < temp_data.length - 1 ? (
                 <div
-                  className="px-2 flex items-center"
+                  className="w-12 px-2 flex items-center justify-right"
                   onClick={() =>
                     setCurrentSelected(
                       currentSelected < temp_data.length - 1
@@ -130,10 +130,10 @@ const PatientRecordPage: FC = () => {
                     )
                   }
                 >
-                  <img src={nexttIcon} className="w-20" />
+                  <img src={nexttIcon} />
                 </div>
               ) : (
-                <div className="w-20 mx-2"></div>
+                <div className="w-12"></div>
               )}
             </div>
           ) : (

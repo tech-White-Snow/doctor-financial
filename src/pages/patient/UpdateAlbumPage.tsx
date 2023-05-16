@@ -23,9 +23,8 @@ const UpdateAlbumPage: FC = () => {
     age: 52,
     sex: 1,
     doctor: "黃文智醫師",
-    date: "9-9-2022 / 10:30 a.m.",
-    content:
-      "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史。",
+    date: "9-9-2022",
+    content: "皮膚發紅，初有斑點",
   };
 
   return (
@@ -35,6 +34,21 @@ const UpdateAlbumPage: FC = () => {
         <Header title="病歷相簿" />
         {/* Main Page */}
         <div className="p-4">
+          {/* Title */}
+          <div className="flex flex-row justify-between">
+            <div
+              className="flex flex-row text-base font-bold"
+              style={{ color: Theme.COLOR_DEFAULT }}
+            >
+              <div>
+                {temp_data.name}({temp_data.sex == 1 ? "男" : "女"})
+              </div>
+              <div className="pl-3">{temp_data.age}歲</div>
+            </div>
+            <div className="text-sm text-[#0C2036] text-opacity-80">
+              {temp_data.date}
+            </div>
+          </div>
           {/* Image */}
           <div className="relative h-[432px] w-full bg-[#F6F9FC] flex flex-col justify-center">
             <div className="absolute w-full p-2 top-2 flex flex-row justify-between items-center">

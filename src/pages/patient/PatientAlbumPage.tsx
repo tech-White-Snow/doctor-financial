@@ -23,8 +23,8 @@ const PatientAlbumPage: FC = () => {
     age: 52,
     sex: 1,
     doctor: "黃文智醫師",
-    date: "9-9-2022 / 10:30 a.m.",
-    content: "This caption is about ...",
+    date: "9-9-2022",
+    content: "皮膚發紅，初有斑點",
   };
 
   const navigate = useNavigate();

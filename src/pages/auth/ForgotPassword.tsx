@@ -40,8 +40,8 @@ const ForgotPassword: FC = () => {
               <input className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2" />
             </div>
             <div
-              className="rounded-[10px] bg-[#64B3EC] hover:bg-[#6D7D8B] text-white text-center text-sm p-3 mt-6"
-              onClick={() => console.log("Click Send Reset Link Button!")}
+              className="rounded-[10px] bg-[#64B3EC] hover:bg-[#D3E7F6] text-white text-center text-sm p-3 mt-6"
+              onClick={() => navigate("/resetpassword")}
             >
               Send Reset Link
             </div>

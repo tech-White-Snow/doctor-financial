@@ -4,10 +4,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "pages/Home";
 import Splash from "pages/Splash";
 import Signin from "pages/auth/Signin";
+import ResetPassword from "pages/auth/ResetPassword";
 import ForgotPassword from "pages/auth/ForgotPassword";
 
 import SearchPage from "pages/SearchPage";
 import SearchResultPage from "pages/SearchResultPage";
+import ViewAccountPage from "pages/ViewAccountPage";
 import EditAccountPage from "pages/EditAccountPage";
 import PastHistoryPage from "pages/PastHistoryPage";
 import AdminPage from "pages/AdminPage";
@@ -23,6 +25,10 @@ import UpdateAlbumPage from "pages/patient/UpdateAlbumPage";
 import PreviewMedicinePage from "pages/patient/PreviewMedicinePage";
 import PatientRecordPage from "pages/patient/PatientRecordPage";
 
+import ScheduleAppointment from "pages/appointment/ScheduleAppointment";
+import AddAppointment from "pages/appointment/AddAppointment";
+import AddAppointmentPatient from "pages/appointment/AddAppointmentPatient";
+
 const Router: FC = () => {
   return (
     <BrowserRouter>
@@ -31,14 +37,26 @@ const Router: FC = () => {
           {/* Authentication */}
           {/* <Route path="/" element={<Splash />} /> */}
           <Route path="/" element={<Signin />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           {/* Main Page */}
+          <Route path="/viewaccount" element={<ViewAccountPage />} />
           <Route path="/home" element={<Home />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/searchresult" element={<SearchResultPage />} />
-          <Route path="/editprofile" element={<EditAccountPage />} />
+          <Route path="/account" element={<EditAccountPage />} />
           <Route path="/pasthistory" element={<PastHistoryPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          {/* Appointment */}
+          <Route
+            path="/scheduleappointment"
+            element={<ScheduleAppointment />}
+          />
+          <Route path="/addappointment" element={<AddAppointment />} />
+          <Route
+            path="/addappointmentpatient"
+            element={<AddAppointmentPatient />}
+          />
           {/* Patient Related Page */}
           <Route path="/patient" element={<PatientList />} />
           <Route path="/patientdetail" element={<PatientDetailPage />} />

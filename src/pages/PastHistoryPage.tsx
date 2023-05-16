@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import Theme from "../assets/color";
 
@@ -18,10 +18,12 @@ const PastHistoryPage: FC = () => {
     age: 52,
     sex: 1,
     doctor: "黃文智醫師",
-    date: "9-9-2022 / 10:30 a.m.",
-    content:
-      "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史。",
+    date: "9-9-2022",
+    content: "既往史：有高血压病、冠心病病史。",
   };
+
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [contentText, setContentText] = useState(temp_data.content);
 
   return (
     <div className="relative">
@@ -50,17 +52,47 @@ const PastHistoryPage: FC = () => {
             className="text-xs pt-8 px-3"
             style={{ color: Theme.COLOR_DEFAULT }}
           >
-            {temp_data.content}
+            <textarea
+              className="w-full h-[240px] resize-h-none focus:outline-none p-2 rounded-lg"
+              value={contentText}
+              onChange={(ev) => setContentText(ev.target.value)}
+              readOnly={!isEditMode}
+            />
           </div>
         </div>
         {/* Edit Box */}
-        <div className="absolute bottom-[80px] right-3 p-4">
-          <div className="flex justify-end p-1">
-            <img src={editIcon} />
-          </div>
-          <div className="pt-3" style={{ color: Theme.COLOR_DEFAULT }}>
-            最後更新：12-8-2022
-          </div>
+        <div className="absolute w-full bottom-[70px] right-3 p-4">
+          {isEditMode ? (
+            <div className="w-full font-mont text-sm text-center pl-3 flex flex-row">
+              <div
+                className="grow rounded-lg bg-[#D3E7F6] p-2 text-[#64B3EC]"
+                onClick={() => setIsEditMode(false)}
+              >
+                Cancel
+              </div>
+              <div
+                className="grow rounded-lg bg-[#64B3EC] p-2 text-white ml-4"
+                onClick={() => setIsEditMode(false)}
+              >
+                Confirm
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div
+                className="flex justify-end p-1"
+                onClick={() => setIsEditMode(true)}
+              >
+                <img src={editIcon} />
+              </div>
+              <div
+                className="pt-3 text-right text-[15px]"
+                style={{ color: Theme.COLOR_DEFAULT }}
+              >
+                最後更新：12-8-2022
+              </div>
+            </div>
+          )}
         </div>
         {/* NavBar */}
         <NavBar status={4} />

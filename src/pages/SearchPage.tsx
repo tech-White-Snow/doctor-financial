@@ -82,7 +82,10 @@ const SearchPage: FC = () => {
           {/* Scheduled Patient List */}
           <div>
             <div className="pt-2 relative">
-              <input className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] text-center p-2 pr-8" />
+              <input
+                className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] text-xs text-center p-2 pr-8"
+                placeholder="請輸入關鍵字"
+              />
               <div
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
                 onClick={() => console.log("Show Password")}

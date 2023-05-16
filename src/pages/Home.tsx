@@ -53,17 +53,12 @@ const Home: FC = () => {
           className="relative w-full h-40 text-center text-base text-white flex items-center pb-2"
           style={{ background: Theme.COLOR_DEFAULT }}
         >
-          <div className="w-full flex flex-row justify-between p-5">
-            <div>
-              <div className="font-bold font-mont text-5xl">福氣堂</div>
-              <div className="font-bold font-sans text-lg tracking-[1rem] ml-4">
-                忠醫診所
-              </div>
-            </div>
+          <div className="w-full flex flex-row justify-between p-8">
+            <div className="font-bold font-mont text-5xl">福氣堂</div>
             <div className="relative">
               <div
-                className="rounded-full border border-white"
-                onClick={() => navigate("/editprofile")}
+                className="rounded-full border-none"
+                onClick={() => navigate("/account")}
               >
                 <img src={AvatarSample} className="w-12 h-12 rounded-full" />
               </div>
@@ -79,13 +74,21 @@ const Home: FC = () => {
         {/* Main Page */}
         <div className="px-3">
           {/* Dashboard */}
-          <div className="relative w-full h-40">
+          {/* <div className="relative w-full h-40">
             <div>
               <img src={DashBack} className="w-full h-40" />
             </div>
             <div className="absolute w-full h-40 top-0 left-0 flex flex-col justify-center text-sm text-white text-center font-mont">
               <div>今天已預約的病人： {temp_db.length}人</div>
               <div className="pt-1">最近的預約時間：10:30 a.m.</div>
+            </div>
+          </div> */}
+          <div className="p-4" onClick={() => navigate("/scheduleappointment")}>
+            <div
+              className="w-full rounded-xl text-sm text-white text-center font-mont p-3"
+              style={{ background: Theme.COLOR_DEFAULT }}
+            >
+              登 記
             </div>
           </div>
           {/* Recent Schedule */}
