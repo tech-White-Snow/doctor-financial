@@ -112,7 +112,7 @@ const AddAppointmentPatient: FC = () => {
           </div>
           <div
             className="grow rounded-lg bg-[#64B3EC] p-3 text-white ml-4"
-            onClick={() => navigate("/addappoint")}
+            onClick={() => navigate("/addappointment")}
           >
             Confirm
           </div>

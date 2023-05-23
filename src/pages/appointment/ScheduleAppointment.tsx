@@ -7,6 +7,8 @@ import Theme from "../../assets/color";
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
 import searchIcon from "../../assets/icons/search_ico.svg";
+import checkIcon from "../../assets/icons/check_ico.svg";
+import downIcon from "../../assets/icons/down_ico.svg";
 
 import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
@@ -40,7 +42,7 @@ const ScheduleAppointment: FC = () => {
     <div className="relative">
       <div className="h-screen overflow-y-auto">
         {/* Header */}
-        <Header title="New Appointment" />
+        <Header title="Add Appointment" />
         {/* Patient Record */}
         <div
           className="w-full px-3 pt-2 pb-8 text-[13px]"
@@ -57,13 +59,57 @@ const ScheduleAppointment: FC = () => {
                 key={idx.name + idx.telephone + kkk}
               >
                 <div className="flex flex-row">
-                  <div>{idx.name}</div>
-                  <div className="pl-2">{idx.telephone}</div>
+                  <div>
+                    <img src={checkIcon} />
+                  </div>
+                  <div className="px-2">{idx.name}</div>
+                  <div>{idx.telephone}</div>
                 </div>
                 <div className="border-b border-[#B6DBF5]">view</div>
               </div>
             ))}
             <div className="py-2 border-b border-b-[#B6DBF5]"></div>
+          </div>
+        </div>
+        {/* Scheduling the appointment date */}
+        <div className="px-7 pt-4">
+          <div>
+            <div
+              className="text-base font-semibold"
+              style={{ color: Theme.COLOR_DEFAULT }}
+            >
+              預約到診日期
+            </div>
+            <div className="relative rounded-lg border border-[#25617B] mt-2">
+              <div className="text-xs">
+                <input
+                  className="w-full h-full rounded-lg py-3 px-2"
+                  placeholder="DD/MM/YYYY"
+                />
+              </div>
+              <div className="absolute top-4 right-2">
+                <img src={downIcon} />
+              </div>
+            </div>
+          </div>
+          <div className="pt-2">
+            <div
+              className="text-base font-semibold"
+              style={{ color: Theme.COLOR_DEFAULT }}
+            >
+              預約到診時間
+            </div>
+            <div className="relative rounded-lg border border-[#25617B] mt-2">
+              <div className="text-xs">
+                <input
+                  className="w-full h-full rounded-lg py-3 px-2"
+                  placeholder="HH : MM"
+                />
+              </div>
+              <div className="absolute top-4 right-2">
+                <img src={downIcon} />
+              </div>
+            </div>
           </div>
         </div>
         {/* Appointment Asset Tools Information */}

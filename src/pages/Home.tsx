@@ -83,7 +83,7 @@ const Home: FC = () => {
               <div className="pt-1">最近的預約時間：10:30 a.m.</div>
             </div>
           </div> */}
-          <div className="p-4" onClick={() => navigate("/scheduleappointment")}>
+          <div className="p-4" onClick={() => navigate("/addappointment")}>
             <div
               className="w-full rounded-xl text-sm text-white text-center font-mont p-3"
               style={{ background: Theme.COLOR_DEFAULT }}

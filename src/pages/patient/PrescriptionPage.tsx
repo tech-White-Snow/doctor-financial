@@ -116,7 +116,7 @@ const PrescriptionPage: FC = () => {
                 <div>醫師簽名：</div>
                 <div className="grow h-40">
                   <textarea
-                    className="w-full h-40 p-2 border-black border-opacity-60 resize-none rounded-xl focus:outline-none"
+                    className="w-full h-40 p-2 border border-black border-opacity-30 resize-none rounded-xl focus:outline-none"
                     style={{ color: Theme.COLOR_GRAY }}
                     readOnly={!isEditMode}
                   />

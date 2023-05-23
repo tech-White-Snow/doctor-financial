@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import Theme from "../../assets/color";
 import nextIcon from "../../assets/icons/next_ico.svg";
 
 import PatientResultItemIcon from "../../assets/icons/patient_thumbnail.svg";
+import SelectedResultItemIcon from "../../assets/icons/selected_ico.svg";
 
 interface PatientResultItemProps {
   name: string;
@@ -43,16 +44,44 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
     });
   };
 
+  const [isLongClick, setIsLongClick] = useState(false);
+  let timeout: NodeJS.Timeout;
+
+  const handleMouseDown = () => {
+    setIsLongClick(false);
+    timeout = setTimeout(() => {
+      setIsLongClick(true);
+    }, 1000); // set the duration of the long click here
+  };
+
+  const handleMouseUp = () => {
+    clearTimeout(timeout);
+    // setIsLongClick(false);
+  };
+
   return (
     <div
       className="px-2 my-2 shadow-lg rounded-xl hover:bg-[#BBBBBB]"
-      onClick={() => browsePatientDetail()}
+      onClick={() => {
+        console.log("longClick --> ", isLongClick);
+        if (!isLongClick) browsePatientDetail();
+      }}
     >
       <div className="relative h-20 flex flex-col justify-center">
         {/* Image */}
         <div className="flex flex-row justify-center text-center">
-          <div className="flex justify-center w-[72px] h-9">
-            <img src={PatientResultItemIcon} />
+          <div
+            className="flex justify-center w-[72px] h-9"
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchEnd={handleMouseUp}
+          >
+            {isLongClick ? (
+              <img src={SelectedResultItemIcon} />
+            ) : (
+              <img src={PatientResultItemIcon} />
+            )}
           </div>
           <div className="grow flex flex-row justify-between text-xs text-left">
             <div className="grow flex flex-row justify-between">
