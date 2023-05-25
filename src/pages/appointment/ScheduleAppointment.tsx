@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -37,6 +37,17 @@ const ScheduleAppointment: FC = () => {
   ];
 
   const navigate = useNavigate();
+  const [recordStatus, setRecordStatus] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    setRecordStatus(Array(recordStatus.length).fill(false));
+  }, []);
+
+  const setRecordStatusAtIndex = (idx: number) => {
+    const newRecordStatus = [...recordStatus];
+    newRecordStatus[idx] = !recordStatus[idx];
+    setRecordStatus(newRecordStatus);
+  };
 
   return (
     <div className="relative">
@@ -59,8 +70,15 @@ const ScheduleAppointment: FC = () => {
                 key={idx.name + idx.telephone + kkk}
               >
                 <div className="flex flex-row">
-                  <div>
-                    <img src={checkIcon} />
+                  <div
+                    className="relative w-[18px] h-[18px] rounded border border-[#64B3EC] p-[1px]"
+                    onClick={() => setRecordStatusAtIndex(kkk)}
+                  >
+                    {recordStatus[kkk] ? (
+                      <div className="w-full h-full rounded bg-[#64B3EC]"></div>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                   <div className="px-2">{idx.name}</div>
                   <div>{idx.telephone}</div>
@@ -72,7 +90,7 @@ const ScheduleAppointment: FC = () => {
           </div>
         </div>
         {/* Scheduling the appointment date */}
-        <div className="px-7 pt-4">
+        <div className="px-7 pt-4 mb-[160px]">
           <div>
             <div
               className="text-base font-semibold"
@@ -114,15 +132,15 @@ const ScheduleAppointment: FC = () => {
         </div>
         {/* Appointment Asset Tools Information */}
         <div className="absolute w-full bottom-[80px] px-3">
-          <div className="w-full font-mont text-sm text-center pl-3 flex flex-row">
+          <div className="w-full font-mont text-sm text-center flex flex-row">
             <div
-              className="grow rounded-lg bg-[#D3E7F6] p-3 text-[#64B3EC]"
+              className="grow rounded-lg bg-[#D3E7F6] p-3 text-[#64B3EC] mr-1"
               onClick={() => navigate("/home")}
             >
               Cancel
             </div>
             <div
-              className="grow rounded-lg bg-[#64B3EC] p-3 text-white ml-4"
+              className="grow rounded-lg bg-[#64B3EC] p-3 text-white ml-1"
               onClick={() => navigate("/addappointment")}
             >
               Confirm

@@ -1,4 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import Theme from "../../assets/color";
 
@@ -67,6 +70,8 @@ const PatientList: FC = () => {
     },
   ];
 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
   return (
     <div className="relative">
       <div className="h-screen overflow-y-auto">
@@ -74,6 +79,15 @@ const PatientList: FC = () => {
         <Header title="Patient Schedule" />
         {/* Main Page */}
         <div className="px-3">
+          {/* Date Selection Field */}
+          <div className="relative pt-2 text-sm text-[#0C2036] font-bold text-center">
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date: Date | null) => setSelectedDate(date)}
+              dateFormat="MM-dd-yyyy"
+              className="w-full px-3 py-2 rounded-md border-gray-300 text-center focus:outline-none"
+            />
+          </div>
           {/* Scheduled Patient List */}
           <div className="w-full">
             <div className="pb-[75px]">
