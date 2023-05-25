@@ -80,12 +80,12 @@ const PatientList: FC = () => {
         {/* Main Page */}
         <div className="px-3">
           {/* Date Selection Field */}
-          <div className="relative pt-2 text-sm text-[#0C2036] font-bold text-center">
+          <div className="flex pt-2 text-sm text-[#0C2036] font-bold justify-center">
             <DatePicker
               selected={selectedDate}
               onChange={(date: Date | null) => setSelectedDate(date)}
               dateFormat="MM-dd-yyyy"
-              className="w-full px-3 py-2 rounded-md border-gray-300 text-center focus:outline-none"
+              className="px-3 py-2 rounded-md border-gray-300 flex text-center focus:outline-none"
             />
           </div>
           {/* Scheduled Patient List */}

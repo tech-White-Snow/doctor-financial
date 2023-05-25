@@ -22,6 +22,10 @@ code {
   border: none !important;
 }
 
+.react-datepicker-wrapper {
+  width: auto !important;
+}
+
 .react-datepicker__header {
   background: #64b3ec !important;
   border-top-left-radius: 10px !important;
