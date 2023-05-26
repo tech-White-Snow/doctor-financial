@@ -85,7 +85,7 @@ const CheckPatient: FC = () => {
           <div className="flex flex-row justify-between w-full px-6 absolute text-center text-base text-white font-bold mt-8">
             <div className="flex flex-row">
               <div onClick={() => navigate(-1)}>
-                <img src={backwardIcon} />
+                <img src={backwardIcon} className="max-w-none" />
               </div>
               <div className="pl-4">
                 {context.name}({context.sex == 1 ? "男" : "女"})
@@ -110,9 +110,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(1)}
               >
-                <div className="font-mont">既往史</div>
+                <div>既往史</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 1 ? (
@@ -134,7 +134,7 @@ const CheckPatient: FC = () => {
                         className="pt-6 self-end"
                         onClick={() => setIsPastHistoryEditMode(true)}
                       >
-                        <img src={editIcon2} />
+                        <img src={editIcon2} className="max-w-none" />
                       </div>
                     ) : (
                       <></>
@@ -171,9 +171,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(2)}
               >
-                <div className="font-mont">現病史</div>
+                <div>現病史</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 2 ? (
@@ -190,7 +190,7 @@ const CheckPatient: FC = () => {
                           )
                         }
                       >
-                        <img src={prevvIcon} className="w-8 h-8" />
+                        <img src={prevvIcon} className="w-8 h-8 max-w-none" />
                       </div>
                     ) : (
                       <div className="w-8 p-1"></div>
@@ -218,7 +218,7 @@ const CheckPatient: FC = () => {
                           )
                         }
                       >
-                        <img src={nexttIcon} className="w-8 h-8" />
+                        <img src={nexttIcon} className="w-8 h-8 max-w-none" />
                       </div>
                     ) : (
                       <div className="w-8 p-1"></div>
@@ -235,9 +235,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(3)}
               >
-                <div className="font-mont">病歷相簿</div>
+                <div>病歷相簿</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 3 ? (
@@ -245,18 +245,18 @@ const CheckPatient: FC = () => {
                   <div className="font-sans flex flex-row justify-between">
                     <div className="flex flex-row">
                       <div className="px-2">
-                        <img src={blankImage} />
+                        <img src={blankImage} className="max-w-none" />
                       </div>
                       <div className="px-2">
-                        <img src={blankImage} />
+                        <img src={blankImage} className="max-w-none" />
                       </div>
                     </div>
                     <div className="flex flex-row items-end">
                       <div className="px-1 pb-1">
-                        <img src={uploadIcon} />
+                        <img src={uploadIcon} className="max-w-none" />
                       </div>
                       <div className="px-1">
-                        <img src={cameraIcon} />
+                        <img src={cameraIcon} className="max-w-none" />
                       </div>
                     </div>
                   </div>
@@ -274,9 +274,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(4)}
               >
-                <div className="font-mont">病名/證型</div>
+                <div>病名/證型</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 4 ? (
@@ -303,9 +303,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(5)}
               >
-                <div className="font-mont">診斷</div>
+                <div>診斷</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 5 ? (
@@ -332,9 +332,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(6)}
               >
-                <div className="font-mont">證型</div>
+                <div>證型</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 6 ? (
@@ -361,9 +361,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(7)}
               >
-                <div className="font-mont">方藥/穴位</div>
+                <div>方藥/穴位</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 7 ? (
@@ -399,7 +399,10 @@ const CheckPatient: FC = () => {
                             )
                           }
                         >
-                          <img src={removeitemIcon} className="w-6 h-6" />
+                          <img
+                            src={removeitemIcon}
+                            className="w-6 h-6 max-w-none"
+                          />
                         </div>
                       </div>
                     ))}
@@ -423,9 +426,9 @@ const CheckPatient: FC = () => {
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(8)}
               >
-                <div className="font-mont">備註</div>
+                <div>備註</div>
                 <div className="flex flex-row justify-center">
-                  <img src={downIcon} />
+                  <img src={downIcon} className="max-w-none" />
                 </div>
               </div>
               {currentSelect == 8 ? (
@@ -477,7 +480,7 @@ const CheckPatient: FC = () => {
         <div
           className="p-3 text-center text-white rounded-xl"
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/previewmedicine")}
         >
           Confirm
         </div>

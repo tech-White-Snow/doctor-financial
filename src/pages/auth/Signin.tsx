@@ -31,9 +31,7 @@ const Signin: FC = () => {
             </div> */}
           </div>
           <div className="grow flex flex-col justify-center">
-            <div className="text-[12px] font-monto text-600 text-[#64B3EC]">
-              Email
-            </div>
+            <div className="text-[12px] text-600 text-[#64B3EC]">Email</div>
             <div className="pt-2">
               <input
                 className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2"
@@ -42,7 +40,7 @@ const Signin: FC = () => {
                 }}
               />
             </div>
-            <div className="text-[12px] font-monto text-600 text-[#64B3EC] pt-2">
+            <div className="text-[12px] text-600 text-[#64B3EC] pt-2">
               Password
             </div>
             <div className="pt-2 relative">
@@ -98,7 +96,7 @@ const Signin: FC = () => {
             className="flex w-5 h-5 border border-[#26777E] rounded-md justify-center"
             onClick={() => setShowWrongPasswordModal(false)}
           >
-            <img src={closeIcon} />
+            <img src={closeIcon} className="max-w-none" />
           </div>
           <div className="grow flex flex-col justify-between">
             <div className="text-center text-[#0C2036] text-sm font-bold">
@@ -106,7 +104,7 @@ const Signin: FC = () => {
             </div>
             <div>
               <div className="flex justify-center">
-                <img src={warningImage} />
+                <img src={warningImage} className="max-w-none" />
               </div>
               <div className="text-xs text-black text-opacity-70 text-center ">
                 密碼錯誤，請重新輸入或Forgot Password。

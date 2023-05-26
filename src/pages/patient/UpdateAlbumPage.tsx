@@ -53,26 +53,26 @@ const UpdateAlbumPage: FC = () => {
           <div className="relative h-[432px] w-full bg-[#F6F9FC] flex flex-col justify-center">
             <div className="absolute w-full p-2 top-2 flex flex-row justify-between items-center">
               <div>
-                <img src={closeIcon} />
+                <img src={closeIcon} className="max-w-none" />
               </div>
               <div className="flex flex-row">
                 <div>
-                  <img src={editIcon} />
+                  <img src={editIcon} className="max-w-none" />
                 </div>
                 <div className="pl-3">
-                  <img src={removeIcon} />
+                  <img src={removeIcon} className="max-w-none" />
                 </div>
               </div>
             </div>
             <div className="flex flex-row justify-center w-full justify-between px-2">
               <div>
-                <img src={prevIcon} />
+                <img src={prevIcon} className="max-w-none" />
               </div>
               <div>
-                <img src={blankImgIcon} />
+                <img src={blankImgIcon} className="max-w-none" />
               </div>
               <div>
-                <img src={nextIcon} />
+                <img src={nextIcon} className="max-w-none" />
               </div>
             </div>
           </div>

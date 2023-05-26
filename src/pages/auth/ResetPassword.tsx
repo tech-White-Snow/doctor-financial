@@ -22,7 +22,7 @@ const ResetPassword: FC = () => {
             <div className="font-bold text-center text-5xl text-[#64B3EC]">
               福氣堂
             </div>
-            <div className="font-mont font-bold text-center text-lg text-[#0C2036] pt-10 pl-4">
+            <div className="font-bold text-center text-lg text-[#0C2036] pt-10 pl-4">
               請重設密碼
             </div>
             <div className="font-bold text-center text-sm text-[#6D7D8B] pt-2 pl-4">
@@ -31,7 +31,7 @@ const ResetPassword: FC = () => {
           </div>
           <div className="grow flex flex-col justify-center">
             <div>
-              <div className="text-[12px] font-monto text-600 text-[#64B3EC]">
+              <div className="text-[12px] text-600 text-[#64B3EC]">
                 New password
               </div>
               <div className="pt-2">
@@ -42,7 +42,7 @@ const ResetPassword: FC = () => {
               </div>
             </div>
             <div className="pt-2">
-              <div className="text-[12px] font-monto text-600 text-[#64B3EC]">
+              <div className="text-[12px] text-600 text-[#64B3EC]">
                 Confirmed new password
               </div>
               <div className="pt-2">

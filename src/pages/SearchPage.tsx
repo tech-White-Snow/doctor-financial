@@ -90,7 +90,7 @@ const SearchPage: FC = () => {
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
                 onClick={() => console.log("Show Password")}
               >
-                <img src={searchIcon} />
+                <img src={searchIcon} className="max-w-none" />
               </div>
             </div>
           </div>

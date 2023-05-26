@@ -20,7 +20,7 @@ const Header: FC<HeaderProps> = ({ title }) => {
             className="absolute left-4 top-8 border border-white p-2 rounded-md"
             onClick={() => navigate(-1)}
           >
-            <img src={backwardIcon} />
+            <img src={backwardIcon} className="max-w-none" />
           </div>
         ) : (
           <></>

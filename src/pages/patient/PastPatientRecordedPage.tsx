@@ -30,7 +30,7 @@ const PastPatientRecordedPage: FC = () => {
         {/* Main Page */}
         <div className="px-4 py-3 pb-[80px]">
           {/* Patient Detail Information */}
-          <div className="w-full font-mont">
+          <div className="w-full">
             {/* Name + Age + Date */}
             <div className="flex flex-row justify-between py-2">
               <div
@@ -38,7 +38,10 @@ const PastPatientRecordedPage: FC = () => {
                 style={{ color: Theme.COLOR_DEFAULT }}
               >
                 <div>
-                  {context.name}({context.sex == 1 ? "男" : "女"})
+                  {context.name}
+                  <span className="px-1">
+                    ({context.sex == 1 ? "男" : "女"})
+                  </span>
                 </div>
                 <div className="pl-3">{context.age}歲</div>
               </div>

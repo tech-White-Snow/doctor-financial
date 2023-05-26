@@ -48,7 +48,7 @@ const RecipePage: FC = () => {
               福氣堂
             </div>
             <div
-              className="font-bold font-mont text-lg pt-5"
+              className="font-bold text-lg pt-5"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">處方</span>
@@ -72,19 +72,19 @@ const RecipePage: FC = () => {
               <div className="py-1">
                 <div style={{ color: Theme.COLOR_DEFAULT }}>診斷:</div>
                 <div className="pl-2 h-48 text-black text-opacity-60"></div>
-                <div className="text-center font-mont text-xs text-[#666666]">
+                <div className="text-center text-xs text-[#666666]">
                   <span className="px-4">日藥/每日</span>
                   <span className="px-4">次/共</span>
                   <span className="px-4">包</span>
                 </div>
-                <div className="font-mont text-xs text-[#666666] pt-3">
+                <div className="text-xs text-[#666666] pt-3">
                   <span>餐</span>
                   <span className="pl-3">服</span>
                 </div>
               </div>
               {/* Diagnosis */}
               <div
-                className="py-1 pt-3 text-black text-opacity-60 font-mont"
+                className="py-1 pt-3 text-black text-opacity-60"
                 style={{ color: Theme.COLOR_DEFAULT }}
               >
                 主診醫師：
@@ -112,7 +112,7 @@ const RecipePage: FC = () => {
                     )}
                   </div>
                   <div
-                    className="font-mont text-[13px] pl-2"
+                    className="text-[13px] pl-2"
                     style={{ color: Theme.COLOR_DEFAULT }}
                   >
                     需要覆診
@@ -132,13 +132,13 @@ const RecipePage: FC = () => {
         {/* Assistant Tools */}
         <div className="mb-[70px] p-4 flex flex-row justify-end">
           <div className="p-3" onClick={() => navigate("/checkpatient")}>
-            <img src={editIcon} />
+            <img src={editIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => navigate("/receipt")}>
-            <img src={shareIcon} />
+            <img src={shareIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => navigate("/recipe")}>
-            <img src={printIcon} />
+            <img src={printIcon} className="max-w-none" />
           </div>
         </div>
         {/* NavBar */}

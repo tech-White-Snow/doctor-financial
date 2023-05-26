@@ -69,7 +69,7 @@ const ViewAccountPage: FC = () => {
           })
         }
       >
-        <img src={addIcon} />
+        <img src={addIcon} className="max-w-none" />
       </div>
       {/* NavBar */}
       <NavBar status={4} />

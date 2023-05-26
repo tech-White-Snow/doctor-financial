@@ -58,7 +58,7 @@ const AddAppointment: FC = () => {
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
                 onClick={() => navigate("/scheduleappointment")}
               >
-                <img src={searchIcon} />
+                <img src={searchIcon} className="max-w-none" />
               </div>
             </div>
             <div className="font-semibold text-center py-2">或</div>

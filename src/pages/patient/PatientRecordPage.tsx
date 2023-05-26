@@ -76,7 +76,7 @@ const PatientRecordPage: FC = () => {
         {/* Main Page */}
         <div className="p-4">
           {/* Title */}
-          <div className="flex flex-row justify-between font-mont w-full">
+          <div className="flex flex-row justify-between w-full">
             <div
               className="flex flex-row text-base font-bold px-1"
               style={{ color: Theme.COLOR_DEFAULT }}
@@ -113,7 +113,7 @@ const PatientRecordPage: FC = () => {
                     )
                   }
                 >
-                  <img src={prevvIcon} />
+                  <img src={prevvIcon} className="max-w-none" />
                 </div>
               ) : (
                 <div className="w-12"></div>
@@ -130,7 +130,7 @@ const PatientRecordPage: FC = () => {
                     )
                   }
                 >
-                  <img src={nexttIcon} />
+                  <img src={nexttIcon} className="max-w-none" />
                 </div>
               ) : (
                 <div className="w-12"></div>
@@ -174,7 +174,7 @@ const PatientRecordPage: FC = () => {
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
                 onClick={() => searchPatientRecordHandle()}
               >
-                <img src={searchIcon} />
+                <img src={searchIcon} className="max-w-none" />
               </div>
             </div>
           </div>

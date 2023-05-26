@@ -23,12 +23,15 @@ const NavBar: FC<NavBarProps> = ({ status }) => {
 
   return (
     <div
-      className="absolute w-full h-[75px] bg-white z-20 bottom-0 text-center text-xs font-mont flex items-center rounded-tl-lg rounded-tr-lg"
+      className="absolute w-full h-[75px] bg-white z-20 bottom-0 text-center text-[11px] flex items-center rounded-tl-lg rounded-tr-lg"
       style={{ color: Theme.COLOR_DEFAULT }}
     >
       <div className="grow" onClick={() => navigate("/home")}>
         <div className="flex justify-center">
-          <img src={status != 1 ? homeIcon : homeIcon1} />
+          <img
+            src={status != 1 ? homeIcon : homeIcon1}
+            className="max-w-none"
+          />
         </div>
         <div
           className="pt-1"
@@ -41,7 +44,10 @@ const NavBar: FC<NavBarProps> = ({ status }) => {
       </div>
       <div className="grow" onClick={() => navigate("/patient")}>
         <div className="flex justify-center">
-          <img src={status != 2 ? patientIcon : patientIcon1} />
+          <img
+            src={status != 2 ? patientIcon : patientIcon1}
+            className="max-w-none"
+          />
         </div>
         <div
           className="pt-1"
@@ -54,7 +60,10 @@ const NavBar: FC<NavBarProps> = ({ status }) => {
       </div>
       <div className="grow" onClick={() => navigate("/search")}>
         <div className="flex justify-center">
-          <img src={status != 3 ? searchIcon : searchIcon1} />
+          <img
+            src={status != 3 ? searchIcon : searchIcon1}
+            className="max-w-none"
+          />
         </div>
         <div
           className="pt-1"
@@ -67,7 +76,10 @@ const NavBar: FC<NavBarProps> = ({ status }) => {
       </div>
       <div className="grow" onClick={() => navigate("/admin")}>
         <div className="flex justify-center">
-          <img src={status != 4 ? adminIcon : adminIcon1} />
+          <img
+            src={status != 4 ? adminIcon : adminIcon1}
+            className="max-w-none"
+          />
         </div>
         <div
           className="pt-1"

@@ -47,7 +47,7 @@ const EditAccountPage: FC = () => {
             className="absolute top-8 right-4 p-1.5 border border-white rounded-lg"
             onClick={() => setIsEditMode(true)}
           >
-            <img src={editIcon} />
+            <img src={editIcon} className="max-w-none" />
           </div>
         ) : (
           <></>
@@ -65,7 +65,10 @@ const EditAccountPage: FC = () => {
               className="relative w-12"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
-              <img src={profileImage} className="w-12 h-12 rounded-full" />
+              <img
+                src={profileImage}
+                className="w-12 h-12 max-w-none rounded-full"
+              />
               <div
                 className="absolute right-1 top-1 w-2 h-2 rounded-full"
                 style={{ background: Theme.COLOR_RED }}
@@ -73,7 +76,7 @@ const EditAccountPage: FC = () => {
             </div>
             {isEditMode ? (
               <div className="absolute right-7 top-7 w-6 h-6">
-                <img src={editIcon1} />
+                <img src={editIcon1} className="max-w-none" />
               </div>
             ) : (
               <></>

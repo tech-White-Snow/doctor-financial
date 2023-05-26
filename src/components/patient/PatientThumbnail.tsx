@@ -41,7 +41,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
           {/* Image */}
           <div className="w-1/3 flex flex-col justify-center text-center">
             <div className="flex justify-center">
-              <img src={patientThumbnailIcon} />
+              <img src={patientThumbnailIcon} className="max-w-none" />
             </div>
             <div
               className="text-sm pt-2"
@@ -57,7 +57,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
             </div>
           </div>
           {/* Content */}
-          <div className="w-2/3 text-xs font-mont">
+          <div className="w-2/3 text-xs">
             <div>
               <span>電話 ：</span>
               <span className="text-black text-opacity-60">{telephone}</span>
@@ -91,20 +91,20 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
               <div className="pl-2">{telephone}</div>
             </div>
             <div
-              className="absolute top-5 right-5 font-mont"
+              className="absolute top-5 right-5"
               onClick={() => setIsCheckPatientOpen(false)}
             >
-              <img src={closeIcon} />
+              <img src={closeIcon} className="max-w-none" />
             </div>
             <div className="text-xs">預約時間：DD/MM/YYYY HH:MM</div>
             <div
-              className="text-xl font-mont font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
+              className="text-xl font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
               onClick={() => navigate("/checkpatient")}
             >
               開始診斷
             </div>
             <div
-              className="text-xl font-mont font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
+              className="text-xl font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
               onClick={() => {
                 navigate("/pastpatientrecord", {
                   state: {

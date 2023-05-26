@@ -45,13 +45,18 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
   };
 
   const [isLongClick, setIsLongClick] = useState(false);
+  const [isPaidClick, setIsPaidClick] = useState(false);
+  const [isHideCard, setIsHideCard] = useState(false);
+
   let timeout: NodeJS.Timeout;
 
   const handleMouseDown = () => {
-    setIsLongClick(false);
-    timeout = setTimeout(() => {
-      setIsLongClick(true);
-    }, 1000); // set the duration of the long click here
+    if (!isLongClick) {
+      // setIsLongClick(false);
+      timeout = setTimeout(() => {
+        setIsLongClick(true);
+      }, 1000); // set the duration of the long click here
+    }
   };
 
   const handleMouseUp = () => {
@@ -59,50 +64,85 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
     // setIsLongClick(false);
   };
 
-  return (
+  return !isHideCard ? (
     <div
-      className="px-2 my-2 shadow-lg rounded-xl hover:bg-[#BBBBBB]"
+      className="my-3 shadow-lg rounded-xl"
       onClick={() => {
-        console.log("longClick --> ", isLongClick);
-        if (!isLongClick) browsePatientDetail();
+        // if (!isLongClick) browsePatientDetail();
       }}
     >
-      <div className="relative h-20 flex flex-col justify-center">
+      <div className="relative h-full flex flex-col justify-center">
         {/* Image */}
         <div className="flex flex-row justify-center text-center">
           <div
-            className="flex justify-center w-[72px] h-9"
+            className="flex justify-center w-[72px]"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onTouchStart={handleMouseDown}
             onTouchEnd={handleMouseUp}
           >
             {isLongClick ? (
-              <img src={SelectedResultItemIcon} />
+              isPaidClick ? (
+                <div
+                  onClick={() => {
+                    setIsPaidClick(false);
+                    setIsLongClick(false);
+                  }}
+                  className="p-1"
+                >
+                  <img src={SelectedResultItemIcon} className="max-w-none" />
+                </div>
+              ) : (
+                <div
+                  className="w-[61px] h-[61px] m-1 border-2 border-[#25617B] bg-transparent rounded-full"
+                  onClick={() => setIsPaidClick(true)}
+                ></div>
+              )
             ) : (
-              <img src={PatientResultItemIcon} />
-            )}
-          </div>
-          <div className="grow flex flex-row justify-between text-xs text-left">
-            <div className="grow flex flex-row justify-between">
-              <div>
-                <div style={{ color: Theme.COLOR_DEFAULT }}>{name}</div>
-                <div className="pt-1">
-                  <span className="text-black">電話:</span>
-                  <span className="text-black text-opacity-60">
-                    {telephone}
-                  </span>
+              <div className="h-[69px] flex justify-center items-center">
+                <div>
+                  <img
+                    src={PatientResultItemIcon}
+                    className="w-[26px] h-[35px] max-w-none"
+                  />
                 </div>
               </div>
-              <div className="text-black text-opacity-60">{date}</div>
-            </div>
-            <div className="p-2 flex justify-center">
-              <img src={nextIcon} />
-            </div>
+            )}
           </div>
+          {isPaidClick ? (
+            <div
+              className="grow bg-[#25617B] text-[36px] text-white text-center font-bold flex justify-center items-center rounded-tr-xl rounded-br-xl"
+              onClick={() => setIsHideCard(true)}
+            >
+              <div>Paid</div>
+            </div>
+          ) : (
+            <div
+              className="grow flex flex-row justify-between items-center pb-3 text-xs text-left"
+              onClick={() => browsePatientDetail()}
+            >
+              <div className="grow flex flex-row justify-between">
+                <div>
+                  <div style={{ color: Theme.COLOR_DEFAULT }}>{name}</div>
+                  <div className="pt-1">
+                    <span className="text-black">電話:</span>
+                    <span className="text-black text-opacity-60">
+                      {telephone}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-black text-opacity-60">{date}</div>
+              </div>
+              <div className="p-2 flex justify-center">
+                <img src={nextIcon} className="max-w-none" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 

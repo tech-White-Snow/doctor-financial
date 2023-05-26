@@ -103,7 +103,7 @@ const AddAppointmentPatient: FC = () => {
       </div>
       {/* Appointment Asset Tools Information */}
       <div className="absolute w-full bottom-[80px] px-3">
-        <div className="w-full font-mont text-sm text-center pl-3 flex flex-row">
+        <div className="w-full text-sm text-center pl-3 flex flex-row">
           <div
             className="grow rounded-lg bg-[#D3E7F6] p-3 text-[#64B3EC]"
             onClick={() => navigate(-1)}

@@ -58,7 +58,7 @@ const ReceiptPage: FC = () => {
               忠醫診所
             </div>
             <div
-              className="font-bold font-mont text-lg pt-2"
+              className="font-bold text-lg pt-2"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">收據</span>
@@ -161,13 +161,13 @@ const ReceiptPage: FC = () => {
         {/* Assistant Tools */}
         <div className="mb-[70px] p-4 flex flex-row justify-end">
           <div className="p-3" onClick={() => setIsEditMode(true)}>
-            <img src={editIcon} />
+            <img src={editIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => navigate("/receipt")}>
-            <img src={shareIcon} />
+            <img src={shareIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => navigate("/recipe")}>
-            <img src={printIcon} />
+            <img src={printIcon} className="max-w-none" />
           </div>
         </div>
       </div>

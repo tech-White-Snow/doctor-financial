@@ -63,7 +63,7 @@ const PastHistoryPage: FC = () => {
         {/* Edit Box */}
         <div className="absolute w-full bottom-[70px] right-3 p-4">
           {isEditMode ? (
-            <div className="w-full font-mont text-sm text-center pl-3 flex flex-row">
+            <div className="w-full text-sm text-center pl-3 flex flex-row">
               <div
                 className="grow rounded-lg bg-[#D3E7F6] p-2 text-[#64B3EC]"
                 onClick={() => setIsEditMode(false)}
@@ -83,7 +83,7 @@ const PastHistoryPage: FC = () => {
                 className="flex justify-end p-1"
                 onClick={() => setIsEditMode(true)}
               >
-                <img src={editIcon} />
+                <img src={editIcon} className="max-w-none" />
               </div>
               <div
                 className="pt-3 text-right text-[15px]"

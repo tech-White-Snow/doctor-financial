@@ -21,9 +21,7 @@ const Splash: FC = () => {
           忠醫診所
         </div>
       </div>
-      <div className="text-sm tracking-[.75rem] pb-6 text-center font-mont">
-        懸壺濟世
-      </div>
+      <div className="text-sm tracking-[.75rem] pb-6 text-center">懸壺濟世</div>
     </div>
   );
 };

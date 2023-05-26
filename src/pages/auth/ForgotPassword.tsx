@@ -25,7 +25,7 @@ const ForgotPassword: FC = () => {
             <div className="font-bold text-center text-lg text-[#6D7D8B] tracking-[1rem] pt-2 pl-4">
               忠醫診所
             </div>
-            <div className="font-mont font-bold text-center text-lg text-[#0C2036] pt-6 pl-4">
+            <div className="font-bold text-center text-lg text-[#0C2036] pt-6 pl-4">
               請輸入Email重設密碼
             </div>
             <div className="font-bold text-center text-sm text-[#6D7D8B] pt-4 pl-4">
@@ -33,9 +33,7 @@ const ForgotPassword: FC = () => {
             </div>
           </div>
           <div className="grow flex flex-col justify-center">
-            <div className="text-[12px] font-monto text-600 text-[#64B3EC]">
-              Email
-            </div>
+            <div className="text-[12px] text-600 text-[#64B3EC]">Email</div>
             <div className="pt-2">
               <input className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2" />
             </div>

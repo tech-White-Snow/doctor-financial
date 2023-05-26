@@ -61,18 +61,18 @@ const PatientAlbumPage: FC = () => {
               <div className="flex flex-row pt-2 justify-between">
                 <div className="flex flex-row">
                   <div className="px-2">
-                    <img src={BlankImage} />
+                    <img src={BlankImage} className="max-w-none" />
                   </div>
                   <div className="px-2">
-                    <img src={BlankImage} />
+                    <img src={BlankImage} className="max-w-none" />
                   </div>
                 </div>
                 <div className="flex flex-row items-end">
                   <div className="px-1 pb-1">
-                    <img src={uploadIcon} />
+                    <img src={uploadIcon} className="max-w-none" />
                   </div>
                   <div className="px-1">
-                    <img src={cameraIcon} />
+                    <img src={cameraIcon} className="max-w-none" />
                   </div>
                 </div>
               </div>
@@ -80,7 +80,7 @@ const PatientAlbumPage: FC = () => {
                 className="absolute top-2 right-1"
                 onClick={() => navigate("/editalbum")}
               >
-                <img src={editIcon} />
+                <img src={editIcon} className="max-w-none" />
               </div>
             </div>
           </div>

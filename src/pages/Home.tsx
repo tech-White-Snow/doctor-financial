@@ -54,13 +54,16 @@ const Home: FC = () => {
           style={{ background: Theme.COLOR_DEFAULT }}
         >
           <div className="w-full flex flex-row justify-between p-8">
-            <div className="font-bold font-mont text-5xl">福氣堂</div>
+            <div className="font-bold text-5xl">福氣堂</div>
             <div className="relative">
               <div
                 className="rounded-full border-none"
-                onClick={() => navigate("/account", { state: { mode: 1 } })}
+                onClick={() => navigate("/viewaccount", { state: { mode: 1 } })}
               >
-                <img src={AvatarSample} className="w-12 h-12 rounded-full" />
+                <img
+                  src={AvatarSample}
+                  className="w-12 h-12 max-w-none rounded-full"
+                />
               </div>
               <div
                 className="absolute w-2 h-2 top-1 right-1 rounded-full"
@@ -76,16 +79,16 @@ const Home: FC = () => {
           {/* Dashboard */}
           {/* <div className="relative w-full h-40">
             <div>
-              <img src={DashBack} className="w-full h-40" />
+              <img src={DashBack} className="w-full h-40 max-w-none" />
             </div>
-            <div className="absolute w-full h-40 top-0 left-0 flex flex-col justify-center text-sm text-white text-center font-mont">
+            <div className="absolute w-full h-40 top-0 left-0 flex flex-col justify-center text-sm text-white text-center">
               <div>今天已預約的病人： {temp_db.length}人</div>
               <div className="pt-1">最近的預約時間：10:30 a.m.</div>
             </div>
           </div> */}
           <div className="p-4" onClick={() => navigate("/addappointment")}>
             <div
-              className="w-full rounded-xl text-sm text-white text-center font-mont p-3"
+              className="w-full rounded-xl text-sm text-white text-center p-3"
               style={{ background: Theme.COLOR_DEFAULT }}
             >
               登 記
@@ -93,7 +96,7 @@ const Home: FC = () => {
           </div>
           {/* Recent Schedule */}
           <div className="w-full mt-2">
-            <div className="text-black text-sm font-mont text-600 py-2 font-bold">
+            <div className="text-black text-sm text-600 py-2 font-bold">
               最近的預約病人
             </div>
             <div className="pb-[75px]">

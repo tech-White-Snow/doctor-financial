@@ -51,7 +51,7 @@ const PreviewMedicinePage: FC = () => {
               忠醫診所
             </div>
             <div
-              className="font-bold font-mont text-lg pt-2"
+              className="font-bold text-lg pt-2"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">處方</span>
@@ -75,12 +75,12 @@ const PreviewMedicinePage: FC = () => {
               <div className="py-1">
                 <div style={{ color: Theme.COLOR_DEFAULT }}>診斷:</div>
                 <div className="pl-2 h-48 text-black text-opacity-60"></div>
-                <div className="text-center font-mont text-xs text-[#666666]">
+                <div className="text-center text-xs text-[#666666]">
                   <span className="px-4">日藥/每日</span>
                   <span className="px-4">次/共</span>
                   <span className="px-4">包</span>
                 </div>
-                <div className="font-mont text-xs text-[#666666] pt-3">
+                <div className="text-xs text-[#666666] pt-3">
                   <span>餐</span>
                   <span className="pl-3">服</span>
                 </div>

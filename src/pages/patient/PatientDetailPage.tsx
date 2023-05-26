@@ -30,7 +30,7 @@ const PatientDetailPage: FC = () => {
         {/* Main Page */}
         <div className="px-4 py-3 pb-[80px]">
           {/* Patient Detail Information */}
-          <div className="w-full font-mont">
+          <div className="w-full">
             {/* Name + Age + Date */}
             <div className="flex flex-row justify-between py-2">
               <div
@@ -111,10 +111,10 @@ const PatientDetailPage: FC = () => {
                         </span>
                       </div>
                       <div className="grow">
-                        <img src={shareIcon} />
+                        <img src={shareIcon} className="max-w-none" />
                       </div>
                       <div className="grow">
-                        <img src={printIcon} />
+                        <img src={printIcon} className="max-w-none" />
                       </div>
                     </div>
                   </div>
