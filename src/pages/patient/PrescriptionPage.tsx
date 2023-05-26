@@ -110,13 +110,16 @@ const PrescriptionPage: FC = () => {
               </div>
               {/* Diagnosis */}
               <div
-                className="h-40 flex flex-row justify-center items-center"
+                className="h-40 py-2 flex flex-row justify-center items-center"
                 style={{ color: Theme.COLOR_DEFAULT }}
               >
                 <div>醫師簽名：</div>
                 <div className="grow h-40">
                   <textarea
-                    className="w-full h-40 p-2 border border-black border-opacity-30 resize-none rounded-xl focus:outline-none"
+                    className={
+                      "w-full h-40 p-2 border-[#64B3EC] resize-none rounded-md focus:outline-none " +
+                      (isEditMode ? "border" : "border-none")
+                    }
                     style={{ color: Theme.COLOR_GRAY }}
                     readOnly={!isEditMode}
                   />

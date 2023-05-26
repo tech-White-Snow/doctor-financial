@@ -19,8 +19,6 @@ const EditAccountPage: FC = () => {
   const location = useLocation();
   const accountMode = location.state.mode; // 1 : viewMode 2: addMode
 
-  console.log("accountMode -> ", accountMode);
-
   const [isEditMode, setIsEditMode] = useState(accountMode == 2);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 

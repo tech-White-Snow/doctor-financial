@@ -58,7 +58,7 @@ const Home: FC = () => {
             <div className="relative">
               <div
                 className="rounded-full border-none"
-                onClick={() => navigate("/account")}
+                onClick={() => navigate("/account", { state: { mode: 1 } })}
               >
                 <img src={AvatarSample} className="w-12 h-12 rounded-full" />
               </div>

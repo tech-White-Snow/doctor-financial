@@ -106,7 +106,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
             <div
               className="text-xl font-mont font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
               onClick={() => {
-                navigate("/patientdetail", {
+                navigate("/pastpatientrecord", {
                   state: {
                     name: "張小梅",
                     newdiease: true,

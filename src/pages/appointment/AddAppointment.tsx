@@ -56,7 +56,7 @@ const AddAppointment: FC = () => {
               />
               <div
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
-                onClick={() => console.log("Show Password")}
+                onClick={() => navigate("/scheduleappointment")}
               >
                 <img src={searchIcon} />
               </div>

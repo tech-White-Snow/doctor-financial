@@ -43,9 +43,12 @@ const ScheduleAppointment: FC = () => {
     setRecordStatus(Array(recordStatus.length).fill(false));
   }, []);
 
-  const setRecordStatusAtIndex = (idx: number) => {
+  const setRecordStatusAtIndex = (id: number) => {
     const newRecordStatus = [...recordStatus];
-    newRecordStatus[idx] = !recordStatus[idx];
+    newRecordStatus.map((idx, kkk) => {
+      newRecordStatus[kkk] = false;
+    });
+    newRecordStatus[id] = true;
     setRecordStatus(newRecordStatus);
   };
 
@@ -83,7 +86,24 @@ const ScheduleAppointment: FC = () => {
                   <div className="px-2">{idx.name}</div>
                   <div>{idx.telephone}</div>
                 </div>
-                <div className="border-b border-[#B6DBF5]">view</div>
+                <div
+                  className="border-b border-[#B6DBF5]"
+                  onClick={() =>
+                    navigate("/pastpatientrecord", {
+                      state: {
+                        name: "張小梅",
+                        newdiease: true,
+                        telephone: "A12345678(9)",
+                        age: 38,
+                        sex: 1,
+                        doctor: "張大玉",
+                        date: "9-9-2022",
+                      },
+                    })
+                  }
+                >
+                  view
+                </div>
               </div>
             ))}
             <div className="py-2 border-b border-b-[#B6DBF5]"></div>
@@ -141,7 +161,7 @@ const ScheduleAppointment: FC = () => {
             </div>
             <div
               className="grow rounded-lg bg-[#64B3EC] p-3 text-white ml-1"
-              onClick={() => navigate("/addappointment")}
+              onClick={() => navigate("/patient")}
             >
               Confirm
             </div>

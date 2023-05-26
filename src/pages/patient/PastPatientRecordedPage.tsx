@@ -14,7 +14,7 @@ import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
-const PatientDetailPage: FC = () => {
+const PastPatientRecordedPage: FC = () => {
   const location = useLocation();
   const context = location.state;
 
@@ -80,46 +80,6 @@ const PatientDetailPage: FC = () => {
             </div>
             {/* Document + Action */}
             <div>
-              <div
-                className="w-full rounded-[10px] p-3 text-white text-sm flex flex-row"
-                style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-              >
-                <div className="grow">Document</div>
-                <div className="grow">Action</div>
-              </div>
-              <div className="text-xs px-3">
-                {docHistory.map((idx: any) => (
-                  <div className="py-1.5 my-1 flex flex-row" key={idx}>
-                    <div className="w-1/2 text-black text-opacity-60">
-                      {idx}
-                    </div>
-                    <div className="w-1/2 flex flex-row">
-                      <div className="grow text-[#25747B]">
-                        <span
-                          onClick={() =>
-                            navigate(
-                              idx == "處方"
-                                ? "/recipe"
-                                : idx == "收據"
-                                ? "/receipt"
-                                : "/prescription"
-                            )
-                          }
-                          className="hover:cursor-pointer"
-                        >
-                          View
-                        </span>
-                      </div>
-                      <div className="grow">
-                        <img src={shareIcon} />
-                      </div>
-                      <div className="grow">
-                        <img src={printIcon} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
               {/* 過往紀錄  */}
               <div className="text-xs">
                 <div
@@ -128,7 +88,7 @@ const PatientDetailPage: FC = () => {
                 >
                   過往紀錄
                 </div>
-                <div className="w-full rounded-[10px] p-3 text-[#64B3EC] bg-[#D3E7F6] flex flex-row">
+                <div className="w-full rounded-[10px] p-3 text-white bg-[#64B3EC] flex flex-row">
                   <div className="grow">Document</div>
                   <div className="grow">Action</div>
                 </div>
@@ -184,4 +144,4 @@ const PatientDetailPage: FC = () => {
   );
 };
 
-export default PatientDetailPage;
+export default PastPatientRecordedPage;
