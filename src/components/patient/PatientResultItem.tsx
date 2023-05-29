@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Theme from "../../assets/color";
 
 import nextIcon from "../../assets/icons/next_ico.svg";
+import tickBlueIcon from "../../assets/icons/tick_blue_ico.svg";
 
 import PatientResultItemIcon from "../../assets/icons/patient_thumbnail.svg";
 import SelectedResultItemIcon from "../../assets/icons/selected_ico.svg";
@@ -88,13 +89,15 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
                     setIsPaidClick(false);
                     setIsLongClick(false);
                   }}
-                  className="p-1"
+                  className="w-[61px] h-[61px] bg-[#64B3EC] rounded-full m-1 flex justify-center items-center"
                 >
-                  <img src={SelectedResultItemIcon} className="max-w-none" />
+                  <div>
+                    <img src={tickBlueIcon} className="max-w-none" />
+                  </div>
                 </div>
               ) : (
                 <div
-                  className="w-[61px] h-[61px] m-1 border-2 border-[#25617B] bg-transparent rounded-full"
+                  className="w-[61px] h-[61px] m-1 border-4 border-[#64B3EC] bg-transparent rounded-full"
                   onClick={() => setIsPaidClick(true)}
                 ></div>
               )
@@ -109,35 +112,44 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
               </div>
             )}
           </div>
-          {isPaidClick ? (
-            <div
-              className="grow bg-[#25617B] text-2xl text-white text-center font-bold flex justify-center items-center rounded-tr-xl rounded-br-xl"
-              onClick={() => setIsHideCard(true)}
-            >
-              <div>Paid</div>
-            </div>
-          ) : (
-            <div
-              className="grow flex flex-row justify-between items-center pb-3 text-xs text-left"
-              onClick={() => browsePatientDetail()}
-            >
-              <div className="grow flex flex-row justify-between">
-                <div>
-                  <div style={{ color: Theme.COLOR_DEFAULT }}>{name}</div>
-                  <div className="pt-1">
-                    <span className="text-black">電話:</span>
-                    <span className="text-black text-opacity-60">
-                      {telephone}
-                    </span>
-                  </div>
+          <div
+            className={
+              "grow flex flex-row justify-between items-center text-xs text-left pl-2 " +
+              (isPaidClick ? "bg-[#64B3EC28]" : "bg-white")
+            }
+            onClick={() => {
+              if (!isPaidClick) browsePatientDetail();
+              else setIsHideCard(true);
+            }}
+          >
+            <div className="grow flex flex-row justify-between">
+              <div>
+                <div style={{ color: Theme.COLOR_DEFAULT }}>{name}</div>
+                <div className="pt-1">
+                  <span className="text-black">電話:</span>
+                  <span className="text-black text-opacity-60">
+                    {telephone}
+                  </span>
                 </div>
-                <div className="text-black text-opacity-60">{date}</div>
               </div>
-              <div className="p-2 flex justify-center">
-                <img src={nextIcon} className="max-w-none" />
+              <div className="h-full flex flex-col">
+                <div className="text-black text-opacity-60">{date}</div>
+                {isPaidClick ? (
+                  <div
+                    className="grow text-[20px] font-medium text-right justify-center pt-2 z-10"
+                    style={{ color: Theme.COLOR_DEFAULT }}
+                  >
+                    PAID
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
-          )}
+            <div className="p-2 pl-4 flex justify-center">
+              <img src={nextIcon} className="max-w-none" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
