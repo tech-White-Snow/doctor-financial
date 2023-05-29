@@ -111,7 +111,7 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
           </div>
           {isPaidClick ? (
             <div
-              className="grow bg-[#25617B] text-[36px] text-white text-center font-bold flex justify-center items-center rounded-tr-xl rounded-br-xl"
+              className="grow bg-[#25617B] text-2xl text-white text-center font-bold flex justify-center items-center rounded-tr-xl rounded-br-xl"
               onClick={() => setIsHideCard(true)}
             >
               <div>Paid</div>

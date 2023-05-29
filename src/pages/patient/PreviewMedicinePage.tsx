@@ -110,7 +110,7 @@ const PreviewMedicinePage: FC = () => {
           <div
             className="p-3 text-center text-white rounded-xl"
             style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/admin")}
           >
             Confirm
           </div>
