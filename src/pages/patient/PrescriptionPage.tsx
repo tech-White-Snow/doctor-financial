@@ -57,13 +57,7 @@ const PrescriptionPage: FC = () => {
               福氣堂
             </div>
             <div
-              className="font-bold font-sans text-lg tracking-[1rem] pl-4 pt-2"
-              style={{ color: Theme.COLOR_GRAY }}
-            >
-              忠醫診所
-            </div>
-            <div
-              className="font-bold text-lg pt-2"
+              className="font-bold text-lg pt-5"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">到診證明書</span>
@@ -109,12 +103,8 @@ const PrescriptionPage: FC = () => {
                 </span>
               </div>
               {/* Diagnosis */}
-              <div
-                className="h-40 py-2 flex flex-row justify-center items-center"
-                style={{ color: Theme.COLOR_DEFAULT }}
-              >
-                <div>醫師簽名：</div>
-                <div className="grow h-40">
+              <div style={{ color: Theme.COLOR_DEFAULT }}>
+                <div className="grow py-4">
                   <textarea
                     className={
                       "w-full h-40 p-2 border-[#64B3EC] resize-none rounded-md focus:outline-none " +
@@ -124,6 +114,7 @@ const PrescriptionPage: FC = () => {
                     readOnly={!isEditMode}
                   />
                 </div>
+                <div className="h-32">醫師簽名：</div>
               </div>
               <div className="py-1 text-black text-opacity-60">
                 <span>醫師編號:</span>

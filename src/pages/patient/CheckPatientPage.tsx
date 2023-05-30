@@ -190,7 +190,7 @@ const CheckPatient: FC = () => {
                           )
                         }
                       >
-                        <img src={prevvIcon} className="w-8 h-8 max-w-none" />
+                        <img src={prevvIcon} className="max-w-none" />
                       </div>
                     ) : (
                       <div className="w-8 p-1"></div>
@@ -218,7 +218,7 @@ const CheckPatient: FC = () => {
                           )
                         }
                       >
-                        <img src={nexttIcon} className="w-8 h-8 max-w-none" />
+                        <img src={nexttIcon} className="max-w-none" />
                       </div>
                     ) : (
                       <div className="w-8 p-1"></div>

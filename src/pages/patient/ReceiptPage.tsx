@@ -52,13 +52,7 @@ const ReceiptPage: FC = () => {
               福氣堂
             </div>
             <div
-              className="font-bold font-sans text-lg tracking-[1rem] pl-4 pt-2"
-              style={{ color: Theme.COLOR_GRAY }}
-            >
-              忠醫診所
-            </div>
-            <div
-              className="font-bold text-lg pt-2"
+              className="font-bold text-lg pt-5"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">收據</span>
@@ -113,18 +107,18 @@ const ReceiptPage: FC = () => {
                 </span>
               </div>
               {/* Diagnosis */}
-              <div
-                className="h-40 flex flex-row justify-center items-center"
-                style={{ color: Theme.COLOR_DEFAULT }}
-              >
-                <div>醫師簽名：</div>
-                <div className="grow h-40">
+              <div style={{ color: Theme.COLOR_DEFAULT }}>
+                <div className="grow py-4">
                   <textarea
-                    className="w-full h-40 p-2 border-black border-opacity-60 resize-none rounded-xl focus:outline-none"
+                    className={
+                      "w-full h-40 p-2 border-[#64B3EC] resize-none rounded-md focus:outline-none " +
+                      (isEditMode ? "border" : "border-none")
+                    }
                     style={{ color: Theme.COLOR_GRAY }}
                     readOnly={!isEditMode}
                   />
                 </div>
+                <div className="h-32">醫師簽名：</div>
               </div>
               <div className="py-1 text-black text-opacity-60">
                 <span>醫師編號:</span>
