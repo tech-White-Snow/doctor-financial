@@ -87,7 +87,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
           </div>
           {/* Top-Right Sub Menu Item */}
           <div
-            className="absolute right-1 top-0 w-3 h-3 z-20 flex flex-col justify-center"
+            className="absolute right-1 top-0 w-3 h-3 z-10 flex flex-col justify-center"
             onClick={() => setIsOpenItemMenu(true)}
           >
             <div className="relative">
@@ -96,7 +96,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
                 <div className="absolute top-2 right-1 text-[#64B3EC] text-[11px] border border-[#64B3EC] w-20">
                   <div
                     className="w-full px-3 py-1 border-b border-b-[#64B3EC] hover:bg-[#D3E7F6]"
-                    onClick={() => navigate("/checkpatient")}
+                    onClick={() => navigate("/scheduleappointment")}
                   >
                     Edit
                   </div>
@@ -166,7 +166,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
             </div>
             <div
               className="absolute top-5 right-5"
-              onClick={() => setIsCheckPatientOpen(false)}
+              onClick={() => setIsItemDeleteOpen(false)}
             >
               <img src={closeIcon} className="max-w-none" />
             </div>
