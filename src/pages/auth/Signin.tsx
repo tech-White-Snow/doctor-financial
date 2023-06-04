@@ -2,6 +2,9 @@ import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+// import jwt from "jsonwebtoken";
+import jwt_decode from "jwt-decode";
+
 import Header from "../../components/Header";
 
 import closeIcon from "../../assets/icons/close_ico.svg";
@@ -12,8 +15,35 @@ const Signin: FC = () => {
   const [currentEmail, setCurrentEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [authErrorMsg, setAuthErrorMsg] = useState("");
 
   const navigate = useNavigate();
+
+  const loginHandler = async () => {
+    const data = { currentEmail, currentPassword };
+    await fetch("http://localhost:8000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.auth) {
+          const decoded_token = jwt_decode(data.token);
+          localStorage.setItem("authToken", JSON.stringify(decoded_token));
+          // start browsing the project
+          navigate("/home");
+        } else {
+          setAuthErrorMsg(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   return (
     <div className="relative">
@@ -26,9 +56,6 @@ const Signin: FC = () => {
             <div className="font-bold text-center text-5xl text-[#64B3EC]">
               福氣堂
             </div>
-            {/* <div className="font-bold text-center text-lg text-[#6D7D8B] tracking-[1rem] pt-2 pl-4">
-              忠醫診所
-            </div> */}
           </div>
           <div className="grow flex flex-col justify-center">
             <div className="text-[12px] text-600 text-[#64B3EC]">Email</div>
@@ -60,18 +87,13 @@ const Signin: FC = () => {
                 Show
               </div>
             </div>
+            {/* AUthentication Error message */}
+            <div className="py-2 text-[#FF0000] text-xs">{authErrorMsg}</div>
           </div>
           <div className="grow flex flex-col justify-center">
             <div
               className="rounded-[10px] bg-[#64B3EC] hover:bg-[#D3E7F6] text-white text-center text-sm p-3"
-              onClick={() => {
-                if (
-                  currentEmail == "yukko@gmail.com" &&
-                  currentPassword == "123456"
-                )
-                  navigate("/home");
-                else setShowWrongPasswordModal(true);
-              }}
+              onClick={() => loginHandler()}
             >
               Log In
             </div>

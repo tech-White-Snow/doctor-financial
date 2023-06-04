@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -45,6 +45,16 @@ const Home: FC = () => {
 
   const navigate = useNavigate();
 
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <div className="relative">
       <div className="h-screen overflow-y-auto">
@@ -77,15 +87,6 @@ const Home: FC = () => {
         {/* Main Page */}
         <div className="px-3">
           {/* Dashboard */}
-          {/* <div className="relative w-full h-40">
-            <div>
-              <img src={DashBack} className="w-full h-40 max-w-none" />
-            </div>
-            <div className="absolute w-full h-40 top-0 left-0 flex flex-col justify-center text-sm text-white text-center">
-              <div>今天已預約的病人： {temp_db.length}人</div>
-              <div className="pt-1">最近的預約時間：10:30 a.m.</div>
-            </div>
-          </div> */}
           <div className="p-4" onClick={() => navigate("/addappointment")}>
             <div
               className="w-full rounded-xl text-sm text-white text-center p-3"
