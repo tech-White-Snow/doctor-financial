@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -13,45 +13,41 @@ import NavBar from "../components/NavBar";
 import PatientThumbnail from "../components/patient/PatientThumbnail";
 
 const Home: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "67123456",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: false,
-      telephone: "67123456",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "67123456",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-  ];
+  const [cardsArray, setCardsArray] = useState([]);
 
   const navigate = useNavigate();
+
+  // get patient cards from backend
+  const getPatientCards = async (user: any) => {
+    const doctorID = user.doctorid;
+    const data = { doctorID };
+    await fetch("http://localhost:8000/getptcards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("homedata -> ", data.data);
+        setCardsArray(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-
     if (!token) {
       // Redirect to login page if token is not present
       navigate("/");
+    } else {
+      // fetch patient card information from backend
+      getPatientCards(JSON.parse(token).user);
     }
   }, [navigate]);
 
@@ -101,16 +97,10 @@ const Home: FC = () => {
               最近的預約病人
             </div>
             <div className="pb-[75px]">
-              {temp_db.map((idx: any) => (
+              {cardsArray.map((idx: any) => (
                 <PatientThumbnail
                   key={idx.name + idx.telephone + idx.doctor}
-                  name={idx.name}
-                  newdiease={idx.newdiease}
-                  telephone={idx.telephone}
-                  age={idx.age}
-                  sex={idx.sex}
-                  doctor={idx.doctor}
-                  date={idx.date}
+                  context={idx}
                 />
               ))}
             </div>

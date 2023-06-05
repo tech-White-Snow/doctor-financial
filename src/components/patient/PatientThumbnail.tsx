@@ -10,30 +10,57 @@ import Theme from "../../assets/color";
 import patientThumbnailIcon from "../../assets/icons/patient_thumbnail.svg";
 
 interface PatientThumbnailProps {
-  name: string;
-  newdiease: boolean;
-  telephone: string;
-  age: number;
-  sex: number;
-  doctor: string;
-  date: string;
+  context: any;
 }
 
-const PatientThumbnail: FC<PatientThumbnailProps> = ({
-  name,
-  newdiease,
-  telephone,
-  age,
-  sex,
-  doctor,
-  date,
-}) => {
+const PatientThumbnail: FC<PatientThumbnailProps> = ({ context }) => {
   const navigate = useNavigate();
 
   const [isCheckPatientOpen, setIsCheckPatientOpen] = useState(false);
   const [isOpenItemMenu, setIsOpenItemMenu] = useState(false);
   const [isItemDeleteOpen, setIsItemDeleteOpen] = useState(false);
   const [isItemDeleted, setIsItemDeleted] = useState(false);
+
+  // change date time format
+  const changeDateTimeFormat = (dateString: any) => {
+    let date = new Date(dateString);
+
+    let formattedDate = `${
+      date.getMonth() + 1
+    }-${date.getDate()}-${date.getFullYear()} /
+${
+  date.getHours() > 12
+    ? date.getHours() - 12
+    : date.getHours() === 0
+    ? 12
+    : date.getHours()
+}:${date.getMinutes() < 10 ? "0" : ""}${date.getMinutes()} ${
+      date.getHours() >= 12 ? "p.m." : "a.m."
+    }`;
+
+    return formattedDate;
+  };
+
+  // change date time format - 1
+  const changeDateTimeFormat1 = (dateString: any) => {
+    let date = new Date(dateString);
+
+    let formattedDate = `${("0" + date.getDate()).slice(-2)}/${(
+      "0" +
+      (date.getMonth() + 1)
+    ).slice(-2)}/${date.getFullYear()} ${(
+      "0" +
+      (date.getUTCHours() > 12
+        ? date.getUTCHours() - 12
+        : date.getUTCHours() === 0
+        ? 12
+        : date.getUTCHours())
+    ).slice(-2)}:${("0" + date.getMinutes()).slice(-2)} ${
+      date.getUTCHours() >= 12 ? "p.m." : "a.m."
+    }`;
+
+    return formattedDate;
+  };
 
   return (
     <div className={isItemDeleted ? "hidden" : "block"}>
@@ -51,29 +78,31 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
               className="text-sm pt-2"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
-              {name}
+              {context.name}
             </div>
             <div
               className="text-xs pt-1"
               style={{ color: Theme.COLOR_SELECTED }}
             >
-              {newdiease ? "新症" : ""}
+              {context.newdiease ? "新症" : ""}
             </div>
           </div>
           {/* Content */}
           <div className="w-2/3 text-xs">
             <div>
               <span>電話 ：</span>
-              <span className="text-black text-opacity-60">{telephone}</span>
+              <span className="text-black text-opacity-60">
+                {context.telephone}
+              </span>
             </div>
             <div>
               <span>年齡 ：</span>
-              <span className="text-black text-opacity-60">{age}</span>
+              <span className="text-black text-opacity-60">{context.age}</span>
             </div>
             <div>
               <span>性別 ：</span>
               <span className="text-black text-opacity-60">
-                {sex == 1 ? "男" : "女"}
+                {context.sex == 1 ? "男" : "女"}
               </span>
             </div>
           </div>
@@ -81,9 +110,11 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
           <div className="absolute bottom-1 right-4 text-xs">
             <div>
               <span>主診醫師: </span>
-              <span className="text-black text-opacity-60">{doctor}</span>
+              <span className="text-black text-opacity-60">
+                {context.doctor}
+              </span>
             </div>
-            <div>{date}</div>
+            <div>{changeDateTimeFormat(context.date)}</div>
           </div>
           {/* Top-Right Sub Menu Item */}
           <div
@@ -118,8 +149,8 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
         <div className="absolute w-full h-full bg-[#AAAAAAAA] z-20 top-0 left-0 flex flex-col justify-center">
           <div className="relative m-3 px-9 py-5 bg-[#D3E7F6] rounded-lg text-[#25617B]">
             <div className="flex flex-row bg-[#D3E7F6] bg-opacity-40 font-sans font-bold text-sm">
-              <div>{name}</div>
-              <div className="pl-2">{telephone}</div>
+              <div>{context.name}</div>
+              <div className="pl-2">{context.telephone}</div>
             </div>
             <div
               className="absolute top-5 right-5"
@@ -127,10 +158,18 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
             >
               <img src={closeIcon} className="max-w-none" />
             </div>
-            <div className="text-xs">預約時間：DD/MM/YYYY HH:MM</div>
+            <div className="text-xs">
+              預約時間：{changeDateTimeFormat1(context.date)}
+            </div>
             <div
               className="text-xl font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
-              onClick={() => navigate("/checkpatient")}
+              onClick={() =>
+                navigate("/checkpatient", {
+                  state: {
+                    context: context,
+                  },
+                })
+              }
             >
               開始診斷
             </div>
@@ -139,13 +178,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
               onClick={() => {
                 navigate("/pastpatientrecord", {
                   state: {
-                    name: "張小梅",
-                    newdiease: true,
-                    telephone: "A12345678(9)",
-                    age: 38,
-                    sex: 1,
-                    doctor: "張大玉",
-                    date: "9-9-2022",
+                    context: context,
                   },
                 });
               }}
@@ -161,8 +194,8 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
         <div className="absolute w-full h-full bg-[#AAAAAAAA] z-20 top-0 left-0 flex flex-col justify-center">
           <div className="relative m-3 px-9 py-5 bg-[#D3E7F6] rounded-lg text-[#25617B]">
             <div className="flex flex-row bg-[#D3E7F6] bg-opacity-40 font-sans font-bold text-sm justify-center">
-              <div>{name}</div>
-              <div className="pl-2">{telephone}</div>
+              <div>{context.name}</div>
+              <div className="pl-2">{context.telephone}</div>
             </div>
             <div
               className="absolute top-5 right-5"
@@ -171,7 +204,7 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({
               <img src={closeIcon} className="max-w-none" />
             </div>
             <div className="text-xs text-center">
-              預約時間：DD/MM/YYYY HH:MM
+              預約時間：{changeDateTimeFormat1(context.date)}
             </div>
             <div
               className="text-xl font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"

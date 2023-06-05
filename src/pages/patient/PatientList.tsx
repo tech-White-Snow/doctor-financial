@@ -92,16 +92,18 @@ const PatientList: FC = () => {
           <div className="w-full">
             <div className="pb-[75px]">
               {temp_db.map((idx: any) => (
-                <PatientThumbnail
-                  key={idx.name + idx.telephone + idx.doctor}
-                  name={idx.name}
-                  newdiease={idx.newdiease}
-                  telephone={idx.telephone}
-                  age={idx.age}
-                  sex={idx.sex}
-                  doctor={idx.doctor}
-                  date={idx.date}
-                />
+                // <PatientThumbnail
+                //   key={idx.name + idx.telephone + idx.doctor}
+                //   id={"A123456789"}
+                //   name={idx.name}
+                //   newdiease={idx.newdiease}
+                //   telephone={idx.telephone}
+                //   age={idx.age}
+                //   sex={idx.sex}
+                //   doctor={idx.doctor}
+                //   date={idx.date}
+                // />
+                <></>
               ))}
             </div>
           </div>

@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -29,40 +29,44 @@ interface MedicineInfo {
 
 const CheckPatient: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const _context = location.state.context;
 
-  const context = {
-    name: "張小梅",
-    email: "eamil@email.com",
-    password: "123456",
-    accountType: 1,
-    fullname: "Ryang",
-    doctorID: "006073",
-    date: "DD-MM-YYYY  HH:MM",
-    sex: 1,
-    age: 38,
-    history: [
-      {
-        context:
-          "This part is the first update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-        date: "02-04-2022",
-      },
-      {
-        context:
-          "This part is the second update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-        date: "05-03-2022",
-      },
-      {
-        context:
-          "This part is the third update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-        date: "07-01-2022",
-      },
-      {
-        context:
-          "This part is the last update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-        date: "09-09-2022",
-      },
-    ],
-  };
+  const [context, setContext] = useState(_context);
+
+  // const context = {
+  //   name: "張小梅",
+  //   email: "eamil@email.com",
+  //   password: "123456",
+  //   accountType: 1,
+  //   fullname: "Ryang",
+  //   doctorID: "006073",
+  //   date: "DD-MM-YYYY  HH:MM",
+  //   sex: 1,
+  //   age: 38,
+  //   history: [
+  //     {
+  //       context:
+  //         "This part is the first update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+  //       date: "02-04-2022",
+  //     },
+  //     {
+  //       context:
+  //         "This part is the second update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+  //       date: "05-03-2022",
+  //     },
+  //     {
+  //       context:
+  //         "This part is the third update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+  //       date: "07-01-2022",
+  //     },
+  //     {
+  //       context:
+  //         "This part is the last update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
+  //       date: "09-09-2022",
+  //     },
+  //   ],
+  // };
 
   const [isPastHistoryEditMode, setIsPastHistoryEditMode] = useState(false);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
@@ -73,9 +77,100 @@ const CheckPatient: FC = () => {
   const [storeMedicineInfoCount, setStoreMedicineInfoCount] = useState(0);
 
   const [currentSelect, setCurrentSelect] = useState(0);
-  const [curHistoryViewState, setCurHistoryViewState] = useState(
-    context.history.length - 1
+
+  type PatientHistoryType = {
+    date: string;
+    detail: string;
+    id: string;
+  };
+  const [patientHistory, setPatientHistory] = useState<PatientHistoryType[]>(
+    []
   );
+  const [originPatientHistory, setOriginPatientHistory] = useState<
+    PatientHistoryType[]
+  >([]);
+  const [curHistoryViewState, setCurHistoryViewState] = useState(0);
+
+  const getPatientHistory = async () => {
+    const cardID = context.cardid;
+    const data = { cardID };
+    await fetch("http://localhost:8000/getpthistory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("historydata -> ", data.data);
+        setCurHistoryViewState(data.data.length - 1);
+        setPatientHistory(data.data);
+        setOriginPatientHistory(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+      // fetch patient card information from backend
+      getPatientHistory();
+    }
+  }, [navigate]);
+
+  const getUpdateRemark = (origin: any, newvalue: any, idx: any) => {
+    let parts = origin.split("@@");
+    parts[idx] = newvalue; // Replace the idx part
+    const output = parts.join("@@");
+    return output;
+  };
+
+  const updateCurrentPatientHistory = () => {
+    // update backend
+    console.log("origin -> ", originPatientHistory[0].detail);
+    console.log("updated -> ", patientHistory[0].detail);
+  };
+
+  const getOnlyDateTime = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + date.getDate()).slice(-2)}-${(
+      "0" +
+      (date.getMonth() + 1)
+    ).slice(-2)}-${date.getFullYear()} ${("0" + date.getHours()).slice(-2)}:${(
+      "0" + date.getMinutes()
+    ).slice(-2)}`;
+
+    return formattedDate;
+  };
+  const getOnlyDate = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
+
+    return formattedDate;
+  };
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const day = ("0" + date.getUTCDate()).slice(-2); // using getUTCDate to avoid timezone issues
+    const month = ("0" + (date.getUTCMonth() + 1)).slice(-2); // using getUTCMonth to avoid timezone issues
+    const year = date.getUTCFullYear(); // using getUTCFullYear to avoid timezone issues
+
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return formattedDate;
+  };
 
   return (
     <div className="relative">
@@ -101,14 +196,17 @@ const CheckPatient: FC = () => {
           style={{ color: Theme.COLOR_DEFAULT }}
         >
           <div className="flex flex-row justify-between font-normal px-3">
-            {context.date}
+            {getOnlyDateTime(context.date)}
           </div>
           <div className="pt-2">
             {/* 既往史 */}
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
-                onClick={() => setCurrentSelect(1)}
+                onClick={() => {
+                  setCurrentSelect(1);
+                  getPatientHistory();
+                }}
               >
                 <div>既往史</div>
                 <div className="flex flex-row justify-center">
@@ -124,11 +222,22 @@ const CheckPatient: FC = () => {
                       color: Theme.COLOR_DARKGREEN,
                     }}
                   >
-                    <div>
-                      Record if the patients has special disease or allergy in
-                      the past. For no accident mistake, this part need an edit
-                      btn for edit.
-                    </div>
+                    {patientHistory && patientHistory.length > 0 ? (
+                      <textarea
+                        className="w-full h-full focus:outline-none p-1 bg-transparent resize-none"
+                        value={patientHistory[0].detail}
+                        onChange={(ev) => {
+                          const newDetail = ev.target.value;
+                          setPatientHistory((prevHistory) => [
+                            { ...prevHistory[0], detail: newDetail },
+                            ...prevHistory.slice(1),
+                          ]);
+                        }}
+                        readOnly={!isPastHistoryEditMode}
+                      />
+                    ) : (
+                      <></>
+                    )}
                     {!isPastHistoryEditMode ? (
                       <div
                         className="pt-6 self-end"
@@ -139,20 +248,28 @@ const CheckPatient: FC = () => {
                     ) : (
                       <></>
                     )}
-                    <div className="pt-2 self-end">Last update: DD/MM/YYYY</div>
+                    <div className="pt-2 self-end">
+                      Last update: {getOnlyDate(patientHistory[0].date)}
+                    </div>
                   </div>
                   {/*  */}
                   {isPastHistoryEditMode ? (
                     <div className="flex py-2 font-normal">
                       <div
                         className="grow p-3 rounded-lg text-center bg-[#D3E7F6]"
-                        onClick={() => setIsPastHistoryEditMode(false)}
+                        onClick={() => {
+                          setIsPastHistoryEditMode(false);
+                          setPatientHistory(originPatientHistory);
+                        }}
                       >
                         Cancel
                       </div>
                       <div
                         className="grow p-3 ml-2 rounded-lg text-center text-white bg-[#64B3EC]"
-                        onClick={() => setIsPastHistoryEditMode(false)}
+                        onClick={() => {
+                          setIsPastHistoryEditMode(false);
+                          updateCurrentPatientHistory();
+                        }}
                       >
                         Confirm
                       </div>
@@ -169,7 +286,10 @@ const CheckPatient: FC = () => {
             <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
-                onClick={() => setCurrentSelect(2)}
+                onClick={() => {
+                  setCurrentSelect(2);
+                  getPatientHistory();
+                }}
               >
                 <div>現病史</div>
                 <div className="flex flex-row justify-center">
@@ -178,52 +298,59 @@ const CheckPatient: FC = () => {
               </div>
               {currentSelect == 2 ? (
                 <div className="p-3 font-sans">
-                  <div className="flex flex-row">
-                    {curHistoryViewState > 0 ? (
+                  {patientHistory ? (
+                    <div className="flex flex-row">
+                      {curHistoryViewState > 0 ? (
+                        <div
+                          className="p-1 flex flex-col justify-center"
+                          onClick={() =>
+                            setCurHistoryViewState(
+                              curHistoryViewState > 0
+                                ? curHistoryViewState - 1
+                                : 0
+                            )
+                          }
+                        >
+                          <img src={prevvIcon} className="max-w-none" />
+                        </div>
+                      ) : (
+                        <div className="w-8 p-1"></div>
+                      )}
                       <div
-                        className="p-1 flex flex-col justify-center"
-                        onClick={() =>
-                          setCurHistoryViewState(
-                            curHistoryViewState > 0
-                              ? curHistoryViewState - 1
-                              : 0
-                          )
-                        }
+                        className="flex flex-col p-6 w-full"
+                        style={{
+                          backgroundColor: Theme.COLOR_LIGHTBLUE,
+                          color: Theme.COLOR_DARKGREEN,
+                        }}
                       >
-                        <img src={prevvIcon} className="max-w-none" />
+                        <div>{patientHistory[curHistoryViewState].detail}</div>
+                        <div className="pt-2 self-end">
+                          Last update:{" "}
+                          {getOnlyDate1(
+                            patientHistory[curHistoryViewState].date
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <div className="w-8 p-1"></div>
-                    )}
-                    <div
-                      className="flex flex-col p-6"
-                      style={{
-                        backgroundColor: Theme.COLOR_LIGHTBLUE,
-                        color: Theme.COLOR_DARKGREEN,
-                      }}
-                    >
-                      <div>{context.history[curHistoryViewState].context}</div>
-                      <div className="pt-2 self-end">
-                        Last update: {context.history[curHistoryViewState].date}
-                      </div>
+                      {curHistoryViewState < patientHistory.length - 1 ? (
+                        <div
+                          className="p-1 flex flex-col justify-center"
+                          onClick={() =>
+                            setCurHistoryViewState(
+                              curHistoryViewState < patientHistory.length - 1
+                                ? curHistoryViewState + 1
+                                : patientHistory.length - 1
+                            )
+                          }
+                        >
+                          <img src={nexttIcon} className="max-w-none" />
+                        </div>
+                      ) : (
+                        <div className="w-8 p-1"></div>
+                      )}
                     </div>
-                    {curHistoryViewState < context.history.length - 1 ? (
-                      <div
-                        className="p-1 flex flex-col justify-center"
-                        onClick={() =>
-                          setCurHistoryViewState(
-                            curHistoryViewState < context.history.length - 1
-                              ? curHistoryViewState + 1
-                              : context.history.length - 1
-                          )
-                        }
-                      >
-                        <img src={nexttIcon} className="max-w-none" />
-                      </div>
-                    ) : (
-                      <div className="w-8 p-1"></div>
-                    )}
-                  </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ) : (
                 <></>
@@ -260,8 +387,17 @@ const CheckPatient: FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="bg-[#E8EEEC] text-[#276D36] p-1 mt-2">
-                    Caption
+                  <div className="rounded-lg p-1 mt-2">
+                    <input
+                      className="w-full focus:outline-none p-2 rounded-lg bg-[#E8EEEC] text-[#276D36]"
+                      value={context.albumtext}
+                      onChange={(ev) => {
+                        setContext((prevContext: any) => ({
+                          ...prevContext,
+                          albumtext: ev.target.value,
+                        }));
+                      }}
+                    />
                   </div>
                 </div>
               ) : (
@@ -289,6 +425,13 @@ const CheckPatient: FC = () => {
                       <input
                         className="w-full focus:outline-none p-2 rounded-lg"
                         style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                        value={context.disease}
+                        onChange={(ev) => {
+                          setContext((prevContext: any) => ({
+                            ...prevContext,
+                            disease: ev.target.value,
+                          }));
+                        }}
                       />
                     </div>
                   </div>
@@ -318,6 +461,13 @@ const CheckPatient: FC = () => {
                       <textarea
                         className="w-full h-[80px] resize-none focus:outline-none p-2 rounded-lg"
                         style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                        value={context.diagnosis}
+                        onChange={(ev) => {
+                          setContext((prevContext: any) => ({
+                            ...prevContext,
+                            diagnosis: ev.target.value,
+                          }));
+                        }}
                       />
                     </div>
                   </div>
@@ -347,6 +497,13 @@ const CheckPatient: FC = () => {
                       <textarea
                         className="w-full h-[80px] resize-none focus:outline-none p-2 rounded-lg"
                         style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
+                        value={context.syndromes}
+                        onChange={(ev) => {
+                          setContext((prevContext: any) => ({
+                            ...prevContext,
+                            syndromes: ev.target.value,
+                          }));
+                        }}
                       />
                     </div>
                   </div>
@@ -443,25 +600,90 @@ const CheckPatient: FC = () => {
                     >
                       <div>
                         <span className="px-1">
-                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                          <input
+                            className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
+                            value={context.remark.split("@@")[0]}
+                            onChange={(ev) => {
+                              setContext((prevContext: any) => ({
+                                ...prevContext,
+                                remark: getUpdateRemark(
+                                  prevContext.remark,
+                                  ev.target.value,
+                                  0
+                                ),
+                              }));
+                            }}
+                          />
                         </span>
                         日藥 / 每日
                         <span className="px-1">
-                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                          <input
+                            className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
+                            value={context.remark.split("@@")[1]}
+                            onChange={(ev) => {
+                              setContext((prevContext: any) => ({
+                                ...prevContext,
+                                remark: getUpdateRemark(
+                                  prevContext.remark,
+                                  ev.target.value,
+                                  1
+                                ),
+                              }));
+                            }}
+                          />
                         </span>
                         次 / 共
                         <span className="px-1">
-                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                          <input
+                            className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
+                            value={context.remark.split("@@")[2]}
+                            onChange={(ev) => {
+                              setContext((prevContext: any) => ({
+                                ...prevContext,
+                                remark: getUpdateRemark(
+                                  prevContext.remark,
+                                  ev.target.value,
+                                  2
+                                ),
+                              }));
+                            }}
+                          />
                         </span>
                         包
                       </div>
                       <div className="pt-1">
                         <span className="px-1">
-                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                          <input
+                            className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
+                            value={context.remark.split("@@")[3]}
+                            onChange={(ev) => {
+                              setContext((prevContext: any) => ({
+                                ...prevContext,
+                                remark: getUpdateRemark(
+                                  prevContext.remark,
+                                  ev.target.value,
+                                  3
+                                ),
+                              }));
+                            }}
+                          />
                         </span>
                         餐
                         <span className="px-1">
-                          <input className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent" />
+                          <input
+                            className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
+                            value={context.remark.split("@@")[4]}
+                            onChange={(ev) => {
+                              setContext((prevContext: any) => ({
+                                ...prevContext,
+                                remark: getUpdateRemark(
+                                  prevContext.remark,
+                                  ev.target.value,
+                                  4
+                                ),
+                              }));
+                            }}
+                          />
                         </span>
                         服
                       </div>

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -16,11 +16,41 @@ import PatientResultItem from "../../components/patient/PatientResultItem";
 
 const PastPatientRecordedPage: FC = () => {
   const location = useLocation();
-  const context = location.state;
+  const context = location.state.context;
 
   const navigate = useNavigate();
 
   const docHistory = ["處方", "收據", "到診症明書"];
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+      // fetch patient card information from backend
+    }
+  }, [navigate]);
+
+  const getOnlyDate = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${
+      date.getMonth() + 1
+    }-${date.getDate()}-${date.getFullYear()}`;
+
+    return formattedDate;
+  };
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
+  };
 
   return (
     <div className="relative">
@@ -34,7 +64,7 @@ const PastPatientRecordedPage: FC = () => {
             {/* Name + Age + Date */}
             <div className="flex flex-row justify-between py-2">
               <div
-                className="flex flex-row text-base font-bold"
+                className="flex flex-row text-base font*-bold"
                 style={{ color: Theme.COLOR_DEFAULT }}
               >
                 <div>
@@ -46,39 +76,48 @@ const PastPatientRecordedPage: FC = () => {
                 <div className="pl-3">{context.age}歲</div>
               </div>
               <div className="text-[#0C2036] text-opacity-80 text-sm">
-                {context.date}
+                {getOnlyDate1(context.date)}
               </div>
             </div>
             {/* Details */}
             <div className="flex flex-row text-sm py-1">
               <div style={{ color: Theme.COLOR_DEFAULT }}>身份證號碼:</div>
               <div className="pl-2 text-black text-opacity-60">
-                (A123456789)
+                {context.cardid}
               </div>
             </div>
             <div className="flex flex-row text-sm py-1">
               <div style={{ color: Theme.COLOR_DEFAULT }}>出生日期:</div>
-              <div className="pl-2 text-black text-opacity-60">4-3-1985</div>
+              <div className="pl-2 text-black text-opacity-60">
+                {getOnlyDate(context.birthday)}
+                {/* {context.birthday} */}
+              </div>
             </div>
             <div className="flex flex-row text-sm py-1">
               <div style={{ color: Theme.COLOR_DEFAULT }}>電話:</div>
-              <div className="pl-2 text-black text-opacity-60">65123456</div>
+              <div className="pl-2 text-black text-opacity-60">
+                {context.telephone}
+              </div>
             </div>
             <div className="flex flex-row text-sm py-1">
               <div style={{ color: Theme.COLOR_DEFAULT }}>地址:</div>
               <div className="pl-2 text-black text-opacity-60">
-                九龍乜乜道31號2樓A室
+                {context.address}
               </div>
             </div>
             {/* Additional Detail */}
             <div className="flex flex-row text-sm py-5">
               <div className="grow flex flex-row">
                 <div style={{ color: Theme.COLOR_DEFAULT }}>緊急聯絡人:</div>
-                <div className="pl-2 text-black text-opacity-60">張大玉</div>
+                <div className="pl-2 text-black text-opacity-60">
+                  {context.emergency}
+                </div>
               </div>
               <div className="grow flex flex-row">
                 <div style={{ color: Theme.COLOR_DEFAULT }}>緊急聯絡電話:</div>
-                <div className="pl-2 text-black text-opacity-60">555555</div>
+                <div className="pl-2 text-black text-opacity-60">
+                  {context.emergencynumber}
+                </div>
               </div>
             </div>
             {/* Document + Action */}

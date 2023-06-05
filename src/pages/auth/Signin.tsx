@@ -2,7 +2,6 @@ import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-// import jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
 
 import Header from "../../components/Header";
