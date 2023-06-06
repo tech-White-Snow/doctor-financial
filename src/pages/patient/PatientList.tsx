@@ -1,4 +1,6 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,65 +14,58 @@ import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientThumbnail from "../../components/patient/PatientThumbnail";
 
-const PatientList: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234561",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: false,
-      telephone: "671234562",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234563",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234564",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234565",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234566",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-  ];
+interface UserData {
+  username: string;
+}
 
+const PatientList: FC = () => {
+  const navigate = useNavigate();
+
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [cardsArray, setCardsArray] = useState([]);
+
+  const getOnlyDate = (dateString: any) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toISOString().split("T")[0];
+    return formattedDate;
+  };
+
+  const getSchedulePatientCards = async (user: any, viewDate: any) => {
+    const doctorID = user.doctorid;
+    // fetch scheduled cards of selected date
+    const data = { doctorID, viewDate };
+    await fetch("http://localhost:8000/getptcardsbydate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCardsArray(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+      setUserData(JSON.parse(token).user);
+      // fetch patient card information from backend
+      getSchedulePatientCards(
+        JSON.parse(token).user,
+        getOnlyDate(selectedDate)
+      );
+    }
+  }, [selectedDate, navigate]);
 
   return (
     <div className="relative">
@@ -91,19 +86,11 @@ const PatientList: FC = () => {
           {/* Scheduled Patient List */}
           <div className="w-full">
             <div className="pb-[75px]">
-              {temp_db.map((idx: any) => (
-                // <PatientThumbnail
-                //   key={idx.name + idx.telephone + idx.doctor}
-                //   id={"A123456789"}
-                //   name={idx.name}
-                //   newdiease={idx.newdiease}
-                //   telephone={idx.telephone}
-                //   age={idx.age}
-                //   sex={idx.sex}
-                //   doctor={idx.doctor}
-                //   date={idx.date}
-                // />
-                <></>
+              {cardsArray.map((idx: any) => (
+                <PatientThumbnail
+                  key={idx.name + idx.telephone + idx.doctor}
+                  context={idx}
+                />
               ))}
             </div>
           </div>

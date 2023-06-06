@@ -22,10 +22,17 @@ const Home: FC = () => {
 
   const navigate = useNavigate();
 
+  const updateDateTimeFormat = (dateTimeString: any) => {
+    const isoString = dateTimeString.toISOString();
+    const formattedDate = isoString.replace("T", " ").replace(/\.\d+Z$/, "");
+    return formattedDate;
+  };
+
   // get patient cards from backend
   const getPatientCards = async (user: any) => {
     const doctorID = user.doctorid;
-    const data = { doctorID };
+    const curDate = updateDateTimeFormat(new Date());
+    const data = { doctorID, curDate };
     await fetch("http://localhost:8000/getptcards", {
       method: "POST",
       headers: {
@@ -36,7 +43,7 @@ const Home: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("homedata -> ", data.data);
-        setCardsArray(data.data);
+        setCardsArray(data.data.slice(0, 4));
       })
       .catch((error) => {
         console.error(error);

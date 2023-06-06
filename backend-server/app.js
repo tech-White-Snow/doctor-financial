@@ -61,9 +61,10 @@ app.post("/login", (req, res) => {
 
 // get patient cards
 app.post("/getptcards", (req, res) => {
+  const { doctorID, curDate } = req.body;
   db.query(
-    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.id WHERE pt_cards.doctorid = ?",
-    req.body.doctorID,
+    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.id WHERE pt_cards.doctorid = ? AND pt_cards.date > ?",
+    [doctorID, curDate],
     (err, rows) => {
       if (err) {
         res.status(500).send(err.message);
@@ -72,6 +73,24 @@ app.post("/getptcards", (req, res) => {
       }
     }
   );
+});
+
+// get patient cards by date
+app.post("/getptcardsbydate", (req, res) => {
+  const { doctorID, viewDate } = req.body;
+  if (doctorID && doctorID != undefined && viewDate && viewDate != undefined) {
+    db.query(
+      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.id WHERE pt_cards.doctorid = ? AND pt_cards.date LIKE CONCAT('%', ?, '%')",
+      [doctorID, viewDate],
+      (err, rows) => {
+        if (err) {
+          res.status(500).send(err.message);
+        } else {
+          res.status(200).json({ data: rows });
+        }
+      }
+    );
+  }
 });
 
 // get patient history
