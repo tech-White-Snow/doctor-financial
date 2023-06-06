@@ -62,6 +62,15 @@ ${
     return formattedDate;
   };
 
+  // calculate age of patient with birthday
+  const getPatientAge = (dateString: any) => {
+    const birthDate = new Date(dateString);
+    const ageDiffMs = Date.now() - birthDate.getTime();
+    const ageDate = new Date(ageDiffMs);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    return age;
+  };
+
   return (
     <div className={isItemDeleted ? "hidden" : "block"}>
       <div
@@ -97,7 +106,9 @@ ${
             </div>
             <div>
               <span>年齡 ：</span>
-              <span className="text-black text-opacity-60">{context.age}</span>
+              <span className="text-black text-opacity-60">
+                {getPatientAge(context.birthday)}
+              </span>
             </div>
             <div>
               <span>性別 ：</span>

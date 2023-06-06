@@ -13,28 +13,19 @@ import Header from "../../components/Header";
 import PatientThumbnail from "../../components/patient/PatientThumbnail";
 
 const AddAppointment: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "A123456(7)",
-      age: 22,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022",
-    },
-    {
-      name: "小明陳",
-      newdiease: false,
-      telephone: "671234562",
-      age: 19,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022",
-    },
-  ];
-
   const navigate = useNavigate();
+
+  const getCurrentDate = () => {
+    const date = new Date();
+
+    const day = ("0" + date.getDate()).slice(-2);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are 0 based, so we add 1
+    const year = date.getFullYear();
+
+    const formattedDate = `${day}-${month}-${year}`;
+
+    return formattedDate;
+  };
 
   return (
     <div className="relative">
@@ -46,7 +37,7 @@ const AddAppointment: FC = () => {
           className="w-full px-3 pt-2 pb-8 text-[13px]"
           style={{ color: Theme.COLOR_DEFAULT }}
         >
-          <div className="text-right">DD-MM-YYYY</div>
+          <div className="text-right">{getCurrentDate()}</div>
           <div className="px-4 py-2">
             <div className="font-semibold">電話號碼 或 身份證號碼</div>
             <div className="pt-2 relative">

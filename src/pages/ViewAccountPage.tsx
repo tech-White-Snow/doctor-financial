@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,20 +14,40 @@ import addIcon from "../assets/icons/add_ico.svg";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 
+interface AccountDataType {
+  email: string;
+  username: string;
+  fullname: string;
+  doctorid: string;
+  avatar: string;
+  password: string;
+}
+
 const ViewAccountPage: FC = () => {
   const navigate = useNavigate();
 
-  const temp_data = [
-    {
-      name: "jenny",
-    },
-    {
-      name: "yukko",
-    },
-    {
-      name: "danny",
-    },
-  ];
+  const [accountList, setAccountList] = useState<AccountDataType[] | null>([]);
+
+  const getAccountsList = async () => {
+    await fetch("http://localhost:8000/getaccounts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setAccountList(data.list);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  useEffect(() => {
+    getAccountsList();
+  }, [navigate]);
 
   return (
     <div className="relative">
@@ -39,22 +59,27 @@ const ViewAccountPage: FC = () => {
           className="relative w-full mt-3 text-xs font-medium pb-[60px]"
           style={{ color: Theme.COLOR_DEFAULT }}
         >
-          {temp_data.map((idx, kkk) => (
-            <div
-              className="text-center p-3 my-2 border-t border-b border-opacity-50"
-              key={idx.name + kkk}
-              onClick={() =>
-                navigate("/account", {
-                  state: {
-                    name: idx.name,
-                    mode: 1,
-                  },
-                })
-              }
-            >
-              {idx.name}
-            </div>
-          ))}
+          {accountList ? (
+            accountList.map((idx: any, kkk: any) => (
+              <div
+                className="text-center p-3 my-2 border-t border-b border-opacity-50"
+                key={idx.username + kkk}
+                onClick={() =>
+                  navigate("/account", {
+                    state: {
+                      // name: idx.username,
+                      context: idx,
+                      mode: 1,
+                    },
+                  })
+                }
+              >
+                {idx.username}
+              </div>
+            ))
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       {/* Add Button */}
@@ -63,7 +88,7 @@ const ViewAccountPage: FC = () => {
         onClick={() =>
           navigate("/account", {
             state: {
-              name: "",
+              context: "",
               mode: 2,
             },
           })

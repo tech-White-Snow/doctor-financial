@@ -12,8 +12,13 @@ import DashBack from "../assets/img/alert_board.png";
 import NavBar from "../components/NavBar";
 import PatientThumbnail from "../components/patient/PatientThumbnail";
 
+interface UserData {
+  username: string;
+}
+
 const Home: FC = () => {
   const [cardsArray, setCardsArray] = useState([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const navigate = useNavigate();
 
@@ -46,6 +51,7 @@ const Home: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      setUserData(JSON.parse(token).user);
       // fetch patient card information from backend
       getPatientCards(JSON.parse(token).user);
     }
@@ -75,7 +81,9 @@ const Home: FC = () => {
                 className="absolute w-2 h-2 top-1 right-1 rounded-full"
                 style={{ background: Theme.COLOR_RED }}
               ></div>
-              <div className="text-sm text-white pt-1">Ryan</div>
+              <div className="text-sm text-white pt-1">
+                {userData && userData.username ? userData.username : ""}
+              </div>
             </div>
           </div>
           <div className="absolute bottom-[-8px] w-full h-8 bg-white rounded-xl"></div>

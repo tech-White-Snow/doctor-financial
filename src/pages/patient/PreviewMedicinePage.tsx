@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -15,19 +15,27 @@ import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
 const PreviewMedicinePage: FC = () => {
-  const temp_data = {
-    name: "陳小明",
-    newdiease: true,
-    telephone: "671234561",
-    age: 52,
-    sex: 1,
-    doctor: "黃文智醫師",
-    date: "9-9-2022",
-    diagnosis: "這是既往史",
-    doctorID: "006073",
+  const navigate = useNavigate();
+  const location = useLocation();
+  const context = location.state.context;
+
+  console.log("preview -> ", context);
+
+  const getOnlyDate = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const day = ("0" + date.getUTCDate()).slice(-2); // using getUTCDate to avoid timezone issues
+    const month = ("0" + (date.getUTCMonth() + 1)).slice(-2); // using getUTCMonth to avoid timezone issues
+    const year = date.getUTCFullYear(); // using getUTCFullYear to avoid timezone issues
+
+    const formattedDate = `${day}-${month}-${year}`;
+
+    return formattedDate;
   };
 
-  const navigate = useNavigate();
+  const updateCheckPatientHandler = () => {
+    navigate("/admin");
+  };
 
   return (
     <div className="relative">
@@ -45,13 +53,7 @@ const PreviewMedicinePage: FC = () => {
               福氣堂
             </div>
             <div
-              className="font-bold font-sans text-lg tracking-[1rem] pl-4 pt-2"
-              style={{ color: Theme.COLOR_GRAY }}
-            >
-              忠醫診所
-            </div>
-            <div
-              className="font-bold text-lg pt-2"
+              className="font-bold text-lg pt-6"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <span className="border-b border-b-[#64B3EC]">處方</span>
@@ -60,16 +62,21 @@ const PreviewMedicinePage: FC = () => {
           {/* User Info */}
           <div>
             <div className="text-sm p-2 mt-3 pb-5 border-b border-b-[#64B3EC]">
-              <div className="py-1">
-                <span style={{ color: Theme.COLOR_DEFAULT }}>診症日期:</span>
-                <span className="pl-2 text-black text-opacity-60">
-                  {temp_data.date}
-                </span>
+              <div className="py-1 flex justify-between">
+                <div>
+                  <span style={{ color: Theme.COLOR_DEFAULT }}>診症日期:</span>
+                  <span className="pl-2 text-black text-opacity-60">
+                    {getOnlyDate(context.date)}
+                  </span>
+                </div>
+                <div onClick={() => navigate(-1)}>
+                  <img src={editIcon} className="max-w-none" />
+                </div>
               </div>
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>病人姓名:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {temp_data.name}
+                  {context.name}
                 </span>
               </div>
               <div className="py-1">
@@ -88,13 +95,7 @@ const PreviewMedicinePage: FC = () => {
               {/* Diagnosis */}
               <div className="py-1 pt-3 text-black text-opacity-60">
                 <span>醫師編號:</span>
-                <span className="pl-2">{temp_data.doctorID}</span>
-              </div>
-              <div className="py-1 text-black text-opacity-60">
-                <span style={{ color: Theme.COLOR_DEFAULT }}>簽發日期:</span>
-                <span className="pl-2 text-black text-opacity-60">
-                  {temp_data.date}
-                </span>
+                <span className="pl-2">{context.doctorid}</span>
               </div>
             </div>
             <div
@@ -110,7 +111,7 @@ const PreviewMedicinePage: FC = () => {
           <div
             className="p-3 text-center text-white rounded-xl"
             style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-            onClick={() => navigate("/admin")}
+            onClick={() => updateCheckPatientHandler()}
           >
             Confirm
           </div>

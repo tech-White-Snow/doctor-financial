@@ -120,11 +120,107 @@ app.post("/addnewpatient", (req, res) => {
   // Execute the query
   db.query(sql, values, (err, result) => {
     if (err) {
-      console.error("Error adding patient:", err);
-      res.sendStatus(500); // Send a 500 Internal Server Error response
+      res.status(200).json({ message: "Error adding patient: " + err });
     } else {
-      console.log("Patient added successfully");
-      res.sendStatus(200); // Send a 200 OK response
+      res.status(200).json({ message: "patient added successfully!" });
+    }
+  });
+});
+
+// update last patient history
+app.post("/updatelastpthistory", (req, res) => {
+  const { cardID, originPtHistory, newPtHistory } = req.body;
+
+  const sql = `UPDATE pt_history SET detail = ? WHERE id = ? AND detail = ?`;
+
+  const values = [newPtHistory, cardID, originPtHistory];
+
+  // Execute the query
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: "Error updating last patient history : " + err });
+    } else {
+      res
+        .status(200)
+        .json({ message: "last patient history updated successfully!" });
+    }
+  });
+});
+
+// get account lists
+app.post("/getaccounts", (req, res) => {
+  const sql = "SELECT * from users";
+
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ message: "Error loading account list : " + err });
+    } else {
+      res.status(200).json({
+        message: "Loading account list successfully!",
+        list: rows,
+      });
+    }
+  });
+});
+
+// add new account
+app.post("/addaccount", (req, res) => {
+  const { userAvatar, userName, userEmail, password, fullName, doctorID } =
+    req.body;
+
+  const sql = `INSERT INTO users (email, username, fullname, doctorid, avatar, password) VALUES (?, ?, ?, ?, ?, ?)`;
+
+  const values = [
+    userEmail,
+    userName,
+    fullName,
+    doctorID,
+    userAvatar,
+    password,
+  ];
+
+  // Execute the query
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: "Error adding new account : " + err });
+    } else {
+      res.status(200).json({ message: "Adding New Account Successfully!" });
+    }
+  });
+});
+
+// update profile account
+app.post("/updateaccount", (req, res) => {
+  const {
+    context,
+    userAvatar,
+    userName,
+    userEmail,
+    password,
+    fullName,
+    doctorID,
+  } = req.body;
+
+  const sql = `UPDATE users SET email = ?, username = ?, fullname = ?, doctorid = ?, avatar = ?, password = ? WHERE email = ?`;
+
+  const values = [
+    userEmail,
+    userName,
+    fullName,
+    doctorID,
+    userAvatar,
+    password,
+    context.email,
+  ];
+
+  // Execute the query
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: "Error updating account : " + err });
+    } else {
+      res.status(200).json({ message: "Updating Account Successfully!" });
     }
   });
 });

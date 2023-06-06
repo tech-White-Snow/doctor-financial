@@ -18,16 +18,91 @@ const EditAccountPage: FC = () => {
 
   const location = useLocation();
   const accountMode = location.state.mode; // 1 : viewMode 2: addMode
+  const context = location.state.context; // context of account
 
   const [isEditMode, setIsEditMode] = useState(accountMode == 2);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
-  const [userName, setUserName] = useState(location.state.name);
-  const [userEmail, setUserEmail] = useState("email@email.com");
-  const [password, setPassword] = useState("123456");
-  const [confirmedPassword, setConfirmedPassword] = useState("123456");
-  const [fullName, setFullName] = useState("黃文智");
-  const [doctorID, setDoctorID] = useState("006073");
+  const [userAvatar, setUserAvatar] = useState(context.userAvatar);
+  const [userName, setUserName] = useState(
+    accountMode != 2 ? context.username : "Admin"
+  );
+  const [userEmail, setUserEmail] = useState(
+    accountMode != 2 ? context.email : "admin@gmail.com"
+  );
+  const [password, setPassword] = useState(
+    accountMode != 2 ? context.password : "123456"
+  );
+  const [confirmedPassword, setConfirmedPassword] = useState(
+    accountMode != 2 ? context.password : ""
+  );
+  const [fullName, setFullName] = useState(
+    accountMode != 2 ? context.fullname : "Admin"
+  );
+  const [doctorID, setDoctorID] = useState(
+    accountMode != 2 ? context.doctorid : "13579"
+  );
+
+  const updateAccountHandler = async () => {
+    if (password == confirmedPassword) {
+      if (accountMode == 2) {
+        // add new account
+        const data = {
+          userAvatar,
+          userName,
+          userEmail,
+          password,
+          fullName,
+          doctorID,
+        };
+        // call backend for updating account information
+        await fetch("http://localhost:8000/addaccount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.message);
+            navigate("/viewaccount");
+          })
+          .catch((error) => {
+            console.error(error);
+            // handle error
+          });
+      } else {
+        // update existing account
+        const data = {
+          context,
+          userAvatar,
+          userName,
+          userEmail,
+          password,
+          fullName,
+          doctorID,
+        };
+        // call backend for updating account information
+        await fetch("http://localhost:8000/updateaccount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.message);
+            navigate("/viewaccount");
+          })
+          .catch((error) => {
+            console.error(error);
+            // handle error
+          });
+      }
+    }
+  };
 
   return (
     <div className="relative">
@@ -86,7 +161,7 @@ const EditAccountPage: FC = () => {
             <div className="w-1/2">Username</div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
-                className="hover:outline-none"
+                className="focus:outline-none"
                 value={userName}
                 onChange={(ev) => setUserName(ev.target.value)}
                 disabled={!isEditMode}
@@ -97,18 +172,24 @@ const EditAccountPage: FC = () => {
             <div className="w-1/2">Email</div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
-                className="hover:outline-none"
-                value={userEmail}
+                className="focus:outline-none"
+                value={userEmail ? userEmail : ""}
                 onChange={(ev) => setUserEmail(ev.target.value)}
                 disabled={!isEditMode}
               />
             </div>
           </div>
           <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Password</div>
+            <div
+              className={
+                "w-1/2 " + (password != confirmedPassword ? "text-red-600" : "")
+              }
+            >
+              Password
+            </div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
-                className="hover:outline-none"
+                className="focus:outline-none"
                 type="password"
                 value={password}
                 onChange={(ev) => setPassword(ev.target.value)}
@@ -118,10 +199,17 @@ const EditAccountPage: FC = () => {
           </div>
           {isEditMode ? (
             <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-              <div className="w-1/2">Confirmed Password</div>
+              <div
+                className={
+                  "w-1/2 " +
+                  (password != confirmedPassword ? "text-red-600" : "")
+                }
+              >
+                Confirmed Password
+              </div>
               <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
                 <input
-                  className="hover:outline-none"
+                  className="focus:outline-none"
                   type="password"
                   value={confirmedPassword}
                   onChange={(ev) => setConfirmedPassword(ev.target.value)}
@@ -136,7 +224,7 @@ const EditAccountPage: FC = () => {
             <div className="w-1/2">Full name</div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
-                className="hover:outline-none"
+                className="focus:outline-none"
                 value={fullName}
                 onChange={(ev) => setFullName(ev.target.value)}
                 disabled={!isEditMode}
@@ -147,7 +235,7 @@ const EditAccountPage: FC = () => {
             <div className="w-1/2">Doctor ID</div>
             <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
               <input
-                className="hover:outline-none"
+                className="focus:outline-none"
                 value={doctorID}
                 onChange={(ev) => setDoctorID(ev.target.value)}
                 disabled={!isEditMode}
@@ -160,7 +248,7 @@ const EditAccountPage: FC = () => {
               <div
                 className="p-3 text-center text-white rounded-xl"
                 style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-                onClick={() => navigate("/viewaccount")}
+                onClick={() => updateAccountHandler()}
               >
                 Confirm
               </div>

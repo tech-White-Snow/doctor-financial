@@ -34,40 +34,6 @@ const CheckPatient: FC = () => {
 
   const [context, setContext] = useState(_context);
 
-  // const context = {
-  //   name: "張小梅",
-  //   email: "eamil@email.com",
-  //   password: "123456",
-  //   accountType: 1,
-  //   fullname: "Ryang",
-  //   doctorID: "006073",
-  //   date: "DD-MM-YYYY  HH:MM",
-  //   sex: 1,
-  //   age: 38,
-  //   history: [
-  //     {
-  //       context:
-  //         "This part is the first update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-  //       date: "02-04-2022",
-  //     },
-  //     {
-  //       context:
-  //         "This part is the second update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-  //       date: "05-03-2022",
-  //     },
-  //     {
-  //       context:
-  //         "This part is the third update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-  //       date: "07-01-2022",
-  //     },
-  //     {
-  //       context:
-  //         "This part is the last update data from 診斷 (diagnosis), not editable here but it can copy and paste, so the user can copy and edit in the diagnosis(診斷)",
-  //       date: "09-09-2022",
-  //     },
-  //   ],
-  // };
-
   const [isPastHistoryEditMode, setIsPastHistoryEditMode] = useState(false);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
@@ -103,7 +69,6 @@ const CheckPatient: FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("historydata -> ", data.data);
         setCurHistoryViewState(data.data.length - 1);
         setPatientHistory(data.data);
         setOriginPatientHistory(data.data);
@@ -133,10 +98,27 @@ const CheckPatient: FC = () => {
     return output;
   };
 
-  const updateCurrentPatientHistory = () => {
+  const updateCurrentPatientHistory = async () => {
     // update backend
-    console.log("origin -> ", originPatientHistory[0].detail);
-    console.log("updated -> ", patientHistory[0].detail);
+    const cardID = _context.cardid;
+    const originPtHistory = originPatientHistory[0].detail;
+    const newPtHistory = patientHistory[0].detail;
+    const data = { cardID, originPtHistory, newPtHistory };
+    await fetch("http://localhost:8000/updatelastpthistory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("last history updated successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
   };
 
   const getOnlyDateTime = (dateString: any) => {
@@ -216,7 +198,7 @@ const CheckPatient: FC = () => {
               {currentSelect == 1 ? (
                 <div className="p-3 font-sans">
                   <div
-                    className="flex flex-col p-6"
+                    className="flex flex-col p-4"
                     style={{
                       backgroundColor: Theme.COLOR_LIGHTBLUE,
                       color: Theme.COLOR_DARKGREEN,
@@ -240,7 +222,7 @@ const CheckPatient: FC = () => {
                     )}
                     {!isPastHistoryEditMode ? (
                       <div
-                        className="pt-6 self-end"
+                        className="pt-2 self-end"
                         onClick={() => setIsPastHistoryEditMode(true)}
                       >
                         <img src={editIcon2} className="max-w-none" />
@@ -702,7 +684,9 @@ const CheckPatient: FC = () => {
         <div
           className="p-3 text-center text-white rounded-xl"
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-          onClick={() => navigate("/previewmedicine")}
+          onClick={() =>
+            navigate("/previewmedicine", { state: { context: context } })
+          }
         >
           Confirm
         </div>

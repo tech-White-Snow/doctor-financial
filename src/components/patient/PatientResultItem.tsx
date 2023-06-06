@@ -126,7 +126,7 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
               <div>
                 <div style={{ color: Theme.COLOR_DEFAULT }}>{name}</div>
                 <div className="pt-1">
-                  0<span className="text-black">電話:</span>
+                  <span className="text-black">電話:</span>
                   <span className="text-black text-opacity-60">
                     {telephone}
                   </span>

@@ -52,6 +52,15 @@ const PastPatientRecordedPage: FC = () => {
     return formattedDate;
   };
 
+  // calculate age of patient with birthday
+  const getPatientAge = (dateString: any) => {
+    const birthDate = new Date(dateString);
+    const ageDiffMs = Date.now() - birthDate.getTime();
+    const ageDate = new Date(ageDiffMs);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    return age;
+  };
+
   return (
     <div className="relative">
       <div className="h-screen overflow-y-auto">
@@ -73,7 +82,7 @@ const PastPatientRecordedPage: FC = () => {
                     ({context.sex == 1 ? "男" : "女"})
                   </span>
                 </div>
-                <div className="pl-3">{context.age}歲</div>
+                <div className="pl-3">{getPatientAge(context.birthday)}歲</div>
               </div>
               <div className="text-[#0C2036] text-opacity-80 text-sm">
                 {getOnlyDate1(context.date)}
