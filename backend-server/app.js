@@ -122,13 +122,18 @@ app.post("/addnewpatient", (req, res) => {
     emergencynumber,
   } = req.body;
 
-  const sql = `INSERT INTO patients (name, engname, birthday, sex, patientid, telephone, address, emergency, emergencynumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const formattedBirthday = new Date(birthday)
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
+
+  const sql = `INSERT INTO patients (name, engname, birthday, sex, patientid, telephone, address, emergency, emergencynumber) VALUES (?, ?, DATE_FORMAT(?, "%Y-%m-%d %H:%i:%s"), ?, ?, ?, ?, ?, ?)`;
 
   const values = [
     chiname,
     engname,
-    birthday,
-    sex,
+    formattedBirthday,
+    sex == "男" ? "1" : "0",
     id,
     telephone,
     address,
