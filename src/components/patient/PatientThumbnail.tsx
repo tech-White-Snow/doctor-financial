@@ -23,9 +23,9 @@ const PatientThumbnail: FC<PatientThumbnailProps> = ({ context }) => {
 
   // change date time format
   const changeDateTimeFormat = (dateString: any) => {
-    let date = new Date(dateString);
+    const date = new Date(dateString);
 
-    let formattedDate = `${
+    const formattedDate = `${
       date.getMonth() + 1
     }-${date.getDate()}-${date.getFullYear()} /
 ${
@@ -43,9 +43,9 @@ ${
 
   // change date time format - 1
   const changeDateTimeFormat1 = (dateString: any) => {
-    let date = new Date(dateString);
+    const date = new Date(dateString);
 
-    let formattedDate = `${("0" + date.getDate()).slice(-2)}/${(
+    const formattedDate = `${("0" + date.getDate()).slice(-2)}/${(
       "0" +
       (date.getMonth() + 1)
     ).slice(-2)}/${date.getFullYear()} ${(

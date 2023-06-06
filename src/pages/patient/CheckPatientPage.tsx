@@ -92,7 +92,7 @@ const CheckPatient: FC = () => {
   }, [navigate]);
 
   const getUpdateRemark = (origin: any, newvalue: any, idx: any) => {
-    let parts = origin.split("@@");
+    const parts = origin.split("@@");
     parts[idx] = newvalue; // Replace the idx part
     const output = parts.join("@@");
     return output;
