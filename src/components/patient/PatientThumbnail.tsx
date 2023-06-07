@@ -71,6 +71,30 @@ ${
     return age;
   };
 
+  // delete Thumbnail
+  const deleteThumbnailHanlder = async () => {
+    // call backend for delete current thumbnail
+    const data = { context };
+    await fetch("http://localhost:8000/deleteptcard", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Delete Patient Card Succeed!");
+
+        setIsItemDeleted(true);
+        setIsItemDeleteOpen(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   return (
     <div className={isItemDeleted ? "hidden" : "block"}>
       <div
@@ -219,10 +243,7 @@ ${
             </div>
             <div
               className="text-xl font-bold text-center tracking-[.75rem] pl-2 py-2 border border-[#25617B] rounded-lg mt-3"
-              onClick={() => {
-                setIsItemDeleted(true);
-                setIsItemDeleteOpen(false);
-              }}
+              onClick={() => deleteThumbnailHanlder()}
             >
               取消預約
             </div>

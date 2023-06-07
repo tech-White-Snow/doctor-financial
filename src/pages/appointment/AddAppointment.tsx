@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +14,8 @@ import PatientThumbnail from "../../components/patient/PatientThumbnail";
 
 const AddAppointment: FC = () => {
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const getCurrentDate = () => {
     const date = new Date();
@@ -25,6 +27,28 @@ const AddAppointment: FC = () => {
     const formattedDate = `${day}-${month}-${year}`;
 
     return formattedDate;
+  };
+
+  const searchPatientHandler = async () => {
+    const data = { searchText };
+    await fetch("http://localhost:8000/findpatients", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("searched Data -> ", data.data.length);
+        if (data.data.length > 0)
+          navigate("/scheduleappointment", { state: { context: data.data } });
+        else setErrorMessage("No such patients exists!");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
   };
 
   return (
@@ -44,10 +68,12 @@ const AddAppointment: FC = () => {
               <input
                 className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] text-xs p-2 pr-8"
                 placeholder="請輸入關鍵字"
+                value={searchText}
+                onChange={(ev) => setSearchText(ev.target.value)}
               />
               <div
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
-                onClick={() => navigate("/scheduleappointment")}
+                onClick={() => searchPatientHandler()}
               >
                 <img src={searchIcon} className="max-w-none" />
               </div>
@@ -60,6 +86,11 @@ const AddAppointment: FC = () => {
             >
               新增病人
             </div>
+            {errorMessage != "" ? (
+              <div className="text-red-600 p-3 text-center">{errorMessage}</div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         {/* NavBar */}

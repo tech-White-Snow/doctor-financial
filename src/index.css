@@ -52,3 +52,20 @@ code {
 .dp40vw {
   width: 42vw !important;
 }
+
+.dp80vw {
+  width: 80vw !important;
+}
+
+.rc-time-picker-input {
+  border: none !important;
+  border-radius: 10px !important;
+  outline: none;
+  color: black !important;
+}
+.rc-time-picker-clear {
+  display: none !important;
+}
+.rc-time-picker-panel-inner {
+  margin-top: 5px !important;
+}

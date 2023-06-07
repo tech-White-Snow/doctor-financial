@@ -249,6 +249,62 @@ app.post("/updateaccount", (req, res) => {
   });
 });
 
+// find patients by patientid and telephone number
+app.post("/findpatients", (req, res) => {
+  const searchtext = req.body.searchText;
+
+  const sql = `SELECT * from patients WHERE patientid = ? OR telephone = ?`;
+  const values = [searchtext, searchtext];
+
+  // Execute the query
+  db.query(sql, values, (err, rows) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: "Error finding patients by ID : " + err });
+    } else {
+      res.status(200).json({ data: rows });
+    }
+  });
+});
+
+// add new appointment
+app.post("/addnewappointment", (req, res) => {
+  const { doctorName, doctorID, patientID, dateTime } = req.body;
+
+  const sql = `INSERT INTO pt_cards (cardid, doctorid, patientid, doctor, date) VALUES (?, ?, ?, ?, ?)`;
+  const values = ["", doctorID, patientID, doctorName, dateTime];
+
+  // Execute the query
+  db.query(sql, values, (err, rows) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: "Error adding new appointment : " + err });
+    } else {
+      res.status(200).json({ message: "Adding new appointment succeed!" });
+    }
+  });
+});
+
+// delete patient card
+app.post("/deleteptcard", (req, res) => {
+  const context = req.body.context;
+
+  console.log("context --> ", context);
+  const sql = `DELETE FROM pt_cards WHERE cardid = ?`;
+  const values = [context.cardid];
+
+  // Execute the query
+  db.query(sql, values, (err, rows) => {
+    if (err) {
+      res.status(500).json({ message: "Error deleting patient card : " + err });
+    } else {
+      res.status(200).json({ message: "Deleteing patient card succeed!" });
+    }
+  });
+});
+
 // Server running
 app.listen(8000, () => {
   console.log("Server started on port 8000!");
