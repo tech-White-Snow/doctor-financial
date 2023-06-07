@@ -82,9 +82,16 @@ const ViewAccountPage: FC = () => {
           )}
         </div>
       </div>
+      {/* Logout Button */}
+      <div
+        className="absolute bottom-[80px] w-full p-2 text-center text-[#CD2E54] font-bold border-t border-b border-opacity-50"
+        onClick={() => console.log("logout!")}
+      >
+        LOGOUT
+      </div>
       {/* Add Button */}
       <div
-        className="absolute bottom-[80px] right-5"
+        className="absolute bottom-[88px] right-5 z-20"
         onClick={() =>
           navigate("/account", {
             state: {
