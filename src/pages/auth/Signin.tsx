@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +32,7 @@ const Signin: FC = () => {
         if (data.auth) {
           const decoded_token = jwt_decode(data.token);
           localStorage.setItem("authToken", JSON.stringify(decoded_token));
+
           // start browsing the project
           navigate("/home");
         } else {
@@ -43,6 +44,17 @@ const Signin: FC = () => {
         // handle error
       });
   };
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+      navigate("/home");
+    }
+  }, [navigate]);
 
   return (
     <div className="relative">

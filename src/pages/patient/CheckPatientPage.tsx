@@ -284,7 +284,7 @@ const CheckPatient: FC = () => {
                     <div className="flex flex-row">
                       {curHistoryViewState > 0 ? (
                         <div
-                          className="p-1 flex flex-col justify-center"
+                          className="flex flex-col justify-center"
                           onClick={() =>
                             setCurHistoryViewState(
                               curHistoryViewState > 0
@@ -296,10 +296,10 @@ const CheckPatient: FC = () => {
                           <img src={prevvIcon} className="max-w-none" />
                         </div>
                       ) : (
-                        <div className="w-8 p-1"></div>
+                        <div className="w-8"></div>
                       )}
                       <div
-                        className="flex flex-col p-6 w-full"
+                        className="flex flex-col p-3 w-full"
                         style={{
                           backgroundColor: Theme.COLOR_LIGHTBLUE,
                           color: Theme.COLOR_DARKGREEN,
@@ -315,7 +315,7 @@ const CheckPatient: FC = () => {
                       </div>
                       {curHistoryViewState < patientHistory.length - 1 ? (
                         <div
-                          className="p-1 flex flex-col justify-center"
+                          className="flex flex-col justify-center"
                           onClick={() =>
                             setCurHistoryViewState(
                               curHistoryViewState < patientHistory.length - 1
@@ -327,7 +327,7 @@ const CheckPatient: FC = () => {
                           <img src={nexttIcon} className="max-w-none" />
                         </div>
                       ) : (
-                        <div className="w-8 p-1"></div>
+                        <div className="w-8"></div>
                       )}
                     </div>
                   ) : (

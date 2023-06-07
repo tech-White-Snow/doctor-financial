@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +31,16 @@ const RecipePage: FC = () => {
   const navigate = useNavigate();
 
   const [isFollowedUp, setIsFollowedUp] = useState(true);
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   return (
     <div className="relative">

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -71,6 +71,16 @@ const SearchPage: FC = () => {
   ];
 
   const navigate = useNavigate();
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   return (
     <div className="relative">

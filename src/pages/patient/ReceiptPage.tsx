@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -35,6 +35,16 @@ const ReceiptPage: FC = () => {
   const [curDiagnosis, setCurDiagnosis] = useState("這是既往史");
   const [curToll, setCurToll] = useState(5);
   const [curDoctorID, setCurDoctorID] = useState("006073");
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   return (
     <div className="relative">

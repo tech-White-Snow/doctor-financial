@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -56,6 +56,16 @@ const PatientRecordPage: FC = () => {
   const [isSearched, setIsSearched] = useState(false);
 
   const navigate = useNavigate();
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   const searchPatientRecordHandle = () => {
     if (searchTerm == "") return;

@@ -4,9 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// import TimePicker from "react-time-picker";
-// import "react-time-picker/dist/TimePicker.css";
-// import "react-clock/dist/Clock.css";
 import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 import moment from "moment";
@@ -38,6 +35,16 @@ const ScheduleAppointment = () => {
   useEffect(() => {
     setRecordStatus(Array(recordStatus.length).fill(false));
   }, []);
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   const setRecordStatusAtIndex = (id: number) => {
     const newRecordStatus = [...recordStatus];

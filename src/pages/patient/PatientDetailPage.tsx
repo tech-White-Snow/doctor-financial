@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -21,6 +21,16 @@ const PatientDetailPage: FC = () => {
   const navigate = useNavigate();
 
   const docHistory = ["處方", "收據", "到診症明書"];
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   return (
     <div className="relative">

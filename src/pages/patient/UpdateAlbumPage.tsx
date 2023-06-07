@@ -1,4 +1,6 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -26,6 +28,17 @@ const UpdateAlbumPage: FC = () => {
     date: "9-9-2022",
     content: "皮膚發紅，初有斑點",
   };
+
+  const navigate = useNavigate();
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   return (
     <div className="relative">

@@ -45,9 +45,21 @@ const ViewAccountPage: FC = () => {
       });
   };
 
+  // Hook for User Authentication
   useEffect(() => {
-    getAccountsList();
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+      getAccountsList();
+    }
   }, [navigate]);
+
+  const logoutHandler = () => {
+    localStorage.removeItem("authToken");
+    navigate("/");
+  };
 
   return (
     <div className="relative">
@@ -85,7 +97,7 @@ const ViewAccountPage: FC = () => {
       {/* Logout Button */}
       <div
         className="absolute bottom-[80px] w-full p-2 text-center text-[#CD2E54] font-bold border-t border-b border-opacity-50"
-        onClick={() => console.log("logout!")}
+        onClick={() => logoutHandler()}
       >
         LOGOUT
       </div>

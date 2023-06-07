@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -18,6 +18,16 @@ const PreviewMedicinePage: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const context = location.state.context;
+
+  // Hook for User Authentication
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+    }
+  }, [navigate]);
 
   console.log("preview -> ", context);
 
