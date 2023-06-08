@@ -110,13 +110,12 @@ const PreviewMedicinePage: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Update Check Patient Detail successfully!");
+        navigate("/admin");
       })
       .catch((error) => {
         console.error(error);
         // handle error
       });
-
-    // navigate("/admin");
   };
 
   return (
