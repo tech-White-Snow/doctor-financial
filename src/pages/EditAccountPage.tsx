@@ -17,7 +17,7 @@ const EditAccountPage: FC = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const accountMode = location.state.mode; // 1 : viewMode 2: addMode
+  const accountMode = location.state.mode; // 1 : viewMode 2: addMode 3 : company viewmode
   const context = location.state.context; // context of account
 
   console.log("editAccount -> ", context);
@@ -44,6 +44,17 @@ const EditAccountPage: FC = () => {
     accountMode != 2 ? context.doctorid : "13579"
   );
 
+  // Company profile variables
+  const [companyLogo, setCompanyLogo] = useState(
+    accountMode == 3 ? context.logo : ""
+  );
+  const [companyAddress, setCompanyAddress] = useState(
+    accountMode == 3 ? context.address : ""
+  );
+  const [companyTelephone, setCompanyTelephone] = useState(
+    accountMode == 3 ? context.tel : ""
+  );
+
   // Avatar Upload
   const [file, setFile] = useState<File>(new File([], "") || null);
   const [loadFile, setLoadFile] = useState<string>(
@@ -68,7 +79,6 @@ const EditAccountPage: FC = () => {
       return "";
     }
 
-    console.log("***");
     const formData = new FormData();
     formData.append("file", file);
 
@@ -112,7 +122,7 @@ const EditAccountPage: FC = () => {
             console.error(error);
             // handle error
           });
-      } else {
+      } else if (accountMode == 1) {
         // update existing account
 
         // upload Avatar
@@ -129,6 +139,26 @@ const EditAccountPage: FC = () => {
         };
         // call backend for updating account information
         await fetch("http://localhost:8000/updateaccount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.message);
+            navigate("/viewaccount");
+          })
+          .catch((error) => {
+            console.error(error);
+            // handle error
+          });
+      } else {
+        // Update Company Profile
+        const data = { companyLogo, companyAddress, companyTelephone };
+        // call backend for updating account information
+        await fetch("http://localhost:8000/updatecompanyprofile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -182,96 +212,78 @@ const EditAccountPage: FC = () => {
           <></>
         )}
         {/* Account Detail */}
-        <div
-          className={
-            "relative w-full mt-3 text-xs font-medium text-black text-opacity-70 " +
-            (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[120px]")
-          }
-        >
-          <div className="relative flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2 pt-2">Profile Picture</div>
-            <div
-              className="relative w-12"
-              style={{ color: Theme.COLOR_DEFAULT }}
-            >
-              {loadFile != "" ? (
-                <img
-                  src={
-                    context.avatar == loadFile
-                      ? "http://localhost:8000/uploads/" + loadFile
-                      : loadFile
-                  }
-                  className="w-12 h-12 max-w-none rounded-full"
-                />
-              ) : (
-                <img
-                  src={profileImage}
-                  className="w-12 h-12 max-w-none rounded-full"
-                />
-              )}
+        {accountMode == 1 || accountMode == 2 ? (
+          <div
+            className={
+              "relative w-full mt-3 text-xs font-medium text-black text-opacity-70 " +
+              (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[120px]")
+            }
+          >
+            <div className="relative flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/2 pt-2">Profile Picture</div>
               <div
-                className="absolute right-1 top-1 w-2 h-2 rounded-full"
-                style={{ background: Theme.COLOR_RED }}
-              ></div>
+                className="relative w-12"
+                style={{ color: Theme.COLOR_DEFAULT }}
+              >
+                {loadFile != "" ? (
+                  <img
+                    src={
+                      context.avatar == loadFile
+                        ? "http://localhost:8000/uploads/" + loadFile
+                        : loadFile
+                    }
+                    className="w-12 h-12 max-w-none rounded-full"
+                  />
+                ) : (
+                  <img
+                    src={profileImage}
+                    className="w-12 h-12 max-w-none rounded-full"
+                  />
+                )}
+                <div
+                  className="absolute right-1 top-1 w-2 h-2 rounded-full"
+                  style={{ background: Theme.COLOR_RED }}
+                ></div>
+              </div>
+              {isEditMode ? (
+                <div className="absolute right-7 top-7 w-6 h-6">
+                  <label htmlFor="file-input" className="w-8 h-8">
+                    <img src={editIcon1} className="max-w-none" />
+                  </label>
+                  <input
+                    id="file-input"
+                    type="file"
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                    accept="image/*"
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
-            {isEditMode ? (
-              <div className="absolute right-7 top-7 w-6 h-6">
-                <label htmlFor="file-input" className="w-8 h-8">
-                  <img src={editIcon1} className="max-w-none" />
-                </label>
+            <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/2">Username</div>
+              <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
                 <input
-                  id="file-input"
-                  type="file"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                  accept="image/*"
+                  className="focus:outline-none"
+                  value={userName}
+                  onChange={(ev) => setUserName(ev.target.value)}
+                  disabled={!isEditMode}
                 />
               </div>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Username</div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
-              <input
-                className="focus:outline-none"
-                value={userName}
-                onChange={(ev) => setUserName(ev.target.value)}
-                disabled={!isEditMode}
-              />
             </div>
-          </div>
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Email</div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
-              <input
-                className="focus:outline-none"
-                value={userEmail ? userEmail : ""}
-                onChange={(ev) => setUserEmail(ev.target.value)}
-                disabled={!isEditMode}
-              />
+            <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/2">Email</div>
+              <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
+                <input
+                  className="focus:outline-none"
+                  value={userEmail ? userEmail : ""}
+                  onChange={(ev) => setUserEmail(ev.target.value)}
+                  disabled={!isEditMode}
+                />
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div
-              className={
-                "w-1/2 " + (password != confirmedPassword ? "text-red-600" : "")
-              }
-            >
-              Password
-            </div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
-              <input
-                className="focus:outline-none"
-                type="password"
-                value={password}
-                onChange={(ev) => setPassword(ev.target.value)}
-                disabled={!isEditMode}
-              />
-            </div>
-          </div>
-          {isEditMode ? (
             <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
               <div
                 className={
@@ -279,58 +291,134 @@ const EditAccountPage: FC = () => {
                   (password != confirmedPassword ? "text-red-600" : "")
                 }
               >
-                Confirmed Password
+                Password
               </div>
               <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
                 <input
                   className="focus:outline-none"
                   type="password"
-                  value={confirmedPassword}
-                  onChange={(ev) => setConfirmedPassword(ev.target.value)}
+                  value={password}
+                  onChange={(ev) => setPassword(ev.target.value)}
                   disabled={!isEditMode}
                 />
               </div>
             </div>
-          ) : (
-            <></>
-          )}
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Full name</div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
-              <input
-                className="focus:outline-none"
-                value={fullName}
-                onChange={(ev) => setFullName(ev.target.value)}
-                disabled={!isEditMode}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
-            <div className="w-1/2">Doctor ID</div>
-            <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
-              <input
-                className="focus:outline-none"
-                value={doctorID}
-                onChange={(ev) => setDoctorID(ev.target.value)}
-                disabled={!isEditMode}
-              />
-            </div>
-          </div>
-          {/* Confirmed Buttonn */}
-          {isEditMode ? (
-            <div className="absolute w-full px-3">
-              <div
-                className="p-3 text-center text-white rounded-xl"
-                style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-                onClick={() => updateAccountHandler()}
-              >
-                Confirm
+            {isEditMode ? (
+              <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+                <div
+                  className={
+                    "w-1/2 " +
+                    (password != confirmedPassword ? "text-red-600" : "")
+                  }
+                >
+                  Confirmed Password
+                </div>
+                <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
+                  <input
+                    className="focus:outline-none"
+                    type="password"
+                    value={confirmedPassword}
+                    onChange={(ev) => setConfirmedPassword(ev.target.value)}
+                    disabled={!isEditMode}
+                  />
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+            <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/2">Full name</div>
+              <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
+                <input
+                  className="focus:outline-none"
+                  value={fullName}
+                  onChange={(ev) => setFullName(ev.target.value)}
+                  disabled={!isEditMode}
+                />
               </div>
             </div>
-          ) : (
-            <></>
-          )}
-        </div>
+            <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/2">Doctor ID</div>
+              <div className="w-1/2" style={{ color: Theme.COLOR_DEFAULT }}>
+                <input
+                  className="focus:outline-none"
+                  value={doctorID}
+                  onChange={(ev) => setDoctorID(ev.target.value)}
+                  disabled={!isEditMode}
+                />
+              </div>
+            </div>
+            {/* Confirmed Buttonn */}
+            {isEditMode ? (
+              <div className="absolute w-full px-3">
+                <div
+                  className="p-3 text-center text-white rounded-xl"
+                  style={{ backgroundColor: Theme.COLOR_DEFAULT }}
+                  onClick={() => updateAccountHandler()}
+                >
+                  Confirm
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        ) : (
+          <div
+            className={
+              "relative w-full mt-3 text-xs font-medium text-black text-opacity-70 " +
+              (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[120px]")
+            }
+          >
+            <div className="relative flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/3 pt-2">Logo</div>
+              <div className="w-2/3" style={{ color: Theme.COLOR_DEFAULT }}>
+                <input
+                  className="focus:outline-none w-full font-bold text-5xl"
+                  value={companyLogo}
+                  onChange={(ev) => setCompanyLogo(ev.target.value)}
+                  disabled={!isEditMode}
+                />
+              </div>
+            </div>
+            <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/3">Address</div>
+              <div className="w-2/3" style={{ color: Theme.COLOR_DEFAULT }}>
+                <input
+                  className="focus:outline-none w-full"
+                  value={companyAddress}
+                  onChange={(ev) => setCompanyAddress(ev.target.value)}
+                  disabled={!isEditMode}
+                />
+              </div>
+            </div>
+            <div className="flex flex-row p-3 my-2 border-t border-b border-opacity-50">
+              <div className="w-1/3">Tel</div>
+              <div className="w-2/3" style={{ color: Theme.COLOR_DEFAULT }}>
+                <input
+                  className="focus:outline-none w-full"
+                  value={companyTelephone}
+                  onChange={(ev) => setCompanyTelephone(ev.target.value)}
+                  disabled={!isEditMode}
+                />
+              </div>
+            </div>
+            {/* Confirmed Buttonn */}
+            {isEditMode ? (
+              <div className="absolute w-full px-3">
+                <div
+                  className="p-3 text-center text-white rounded-xl"
+                  style={{ backgroundColor: Theme.COLOR_DEFAULT }}
+                  onClick={() => updateAccountHandler()}
+                >
+                  Confirm
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+          </div>
+        )}
       </div>
       {/* NavBar */}
       <NavBar status={4} />

@@ -23,11 +23,18 @@ interface AccountDataType {
   password: string;
 }
 
+interface CompanyInfoType {
+  address: string;
+  tel: string;
+}
+
 const ViewAccountPage: FC = () => {
   const navigate = useNavigate();
 
   const [accountList, setAccountList] = useState<AccountDataType[] | null>([]);
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoType | null>(null);
 
+  // get User accounts
   const getAccountsList = async () => {
     await fetch("http://localhost:8000/getaccounts", {
       method: "POST",
@@ -38,6 +45,22 @@ const ViewAccountPage: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         setAccountList(data.list);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+
+    //  get company info
+    await fetch("http://localhost:8000/getcompanyinfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCompanyInfo(data.data[0]);
       })
       .catch((error) => {
         console.error(error);
@@ -92,6 +115,14 @@ const ViewAccountPage: FC = () => {
           ) : (
             <></>
           )}
+          <div
+            className="text-center p-3 my-2 border-t border-b border-opacity-50"
+            onClick={() =>
+              navigate("/account", { state: { context: companyInfo, mode: 3 } })
+            }
+          >
+            Company
+          </div>
         </div>
       </div>
       {/* Logout Button */}

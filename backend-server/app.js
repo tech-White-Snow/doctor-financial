@@ -185,6 +185,8 @@ app.post("/updatelastpthistory", (req, res) => {
   });
 });
 
+// ------------------------------------------- Account Management ----------------------------------------------------
+
 // get account lists
 app.post("/getaccounts", (req, res) => {
   const sql = "SELECT * from users";
@@ -196,6 +198,40 @@ app.post("/getaccounts", (req, res) => {
       res.status(200).json({
         message: "Loading account list successfully!",
         list: rows,
+      });
+    }
+  });
+});
+
+// get company profile information
+app.post("/getcompanyinfo", (req, res) => {
+  const sql = "SELECT * from company";
+
+  db.query(sql, [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ message: "Error loading company info : " + err });
+    } else {
+      res.status(200).json({
+        message: "Loading Company Profile successfully!",
+        data: rows,
+      });
+    }
+  });
+});
+
+// update company profile information
+app.post("/updatecompanyprofile", (req, res) => {
+  const { companyLogo, companyAddress, companyTelephone } = req.body;
+
+  const sql = "UPDATE company SET logo = ?, address = ?, tel = ? WHERE id = 1";
+  const values = [companyLogo, companyAddress, companyTelephone];
+
+  db.query(sql, values, (err, rows) => {
+    if (err) {
+      res.status(500).json({ message: "Error updating company info : " + err });
+    } else {
+      res.status(200).json({
+        message: "Updating Company Profile successfully!",
       });
     }
   });
