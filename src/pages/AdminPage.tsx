@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -12,46 +12,38 @@ import Header from "../components/Header";
 import PatientResultItem from "../components/patient/PatientResultItem";
 
 const AdminPage: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234561",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: false,
-      telephone: "671234562",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234563",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234564",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-  ];
-
   const navigate = useNavigate();
+
+  const [context, setContext] = useState([]);
+
+  const updateDateTimeFormat = (dateTimeString: any) => {
+    const isoString = dateTimeString.toISOString();
+    const formattedDate = isoString.replace("T", " ").replace(/\.\d+Z$/, "");
+    return formattedDate;
+  };
+
+  const viewSearchResultHandler = async () => {
+    const curDate = updateDateTimeFormat(new Date());
+    const searchText = "";
+    const data = { searchText, curDate };
+    await fetch("http://localhost:8000/getptcardpayment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get searched patient card for payment successfully!");
+        setContext(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -59,6 +51,7 @@ const AdminPage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      viewSearchResultHandler();
     }
   }, [navigate]);
 
@@ -72,7 +65,7 @@ const AdminPage: FC = () => {
           {/* Scheduled Patient List */}
           <div className="w-full">
             <div className="pb-[75px]">
-              {temp_db.map((idx: any) => (
+              {context.map((idx: any) => (
                 <PatientResultItem
                   key={idx.name + idx.telephone + idx.doctor}
                   cardid={1}
