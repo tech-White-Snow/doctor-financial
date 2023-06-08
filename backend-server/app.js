@@ -375,6 +375,44 @@ app.post("/uploadavatar", upload.single("file"), (req, res) => {
   res.status(200).json({ filename: filename });
 });
 
+// ------------------------------ Search Patient Card for Payment ---------------------------------
+app.post("/getptcardpayment", (req, res) => {
+  const { searchText, curDate } = req.body;
+  db.query(
+    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND pt_cards.paid = 0 AND (pt_cards.albumtext LIKE ? OR pt_cards.disease LIKE ? OR pt_cards.diagnosis LIKE ? OR pt_cards.syndromes LIKE ? OR pt_cards.medicines LIKE ?)",
+    [
+      curDate,
+      `%${searchText}%`,
+      `%${searchText}%`,
+      `%${searchText}%`,
+      `%${searchText}%`,
+      `%${searchText}%`,
+    ],
+    (err, rows) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.status(200).json({ data: rows });
+      }
+    }
+  );
+});
+
+app.post("/updatecardpaid", (req, res) => {
+  const cardid = req.body.cardid;
+  db.query(
+    "UPDATE pt_cards SET paid = 1 WHERE cardid = ?",
+    [cardid],
+    (err, rows) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.status(200).json({ data: rows });
+      }
+    }
+  );
+});
+
 // Server running
 app.listen(8000, () => {
   console.log("Server started on port 8000!");

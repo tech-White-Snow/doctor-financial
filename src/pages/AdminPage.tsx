@@ -75,6 +75,7 @@ const AdminPage: FC = () => {
               {temp_db.map((idx: any) => (
                 <PatientResultItem
                   key={idx.name + idx.telephone + idx.doctor}
+                  cardid={1}
                   name={idx.name}
                   newdiease={idx.newdiease}
                   telephone={idx.telephone}

@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../assets/color";
 
@@ -12,64 +12,10 @@ import Header from "../components/Header";
 import PatientResultItem from "../components/patient/PatientResultItem";
 
 const SearchResultPage: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234561",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: false,
-      telephone: "671234562",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234563",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234564",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234565",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234566",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-  ];
-
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const context = location.state.context;
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -90,9 +36,10 @@ const SearchResultPage: FC = () => {
           {/* Scheduled Patient List */}
           <div className="w-full">
             <div className="pb-[75px]">
-              {temp_db.map((idx: any) => (
+              {context.map((idx: any) => (
                 <PatientResultItem
                   key={idx.name + idx.telephone + idx.doctor}
+                  cardid={idx.cardid}
                   name={idx.name}
                   newdiease={idx.newdiease}
                   telephone={idx.telephone}

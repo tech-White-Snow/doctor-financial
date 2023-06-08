@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -13,64 +13,9 @@ import Header from "../components/Header";
 import PatientThumbnail from "../components/patient/PatientThumbnail";
 
 const SearchPage: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234561",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: false,
-      telephone: "671234562",
-      age: 52,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234563",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234564",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234565",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "671234566",
-      age: 52,
-      sex: 1,
-      doctor: "黃文醫師",
-      date: "9-9-2022 / 10:30 a.m.",
-    },
-  ];
-
   const navigate = useNavigate();
+
+  const [searchText, setSearchText] = useState("");
 
   // Hook for User Authentication
   useEffect(() => {
@@ -81,6 +26,34 @@ const SearchPage: FC = () => {
     } else {
     }
   }, [navigate]);
+
+  const updateDateTimeFormat = (dateTimeString: any) => {
+    const isoString = dateTimeString.toISOString();
+    const formattedDate = isoString.replace("T", " ").replace(/\.\d+Z$/, "");
+    return formattedDate;
+  };
+
+  const viewSearchResultHandler = async () => {
+    const curDate = updateDateTimeFormat(new Date());
+    const data = { searchText, curDate };
+    await fetch("http://localhost:8000/getptcardpayment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get searched patient card for payment successfully!");
+        console.log("ptcardspayment -> ", data);
+        navigate("/searchresult", { state: { context: data.data } });
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   return (
     <div className="relative">
@@ -95,10 +68,12 @@ const SearchPage: FC = () => {
               <input
                 className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] text-xs text-center p-2 pr-8"
                 placeholder="請輸入關鍵字"
+                value={searchText}
+                onChange={(ev) => setSearchText(ev.target.value)}
               />
               <div
                 className="absolute right-3 top-[26px] text-[10px] text-[#25747B]"
-                onClick={() => console.log("Show Password")}
+                onClick={() => viewSearchResultHandler()}
               >
                 <img src={searchIcon} className="max-w-none" />
               </div>
@@ -108,7 +83,7 @@ const SearchPage: FC = () => {
         <div className="absolute w-full bottom-[80px] px-3">
           <div
             className="rounded-[10px] bg-[#64B3EC] hover:bg-[#6D7D8B] text-white text-center text-sm p-3"
-            onClick={() => navigate("/searchresult")}
+            onClick={() => viewSearchResultHandler()}
           >
             Search
           </div>

@@ -11,6 +11,7 @@ import PatientResultItemIcon from "../../assets/icons/patient_thumbnail.svg";
 import SelectedResultItemIcon from "../../assets/icons/selected_ico.svg";
 
 interface PatientResultItemProps {
+  cardid: number;
   name: string;
   newdiease: boolean;
   telephone: string;
@@ -21,6 +22,7 @@ interface PatientResultItemProps {
 }
 
 const PatientResultItem: FC<PatientResultItemProps> = ({
+  cardid,
   name,
   newdiease,
   telephone,
@@ -63,6 +65,39 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
   const handleMouseUp = () => {
     clearTimeout(timeout);
     // setIsLongClick(false);
+  };
+
+  // remove and hide paid card after click
+  const removePaidCardHandler = async () => {
+    // update backend for paid
+    console.log("patientresultitem -> ", cardid);
+    const data = { cardid };
+    await fetch("http://localhost:8000/updatecardpaid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Card Paid Status successfully!");
+        setIsHideCard(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
   };
 
   return !isHideCard ? (
@@ -119,7 +154,7 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
             }
             onClick={() => {
               if (!isPaidClick) browsePatientDetail();
-              else setIsHideCard(true);
+              else removePaidCardHandler();
             }}
           >
             <div className="grow flex flex-row justify-between">
@@ -133,7 +168,9 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
                 </div>
               </div>
               <div className="h-full flex flex-col">
-                <div className="text-black text-opacity-60">{date}</div>
+                <div className="text-black text-opacity-60">
+                  {getOnlyDate1(date)}
+                </div>
                 {isPaidClick ? (
                   <div
                     className="grow text-[20px] font-medium text-right justify-center pt-2 z-10"
