@@ -36,12 +36,13 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
   const browsePatientDetail = () => {
     navigate("/patientdetail", {
       state: {
-        name: name,
-        newdiease: newdiease,
-        telephone: telephone,
-        age: age,
-        sex: sex,
-        doctor: doctor,
+        cardid: cardid,
+        // name: name,
+        // newdiease: newdiease,
+        // telephone: telephone,
+        // age: age,
+        // sex: sex,
+        // doctor: doctor,
         date: date,
       },
     });
@@ -70,7 +71,6 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
   // remove and hide paid card after click
   const removePaidCardHandler = async () => {
     // update backend for paid
-    console.log("patientresultitem -> ", cardid);
     const data = { cardid };
     await fetch("http://localhost:8000/updatecardpaid", {
       method: "POST",

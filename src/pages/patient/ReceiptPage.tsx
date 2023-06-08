@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -15,26 +15,56 @@ import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
 const ReceiptPage: FC = () => {
-  const temp_data = {
-    name: "陳小明",
-    newdiease: true,
-    telephone: "671234561",
-    age: 52,
-    sex: 1,
-    doctor: "黃文智醫師",
-    date: "9-9-2022",
-    diagnosis: "這是既往史",
-    doctorID: "006073",
-    toll: 5,
-  };
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const context = location.state.context;
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
+  };
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [curDate, setCurDate] = useState("9-9-2022");
-  const [curName, setCurName] = useState("陳小明");
-  const [curDiagnosis, setCurDiagnosis] = useState("這是既往史");
-  const [curToll, setCurToll] = useState(5);
-  const [curDoctorID, setCurDoctorID] = useState("006073");
+  const [curDate, setCurDate] = useState(getOnlyDate1(context.date));
+  const [curName, setCurName] = useState("");
+  const [curDiagnosis, setCurDiagnosis] = useState("");
+  const [curToll, setCurToll] = useState(0);
+  const [curDoctorID, setCurDoctorID] = useState("");
+  const [curReceipt, setCurReceipt] = useState("");
+
+  const getReceiptData = async () => {
+    const cardid = context.cardid;
+    const data = { cardid };
+    await fetch("http://localhost:8000/getptcardsbyid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get Patient Detail by ID successfully!");
+        if (data.data.length > 0) {
+          // update current receipt
+          const temp = data.data[0];
+          setCurName(temp.name);
+          setCurDiagnosis(temp.diagnosis);
+          setCurDoctorID(temp.doctorid);
+          setCurReceipt(temp.receipt ? temp.receipt : "");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   // Hook for User Authentication
   useEffect(() => {
@@ -43,8 +73,32 @@ const ReceiptPage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      getReceiptData();
     }
   }, [navigate]);
+
+  // Update Doctor Receipt Handler
+  const updateReceiptHandler = async () => {
+    setIsEditMode(false);
+    // update backend data
+    const cardid = context.cardid;
+    const data = { cardid, curReceipt };
+    await fetch("http://localhost:8000/updateptcardreceipt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Patient Card Receipt successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   return (
     <div className="relative">
@@ -111,8 +165,9 @@ const ReceiptPage: FC = () => {
                   <input
                     type="text"
                     className="focus:outline-none"
-                    value={curToll}
-                    onChange={(ev: any) => setCurToll(ev.target.value)}
+                    value={"$"}
+                    // value={curToll}
+                    // onChange={(ev: any) => setCurToll(ev.target.value)}
                   />
                 </span>
               </div>
@@ -126,6 +181,8 @@ const ReceiptPage: FC = () => {
                     }
                     style={{ color: Theme.COLOR_GRAY }}
                     readOnly={!isEditMode}
+                    value={curReceipt}
+                    onChange={(ev) => setCurReceipt(ev.target.value)}
                   />
                 </div>
                 <div className="h-32">醫師簽名：</div>
@@ -141,7 +198,7 @@ const ReceiptPage: FC = () => {
                   />
                 </span>
               </div>
-              <div className="py-1 text-black text-opacity-60">
+              {/* <div className="py-1 text-black text-opacity-60">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>簽發日期:</span>
                 <span className="pl-2 text-black text-opacity-60">
                   <input
@@ -151,7 +208,7 @@ const ReceiptPage: FC = () => {
                     onChange={(ev) => setCurDate(ev.target.value)}
                   />
                 </span>
-              </div>
+              </div> */}
             </div>
             <div
               className="flex flex-row justify-between p-3 text-xs"
@@ -180,7 +237,7 @@ const ReceiptPage: FC = () => {
           <div
             className="p-3 text-center text-white rounded-xl"
             style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-            onClick={() => setIsEditMode(false)}
+            onClick={() => updateReceiptHandler()}
           >
             Confirm
           </div>

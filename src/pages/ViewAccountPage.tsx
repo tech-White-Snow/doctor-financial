@@ -68,7 +68,7 @@ const ViewAccountPage: FC = () => {
         <Header title="Account" />
         {/* Account Detail */}
         <div
-          className="relative w-full mt-3 text-xs font-medium pb-[60px]"
+          className="relative w-full mt-3 text-xs font-medium pb-[130px]"
           style={{ color: Theme.COLOR_DEFAULT }}
         >
           {accountList ? (
@@ -96,7 +96,7 @@ const ViewAccountPage: FC = () => {
       </div>
       {/* Logout Button */}
       <div
-        className="absolute bottom-[80px] w-full p-2 text-center text-[#CD2E54] font-bold border-t border-b border-opacity-50"
+        className="absolute bottom-[80px] w-full p-2 text-center text-[#CD2E54] font-bold border-t border-b border-opacity-50 bg-white"
         onClick={() => logoutHandler()}
       >
         LOGOUT

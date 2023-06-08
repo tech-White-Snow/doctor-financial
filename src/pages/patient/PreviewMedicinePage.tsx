@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -14,6 +14,11 @@ import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
+interface MedicineType {
+  name: string;
+  amount: number;
+}
+
 const PreviewMedicinePage: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,6 +27,17 @@ const PreviewMedicinePage: FC = () => {
   const context = location.state.context;
   const files = location.state.files;
 
+  const [curMedicines, setCurMedicines] = useState<MedicineType[]>([]);
+  const [chunkMedicines, setChunkMedicines] = useState<MedicineType[][]>([]);
+
+  const chunkArray = (arr: MedicineType[], chunkSize: number) => {
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      chunks.push(arr.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -29,6 +45,10 @@ const PreviewMedicinePage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      setCurMedicines(context.medicines ? JSON.parse(context.medicines) : []);
+      setChunkMedicines(
+        context.medicines ? chunkArray(JSON.parse(context.medicines), 3) : []
+      );
     }
   }, [navigate]);
 
@@ -147,7 +167,24 @@ const PreviewMedicinePage: FC = () => {
               </div>
               <div className="py-1">
                 <div style={{ color: Theme.COLOR_DEFAULT }}>診斷:</div>
-                <div className="pl-2 h-48 text-black text-opacity-60"></div>
+                <div className="p-2 h-48 text-black text-xs">
+                  <table className="table w-11/12 mx-auto border-collapse border border-black">
+                    <tbody>
+                      {chunkMedicines.map((chunk, i) => (
+                        <tr key={i}>
+                          {chunk.map((medicine, j) => (
+                            <td
+                              key={j}
+                              className="border border-black p-1 text-center w-1/3"
+                            >
+                              {medicine.name} {medicine.amount}g
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="text-center text-xs text-[#666666]">
                   <span className="px-4">日藥/每日</span>
                   <span className="px-4">次/共</span>

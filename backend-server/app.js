@@ -413,6 +413,47 @@ app.post("/updatecardpaid", (req, res) => {
   );
 });
 
+// get patient cards
+app.post("/getptcardsbyid", (req, res) => {
+  const { cardid } = req.body;
+  db.query(
+    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.cardid = ?",
+    [cardid],
+    (err, rows) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.status(200).json({ data: rows });
+      }
+    }
+  );
+});
+
+// --------------------------------- Receipt, Recipe, Prescription -------------------------------
+app.post("/updateptcardreceipt", (req, res) => {
+  const { cardid, curReceipt } = req.body;
+  db.query(
+    `UPDATE pt_cards SET receipt = ? WHERE cardid = ?`,
+    [curReceipt, cardid],
+    (err, rows) => {
+      if (err) res.status(500).send(err.message);
+      else res.status(200).send({ data: rows });
+    }
+  );
+});
+
+app.post("/updateptcardprescription", (req, res) => {
+  const { cardid, curPrescription } = req.body;
+  db.query(
+    `UPDATE pt_cards SET prescription = ? WHERE cardid = ?`,
+    [curPrescription, cardid],
+    (err, rows) => {
+      if (err) res.status(500).send(err.message);
+      else res.status(200).send({ data: rows });
+    }
+  );
+});
+
 // Server running
 app.listen(8000, () => {
   console.log("Server started on port 8000!");

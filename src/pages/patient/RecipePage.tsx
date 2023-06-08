@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -15,22 +15,67 @@ import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
-const RecipePage: FC = () => {
-  const temp_data = {
-    name: "陳小明",
-    newdiease: true,
-    telephone: "671234561",
-    age: 52,
-    sex: 1,
-    doctor: "黃文智醫師",
-    date: "9-9-2022",
-    diagnosis: "這是既往史",
-    doctorID: "006073",
-  };
+interface MedicineType {
+  name: string;
+  amount: number;
+}
 
+const RecipePage: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const _context = location.state.context;
 
   const [isFollowedUp, setIsFollowedUp] = useState(true);
+
+  const [context, setContext] = useState({});
+
+  const [curName, setCurName] = useState("");
+  const [curDiagnosis, setCurDiagnosis] = useState("");
+  const [curDoctorName, setCurDoctorName] = useState("");
+  const [curDoctorID, setCurDoctorID] = useState("");
+  const [curMedicines, setCurMedicines] = useState<MedicineType[]>([]);
+  const [chunkMedicines, setChunkMedicines] = useState<MedicineType[][]>([]);
+
+  const chunkArray = (arr: MedicineType[], chunkSize: number) => {
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      chunks.push(arr.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+
+  const getRecipeData = async () => {
+    const cardid = _context.cardid;
+    const data = { cardid };
+    await fetch("http://localhost:8000/getptcardsbyid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get Patient Detail by ID successfully!");
+        if (data.data.length > 0) {
+          // update current receipt
+          setContext(data.data[0]);
+          const temp = data.data[0];
+          setCurName(temp.name);
+          setCurDiagnosis(temp.diagnosis);
+          setCurDoctorName(temp.doctor);
+          setCurDoctorID(temp.doctorid);
+          setCurMedicines(temp.medicines ? JSON.parse(temp.medicines) : []);
+          setChunkMedicines(
+            temp.medicines ? chunkArray(JSON.parse(temp.medicines), 3) : []
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   // Hook for User Authentication
   useEffect(() => {
@@ -39,8 +84,20 @@ const RecipePage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      // get patient data
+      getRecipeData();
     }
   }, [navigate]);
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
+  };
 
   return (
     <div className="relative">
@@ -70,18 +127,35 @@ const RecipePage: FC = () => {
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>診症日期:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {temp_data.date}
+                  {getOnlyDate1(_context.date)}
                 </span>
               </div>
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>病人姓名:</span>
                 <span className="pl-2 text-black text-opacity-60">
-                  {temp_data.name}
+                  {curName}
                 </span>
               </div>
               <div className="py-1">
                 <div style={{ color: Theme.COLOR_DEFAULT }}>診斷:</div>
-                <div className="pl-2 h-48 text-black text-opacity-60"></div>
+                <div className="p-2 h-48 text-black text-xs">
+                  <table className="table w-11/12 mx-auto border-collapse border border-black">
+                    <tbody>
+                      {chunkMedicines.map((chunk, i) => (
+                        <tr key={i}>
+                          {chunk.map((medicine, j) => (
+                            <td
+                              key={j}
+                              className="border border-black p-1 text-center w-1/3"
+                            >
+                              {medicine.name} {medicine.amount}g
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="text-center text-xs text-[#666666]">
                   <span className="px-4">日藥/每日</span>
                   <span className="px-4">次/共</span>
@@ -97,12 +171,13 @@ const RecipePage: FC = () => {
                 className="py-1 pt-3 text-black text-opacity-60"
                 style={{ color: Theme.COLOR_DEFAULT }}
               >
-                主診醫師：
+                <span>主診醫師：</span>
+                <span>{curDoctorName}</span>
               </div>
               <div className="pb-1 text-black text-opacity-60 flex flex-row justify-between">
                 <div>
                   <span>醫師編號:</span>
-                  <span className="pl-2">{temp_data.doctorID}</span>
+                  <span className="pl-2">{curDoctorID}</span>
                 </div>
                 {/* <div className="flex flex-row">
                   <div
@@ -141,13 +216,18 @@ const RecipePage: FC = () => {
         </div>
         {/* Assistant Tools */}
         <div className="mb-[70px] p-4 flex flex-row justify-end">
-          <div className="p-3" onClick={() => navigate("/checkpatient")}>
+          <div
+            className="p-3"
+            onClick={() =>
+              navigate("/checkpatient", { state: { context: context } })
+            }
+          >
             <img src={editIcon} className="max-w-none" />
           </div>
-          <div className="p-3" onClick={() => navigate("/receipt")}>
+          <div className="p-3" onClick={() => console.log("Share")}>
             <img src={shareIcon} className="max-w-none" />
           </div>
-          <div className="p-3" onClick={() => navigate("/recipe")}>
+          <div className="p-3" onClick={() => console.log("Print")}>
             <img src={printIcon} className="max-w-none" />
           </div>
         </div>
