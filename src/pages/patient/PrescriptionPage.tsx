@@ -14,6 +14,12 @@ import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
+interface CompanyInfoType {
+  logo: string;
+  address: string;
+  tel: string;
+}
+
 const PrescriptionPage: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,6 +71,30 @@ const PrescriptionPage: FC = () => {
       });
   };
 
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoType>({
+    logo: "",
+    address: "",
+    tel: "",
+  });
+
+  const getCompanyInfo = async () => {
+    //  get company info
+    await fetch("http://localhost:8000/getcompanyinfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCompanyInfo(data.data[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -74,6 +104,8 @@ const PrescriptionPage: FC = () => {
     } else {
       // get prescription data
       getPrescriptionData();
+      // get company profile
+      getCompanyInfo();
     }
   }, [navigate]);
 
@@ -118,7 +150,7 @@ const PrescriptionPage: FC = () => {
               className="font-bold font-sans text-5xl"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
-              福氣堂
+              {companyInfo.logo}
             </div>
             <div
               className="font-bold text-lg pt-5"
@@ -211,8 +243,8 @@ const PrescriptionPage: FC = () => {
               className="p-3 text-xs flex justify-between"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
-              <div>地址: 油麻地彌敦道546號旺角大樓5D</div>
-              <div>電話: 2788 2951</div>
+              <div>地址: {companyInfo.address}</div>
+              <div>電話: {companyInfo.tel}</div>
             </div>
           </div>
           {/* Assistant Tools */}

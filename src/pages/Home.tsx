@@ -16,6 +16,10 @@ interface UserData {
   username: string;
 }
 
+interface CompanyInfoType {
+  logo: string;
+}
+
 const Home: FC = () => {
   const [cardsArray, setCardsArray] = useState([]);
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -51,6 +55,26 @@ const Home: FC = () => {
       });
   };
 
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoType>({ logo: "" });
+
+  const getCompanyInfo = async () => {
+    //  get company info
+    await fetch("http://localhost:8000/getcompanyinfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCompanyInfo(data.data[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -61,6 +85,8 @@ const Home: FC = () => {
       setUserData(JSON.parse(token).user);
       // fetch patient card information from backend
       getPatientCards(JSON.parse(token).user);
+      // get Company Information
+      getCompanyInfo();
     }
   }, [navigate]);
 
@@ -72,8 +98,8 @@ const Home: FC = () => {
           className="relative w-full h-40 text-center text-base text-white flex items-center pb-2"
           style={{ background: Theme.COLOR_DEFAULT }}
         >
-          <div className="w-full flex flex-row justify-between p-8">
-            <div className="font-bold text-5xl">福氣堂</div>
+          <div className="w-full flex flex-row justify-between p-8 items-center">
+            <div className="font-bold text-5xl">{companyInfo.logo}</div>
             <div className="relative">
               <div
                 className="rounded-full border-none"
