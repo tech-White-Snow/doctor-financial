@@ -5,10 +5,13 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const mysql = require("mysql");
+const multer = require("multer");
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+
+const upload = multer({ dest: "uploads/" });
 
 // MySQL Configuration
 const db = mysql.createConnection({
@@ -22,6 +25,15 @@ db.connect((err) => {
   if (err) throw err;
   console.log("Connected to MySQL database!");
 });
+
+// Able to Access and Get Image
+app.use("/uploads", express.static("uploads"));
+
+// app.get("/api/images/:filename", (req, res) => {
+//   const { filename } = req.params;
+//   const publicUrl = `${req.protocol}://${req.get("host")}/uploads/${filename}`;
+//   res.json({ url: publicUrl });
+// });
 
 // user authentication - login/signup
 app.post("/login", (req, res) => {
@@ -63,7 +75,7 @@ app.post("/login", (req, res) => {
 app.post("/getptcards", (req, res) => {
   const { doctorID, curDate } = req.body;
   db.query(
-    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.id WHERE pt_cards.doctorid = ? AND pt_cards.date > ?",
+    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.doctorid = ? AND pt_cards.date >= ?",
     [doctorID, curDate],
     (err, rows) => {
       if (err) {
@@ -97,7 +109,7 @@ app.post("/getptcardsbydate", (req, res) => {
 app.post("/getpthistory", (req, res) => {
   db.query(
     "SELECT * FROM pt_history WHERE id = ?",
-    req.body.cardID,
+    req.body.patientID,
     (err, rows) => {
       if (err) {
         res.status(500).send(err.message);
@@ -291,7 +303,6 @@ app.post("/addnewappointment", (req, res) => {
 app.post("/deleteptcard", (req, res) => {
   const context = req.body.context;
 
-  console.log("context --> ", context);
   const sql = `DELETE FROM pt_cards WHERE cardid = ?`;
   const values = [context.cardid];
 
@@ -301,6 +312,59 @@ app.post("/deleteptcard", (req, res) => {
       res.status(500).json({ message: "Error deleting patient card : " + err });
     } else {
       res.status(200).json({ message: "Deleteing patient card succeed!" });
+    }
+  });
+});
+
+// --------------------------------- Check Patient -------------------------------------------
+
+// upload files
+app.post("/upload", upload.single("file"), (req, res) => {
+  const cardid = req.body.cardid;
+  const filename = req.file.filename;
+
+  // save in sql database
+  const sql = `UPDATE pt_cards SET album = CONCAT(album, ?) WHERE cardid = ?`;
+  const values = [", " + filename, cardid];
+
+  db.query(sql, values, (err, rows) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: "Uploading Album Image failed : " + err });
+    } else {
+      res.status(200).json({ message: "Uploading Album Image succeed!" });
+    }
+  });
+});
+
+// update check patient detail
+app.post("/updatecheckpatient", (req, res) => {
+  const context = req.body.context;
+
+  if (!context || !context.cardid) return;
+
+  // update card information
+  const sql = `UPDATE pt_cards SET albumtext = ?, disease = ?, diagnosis = ?, syndromes = ?, medicines = ?, remark = ? WHERE cardid = ?`;
+  const values = [
+    context.albumtext,
+    context.disease,
+    context.diagnosis,
+    context.syndromes,
+    context.medicines,
+    context.remark,
+    context.cardid,
+  ];
+
+  db.query(sql, values, (err, rows) => {
+    if (err) {
+      res.status(500).json({
+        message: "Updating Check Patient Card Detail failed : " + err,
+      });
+    } else {
+      res
+        .status(200)
+        .json({ message: "Updating Check Patient Card Detail succeed!" });
     }
   });
 });

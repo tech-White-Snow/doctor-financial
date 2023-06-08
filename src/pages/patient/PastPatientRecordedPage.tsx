@@ -92,7 +92,7 @@ const PastPatientRecordedPage: FC = () => {
             <div className="flex flex-row text-sm py-1">
               <div style={{ color: Theme.COLOR_DEFAULT }}>身份證號碼:</div>
               <div className="pl-2 text-black text-opacity-60">
-                {context.cardid}
+                {context.patientid}
               </div>
             </div>
             <div className="flex flex-row text-sm py-1">

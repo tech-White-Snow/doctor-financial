@@ -42,7 +42,7 @@ const Home: FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("homedata -> ", data.data);
+        // console.log("homedata -> ", data.data);
         setCardsArray(data.data.slice(0, 4));
       })
       .catch((error) => {

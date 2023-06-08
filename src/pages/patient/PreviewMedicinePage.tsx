@@ -17,7 +17,10 @@ import PatientResultItem from "../../components/patient/PatientResultItem";
 const PreviewMedicinePage: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // load requested data
   const context = location.state.context;
+  const files = location.state.files;
 
   // Hook for User Authentication
   useEffect(() => {
@@ -43,8 +46,57 @@ const PreviewMedicinePage: FC = () => {
     return formattedDate;
   };
 
-  const updateCheckPatientHandler = () => {
-    navigate("/admin");
+  const handleUpload = async (file: any) => {
+    console.log("handleUpload");
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("cardid", context.cardid);
+
+    try {
+      const response = await fetch("http://localhost:8000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Album Image Uploaded Successfully");
+      } else {
+        console.error("Failed to upload Album Image");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateCheckPatientHandler = async () => {
+    // Update Check Patient Information
+
+    // -- load album images
+    files.map((idx: File) => handleUpload(idx));
+
+    // -- update extra check patient data
+    const data = { context };
+    await fetch("http://localhost:8000/updatecheckpatient", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Check Patient Detail successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+
+    // navigate("/admin");
   };
 
   return (
@@ -79,7 +131,11 @@ const PreviewMedicinePage: FC = () => {
                     {getOnlyDate(context.date)}
                   </span>
                 </div>
-                <div onClick={() => navigate(-1)}>
+                <div
+                  onClick={() =>
+                    navigate("/checkpatient", { state: { context: context } })
+                  }
+                >
                   <img src={editIcon} className="max-w-none" />
                 </div>
               </div>

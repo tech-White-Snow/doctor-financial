@@ -24,7 +24,7 @@ import NavBar from "../../components/NavBar";
 
 interface MedicineInfo {
   name: string;
-  quantity: number;
+  amount: number;
 }
 
 const CheckPatient: FC = () => {
@@ -38,9 +38,10 @@ const CheckPatient: FC = () => {
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
   const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
-    []
+    JSON.parse(_context.medicines)
   );
-  const [storeMedicineInfoCount, setStoreMedicineInfoCount] = useState(0);
+
+  console.log("-->", _context);
 
   const [currentSelect, setCurrentSelect] = useState(0);
 
@@ -57,9 +58,11 @@ const CheckPatient: FC = () => {
   >([]);
   const [curHistoryViewState, setCurHistoryViewState] = useState(0);
 
+  const [albumImages, setAlbumImages] = useState<string[]>([]);
+
   const getPatientHistory = async () => {
-    const cardID = context.cardid;
-    const data = { cardID };
+    const patientID = context.patientid;
+    const data = { patientID };
     await fetch("http://localhost:8000/getpthistory", {
       method: "POST",
       headers: {
@@ -88,14 +91,33 @@ const CheckPatient: FC = () => {
     } else {
       // fetch patient card information from backend
       getPatientHistory();
+      // analyze album images
+      const albumImgText: string[] = _context.album.split(", ");
+      albumImgText.map((idx) => {
+        console.log(idx);
+      });
+      setAlbumImages(albumImgText);
+      console.log("albumImgText -> ", albumImgText);
+      console.log("QQQ -> ", Array.isArray(albumImgText));
     }
   }, [navigate]);
+
+  useEffect(() => {
+    updateMedicineDetail();
+  }, [storeMedicineInfo]);
 
   const getUpdateRemark = (origin: any, newvalue: any, idx: any) => {
     const parts = origin.split("@@");
     parts[idx] = newvalue; // Replace the idx part
     const output = parts.join("@@");
     return output;
+  };
+
+  const updateMedicineDetail = () => {
+    setContext((prevContext: any) => ({
+      ...prevContext,
+      medicines: JSON.stringify(storeMedicineInfo),
+    }));
   };
 
   const updateCurrentPatientHistory = async () => {
@@ -154,21 +176,40 @@ const CheckPatient: FC = () => {
     return formattedDate;
   };
 
+  // File Uploading Functions
+  const [files, setFiles] = useState<File[]>([]);
+  const [loadFiles, setLoadFiles] = useState<string[]>([]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const filesArray = Array.from(event.target.files);
+      setFiles(filesArray);
+      for (let i = 0; i < filesArray.length; i++) {
+        const file = filesArray[i];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          setLoadFiles((prevFiles) => [...prevFiles, reader.result as string]);
+        };
+      }
+    }
+  };
+
   return (
     <div className="relative">
       <div className="relative h-screen overflow-y-auto">
         {/* Header */}
         <div className="relative bg-[#64B3EC] h-28">
           <div className="flex flex-row justify-between w-full px-6 absolute text-center text-base text-white font-bold mt-8">
-            <div className="flex flex-row">
+            <div className="flex flex-row items-center">
               <div onClick={() => navigate(-1)}>
                 <img src={backwardIcon} className="max-w-none" />
               </div>
               <div className="pl-4">
-                {context.name}({context.sex == 1 ? "男" : "女"})
+                {context.name} ({context.sex == 1 ? "男" : "女"})
               </div>
             </div>
-            <div>{context.age}歲</div>
+            <div>{context.age} 歲</div>
           </div>
           <div className="absolute bottom-[-8px] w-full h-8 bg-white rounded-xl"></div>
         </div>
@@ -220,19 +261,23 @@ const CheckPatient: FC = () => {
                     ) : (
                       <></>
                     )}
-                    {!isPastHistoryEditMode ? (
-                      <div
-                        className="pt-2 self-end"
-                        onClick={() => setIsPastHistoryEditMode(true)}
-                      >
-                        <img src={editIcon2} className="max-w-none" />
-                      </div>
+                    {patientHistory &&
+                    patientHistory.length > 0 &&
+                    !isPastHistoryEditMode ? (
+                      <>
+                        <div
+                          className="pt-2 self-end"
+                          onClick={() => setIsPastHistoryEditMode(true)}
+                        >
+                          <img src={editIcon2} className="max-w-none" />
+                        </div>
+                        <div className="pt-2 self-end">
+                          Last update: {getOnlyDate(patientHistory[0].date)}
+                        </div>
+                      </>
                     ) : (
                       <></>
                     )}
-                    <div className="pt-2 self-end">
-                      Last update: {getOnlyDate(patientHistory[0].date)}
-                    </div>
                   </div>
                   {/*  */}
                   {isPastHistoryEditMode ? (
@@ -298,21 +343,27 @@ const CheckPatient: FC = () => {
                       ) : (
                         <div className="w-8"></div>
                       )}
-                      <div
-                        className="flex flex-col p-3 w-full"
-                        style={{
-                          backgroundColor: Theme.COLOR_LIGHTBLUE,
-                          color: Theme.COLOR_DARKGREEN,
-                        }}
-                      >
-                        <div>{patientHistory[curHistoryViewState].detail}</div>
-                        <div className="pt-2 self-end">
-                          Last update:{" "}
-                          {getOnlyDate1(
-                            patientHistory[curHistoryViewState].date
-                          )}
+                      {patientHistory && patientHistory[curHistoryViewState] ? (
+                        <div
+                          className="flex flex-col p-3 w-full"
+                          style={{
+                            backgroundColor: Theme.COLOR_LIGHTBLUE,
+                            color: Theme.COLOR_DARKGREEN,
+                          }}
+                        >
+                          <div>
+                            {patientHistory[curHistoryViewState].detail}
+                          </div>
+                          <div className="pt-2 self-end">
+                            Last update:{" "}
+                            {getOnlyDate1(
+                              patientHistory[curHistoryViewState].date
+                            )}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <></>
+                      )}
                       {curHistoryViewState < patientHistory.length - 1 ? (
                         <div
                           className="flex flex-col justify-center"
@@ -352,23 +403,75 @@ const CheckPatient: FC = () => {
               {currentSelect == 3 ? (
                 <div className="p-3">
                   <div className="font-sans flex flex-row justify-between">
-                    <div className="flex flex-row">
-                      <div className="px-2">
-                        <img src={blankImage} className="max-w-none" />
+                    {albumImages && albumImages.length > 1 ? (
+                      <div className="flex flex-row overflow-x-auto">
+                        {albumImages ? (
+                          albumImages.map((idx, kkk) =>
+                            kkk == 0 ? (
+                              <></>
+                            ) : (
+                              <div className="px-2">
+                                <img
+                                  src={"http://localhost:8000/uploads/" + idx}
+                                  className="h-24 max-w-none"
+                                />
+                              </div>
+                            )
+                          )
+                        ) : (
+                          <></>
+                        )}
                       </div>
-                      <div className="px-2">
-                        <img src={blankImage} className="max-w-none" />
+                    ) : (
+                      <div className="flex flex-row">
+                        <div className="px-2">
+                          <img src={blankImage} className="max-w-none" />
+                        </div>
+                        <div className="px-2">
+                          <img src={blankImage} className="max-w-none" />
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className="flex flex-row items-end">
-                      <div className="px-1 pb-1">
-                        <img src={uploadIcon} className="max-w-none" />
-                      </div>
-                      <div className="px-1">
-                        <img src={cameraIcon} className="max-w-none" />
+                      <div className="px-1 pb-1 flex items-center">
+                        <div>
+                          <label htmlFor="file-input" className="w-8 h-8">
+                            <img src={uploadIcon} className="max-w-none" />
+                          </label>
+                          <input
+                            id="file-input"
+                            type="file"
+                            onChange={handleFileChange}
+                            style={{ display: "none" }}
+                            accept="image/*"
+                            multiple
+                          />
+                        </div>
+                        <div className="px-1">
+                          <img src={cameraIcon} className="max-w-none" />
+                        </div>
                       </div>
                     </div>
                   </div>
+                  {/* New Uploaded Files Preview */}
+                  {loadFiles.length > 0 ? (
+                    <div className="pt-3 pb-0">
+                      <div>New uploaded Album Images</div>
+                      <div className="flex overflow-x-auto">
+                        {loadFiles.map((file, idx) => (
+                          <div className="px-1" key={"loadFilesImg" + idx}>
+                            <img
+                              src={file}
+                              alt="uploaded file"
+                              className="h-24 max-w-none"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                   <div className="rounded-lg p-1 mt-2">
                     <input
                       className="w-full focus:outline-none p-2 rounded-lg bg-[#E8EEEC] text-[#276D36]"
@@ -508,35 +611,52 @@ const CheckPatient: FC = () => {
               {currentSelect == 7 ? (
                 <div className="px-5 py-3">
                   <div className="flex flex-col">
-                    {Array.from(
-                      { length: storeMedicineInfoCount },
-                      (_: any, index: any) => index
-                    ).map((idx: any) => (
+                    {storeMedicineInfo.map((idx: any, kkk: any) => (
                       <div
                         className="flex flex-row justify-between py-2"
-                        key={"medicinetype" + idx}
+                        key={"medicinetype" + kkk}
                       >
                         <div className="grow">
                           <span className="p-2 bg-[#EAF4FB]">
                             <input
-                              className="w-1/2 bg-[#EAF4FB]"
-                              value="Herbs Medicine"
+                              className="w-1/2 bg-[#EAF4FB] outline-none"
+                              value={idx.name}
+                              onChange={(ev) => {
+                                setStoreMedicineInfo((prevState) => {
+                                  const newState = [...prevState]; // create a copy of the array
+                                  newState[kkk] = {
+                                    ...newState[kkk],
+                                    name: ev.target.value,
+                                  }; // update the name property of the specified element
+                                  return newState;
+                                });
+                              }}
                             />
                           </span>
                           <span className="p-2 ml-2 bg-[#EAF4FB]">
                             <input
-                              className="w-1/4 bg-[#EAF4FB]"
-                              value="Quantity"
+                              className="w-1/4 bg-[#EAF4FB] outline-none"
+                              value={idx.amount}
+                              onChange={(ev) => {
+                                setStoreMedicineInfo((prevState) => {
+                                  const newState = [...prevState]; // create a copy of the array
+                                  newState[kkk] = {
+                                    ...newState[kkk],
+                                    amount: parseInt(ev.target.value),
+                                  }; // update the name property of the specified element
+                                  return newState;
+                                });
+                              }}
                             />
                           </span>
                         </div>
                         <div
                           className="w-6 h-6"
-                          onClick={() =>
-                            setStoreMedicineInfoCount(
-                              storeMedicineInfoCount - 1
-                            )
-                          }
+                          onClick={() => {
+                            setStoreMedicineInfo((prevState) =>
+                              prevState.filter((_, i) => i !== kkk)
+                            );
+                          }}
                         >
                           <img
                             src={removeitemIcon}
@@ -547,9 +667,12 @@ const CheckPatient: FC = () => {
                     ))}
                     <div
                       className="flex flex-row justify-center"
-                      onClick={() =>
-                        setStoreMedicineInfoCount(storeMedicineInfoCount + 1)
-                      }
+                      onClick={() => {
+                        setStoreMedicineInfo((prevState) => [
+                          ...prevState,
+                          { name: "XXX", amount: 0 },
+                        ]);
+                      }}
                     >
                       <img src={additemIcon} />
                     </div>
@@ -684,9 +807,11 @@ const CheckPatient: FC = () => {
         <div
           className="p-3 text-center text-white rounded-xl"
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
-          onClick={() =>
-            navigate("/previewmedicine", { state: { context: context } })
-          }
+          onClick={() => {
+            navigate("/previewmedicine", {
+              state: { context: context, files: files },
+            });
+          }}
         >
           Confirm
         </div>
