@@ -84,9 +84,11 @@ const EditAccountPage: FC = () => {
   const updateAccountHandler = async () => {
     if (password == confirmedPassword) {
       if (accountMode == 2) {
+        // upload Avatar
+        const userAvatar: string = await uploadAvatarHandler();
         // add new account
         const data = {
-          loadFile,
+          userAvatar,
           userName,
           userEmail,
           password,
