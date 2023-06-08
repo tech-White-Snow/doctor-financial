@@ -369,6 +369,12 @@ app.post("/updatecheckpatient", (req, res) => {
   });
 });
 
+// upload Avatar
+app.post("/uploadavatar", upload.single("file"), (req, res) => {
+  const filename = req.file.filename;
+  res.status(200).json({ filename: filename });
+});
+
 // Server running
 app.listen(8000, () => {
   console.log("Server started on port 8000!");

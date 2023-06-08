@@ -20,10 +20,11 @@ const EditAccountPage: FC = () => {
   const accountMode = location.state.mode; // 1 : viewMode 2: addMode
   const context = location.state.context; // context of account
 
+  console.log("editAccount -> ", context);
+
   const [isEditMode, setIsEditMode] = useState(accountMode == 2);
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
-  const [userAvatar, setUserAvatar] = useState(context.userAvatar);
   const [userName, setUserName] = useState(
     accountMode != 2 ? context.username : "Admin"
   );
@@ -43,12 +44,49 @@ const EditAccountPage: FC = () => {
     accountMode != 2 ? context.doctorid : "13579"
   );
 
+  // Avatar Upload
+  const [file, setFile] = useState<File>(new File([], "") || null);
+  const [loadFile, setLoadFile] = useState<string>(
+    context && context.avatar ? context.avatar : ""
+  );
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      setFile(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setLoadFile(reader.result as string);
+      };
+    }
+  };
+
+  const uploadAvatarHandler = async (): Promise<string> => {
+    console.log("handleUpload");
+    if (!file) {
+      return "";
+    }
+
+    console.log("***");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("http://localhost:8000/uploadavatar", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
+    console.log("Album Image Uploaded Successfully");
+    return data.filename;
+  };
+
   const updateAccountHandler = async () => {
     if (password == confirmedPassword) {
       if (accountMode == 2) {
         // add new account
         const data = {
-          userAvatar,
+          loadFile,
           userName,
           userEmail,
           password,
@@ -74,6 +112,10 @@ const EditAccountPage: FC = () => {
           });
       } else {
         // update existing account
+
+        // upload Avatar
+        const userAvatar: string = await uploadAvatarHandler();
+
         const data = {
           context,
           userAvatar,
@@ -150,10 +192,21 @@ const EditAccountPage: FC = () => {
               className="relative w-12"
               style={{ color: Theme.COLOR_DEFAULT }}
             >
-              <img
-                src={profileImage}
-                className="w-12 h-12 max-w-none rounded-full"
-              />
+              {loadFile != "" ? (
+                <img
+                  src={
+                    context.avatar == loadFile
+                      ? "http://localhost:8000/uploads/" + loadFile
+                      : loadFile
+                  }
+                  className="w-12 h-12 max-w-none rounded-full"
+                />
+              ) : (
+                <img
+                  src={profileImage}
+                  className="w-12 h-12 max-w-none rounded-full"
+                />
+              )}
               <div
                 className="absolute right-1 top-1 w-2 h-2 rounded-full"
                 style={{ background: Theme.COLOR_RED }}
@@ -161,7 +214,16 @@ const EditAccountPage: FC = () => {
             </div>
             {isEditMode ? (
               <div className="absolute right-7 top-7 w-6 h-6">
-                <img src={editIcon1} className="max-w-none" />
+                <label htmlFor="file-input" className="w-8 h-8">
+                  <img src={editIcon1} className="max-w-none" />
+                </label>
+                <input
+                  id="file-input"
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                  accept="image/*"
+                />
               </div>
             ) : (
               <></>
