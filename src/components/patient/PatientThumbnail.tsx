@@ -160,12 +160,12 @@ ${
               <img src={subMenuItemIcon} className="max-w-none" />
               {isOpenItemMenu ? (
                 <div className="absolute top-2 right-1 text-[#64B3EC] text-[11px] border border-[#64B3EC] w-20">
-                  <div
+                  {/* <div
                     className="w-full px-3 py-1 border-b border-b-[#64B3EC] hover:bg-[#D3E7F6]"
                     onClick={() => navigate("/scheduleappointment")}
                   >
                     Edit
-                  </div>
+                  </div> */}
                   <div
                     className="w-full px-3 py-1 hover:bg-[#D3E7F6]"
                     onClick={() => setIsItemDeleteOpen(true)}
