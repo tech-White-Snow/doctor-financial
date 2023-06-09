@@ -1,6 +1,6 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -18,18 +18,28 @@ import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
 const UpdateAlbumPage: FC = () => {
-  const temp_data = {
-    name: "陳小明",
-    newdiease: true,
-    telephone: "671234561",
-    age: 52,
-    sex: 1,
-    doctor: "黃文智醫師",
-    date: "9-9-2022",
-    content: "皮膚發紅，初有斑點",
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // get requested data
+  const context = location.state.context;
+  // const _albumdata = location.state.album;
+  console.log("context -> ", context);
+
+  const [currentSelect, setCurrentSelect] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [albumData, setAlbumData] = useState<any>({});
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
   };
 
-  const navigate = useNavigate();
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -37,8 +47,62 @@ const UpdateAlbumPage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      // calc total album count
+      if (context) {
+        updateAlbumDataHandler();
+      }
     }
   }, [navigate]);
+
+  const updateAlbumDataHandler = async () => {
+    // update album data
+    const cardid = context.cardid;
+    const data = { cardid };
+    await fetch("http://localhost:8000/getptcardsbyid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Album Image Data successfully!");
+        console.log("albumdata->", data.data);
+        if (data.data.length > 0) {
+          setAlbumData(data.data[0]);
+          setTotalCount(data.data[0].album.split(", ").length);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  // Remove Current Select Album Image
+  const removeCurrentAlbumImageHandler = async () => {
+    const cardID = albumData.cardid;
+    const rmImgName = albumData.album.split(", ")[currentSelect];
+    // remove on backend
+    const data = { cardID, rmImgName };
+    await fetch("http://localhost:8000/removealbumimage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Remove Current Select Album Image successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+    updateAlbumDataHandler();
+  };
 
   return (
     <div className="relative">
@@ -54,47 +118,75 @@ const UpdateAlbumPage: FC = () => {
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <div>
-                {temp_data.name}({temp_data.sex == 1 ? "男" : "女"})
+                {context ? context.name : ""} (
+                {context ? (context.sex == 1 ? "男" : "女") : ""})
               </div>
-              <div className="pl-3">{temp_data.age}歲</div>
+              <div className="pl-3">{context ? context.age : ""}歲</div>
             </div>
             <div className="text-sm text-[#0C2036] text-opacity-80">
-              {temp_data.date}
+              {context ? getOnlyDate1(context.date) : ""}
             </div>
           </div>
           {/* Image */}
-          <div className="relative h-[432px] w-full bg-[#F6F9FC] flex flex-col justify-center">
+          <div className="relative w-full bg-[#F6F9FC] flex flex-col justify-center">
             <div className="absolute w-full p-2 top-2 flex flex-row justify-between items-center">
-              <div>
+              <div onClick={() => navigate(-1)}>
                 <img src={closeIcon} className="max-w-none" />
               </div>
               <div className="flex flex-row">
-                <div>
+                {/* <div>
                   <img src={editIcon} className="max-w-none" />
-                </div>
-                <div className="pl-3">
+                </div> */}
+                <div
+                  className="pl-3"
+                  onClick={() => removeCurrentAlbumImageHandler()}
+                >
                   <img src={removeIcon} className="max-w-none" />
                 </div>
               </div>
             </div>
-            <div className="flex flex-row justify-center w-full justify-between px-2">
-              <div>
-                <img src={prevIcon} className="max-w-none" />
+            <div className="flex flex-row justify-center w-full justify-between overflow-x-auto items-center">
+              {currentSelect > 1 ? (
+                <div
+                  onClick={() => setCurrentSelect(currentSelect - 1)}
+                  className="absolute left-0"
+                >
+                  <img src={prevIcon} className="max-w-none" />
+                </div>
+              ) : (
+                <></>
+              )}
+              <div className="w-full py-2">
+                {albumData && albumData.album ? (
+                  <img
+                    src={
+                      "http://localhost:8000/uploads/" +
+                      albumData.album.split(", ")[currentSelect]
+                    }
+                    className="max-w-none w-full"
+                  />
+                ) : (
+                  <div className="w-full h-[400px] flex justify-center">
+                    <div className="flex justify-center items-center">
+                      <img src={blankImgIcon} className="max-w-none w-6 h-6" />
+                    </div>
+                  </div>
+                )}
               </div>
-              <div>
-                <img src={blankImgIcon} className="max-w-none" />
-              </div>
-              <div>
-                <img src={nextIcon} className="max-w-none" />
-              </div>
+              {currentSelect < totalCount - 1 ? (
+                <div
+                  onClick={() => setCurrentSelect(currentSelect + 1)}
+                  className="absolute right-0"
+                >
+                  <img src={nextIcon} className="max-w-none" />
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
-          </div>
-          <div
-            className="pt-4 pb-[75px]"
-            style={{ color: Theme.COLOR_DEFAULT }}
-          >
-            <div className="p-2 text-[15px]">{temp_data.date}</div>
-            <div className="px-4 py-2 text-[11px]">{temp_data.content}</div>
+            <div className="pb-[80px] text-[#64B3EC] text-xs px-3">
+              {albumData.albumtext}
+            </div>
           </div>
         </div>
         {/* NavBar */}

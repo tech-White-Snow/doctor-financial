@@ -83,6 +83,35 @@ const CheckPatient: FC = () => {
       });
   };
 
+  const updateAlbumDataHandler = async () => {
+    // update album data
+    const cardid = _context.cardid;
+    const data = { cardid };
+    await fetch("http://localhost:8000/getptcardsbyid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data.length > 0) {
+          setContext(data.data[0]);
+          // analyze album images
+          const albumImgText: string[] = data.data[0].album.split(", ");
+          albumImgText.map((idx) => {
+            console.log(idx);
+          });
+          setAlbumImages(albumImgText);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -92,12 +121,8 @@ const CheckPatient: FC = () => {
     } else {
       // fetch patient card information from backend
       getPatientHistory();
-      // analyze album images
-      const albumImgText: string[] = _context.album.split(", ");
-      albumImgText.map((idx) => {
-        console.log(idx);
-      });
-      setAlbumImages(albumImgText);
+      // upate patient card context
+      updateAlbumDataHandler();
     }
   }, [navigate]);
 
@@ -409,7 +434,14 @@ const CheckPatient: FC = () => {
                             kkk == 0 ? (
                               <></>
                             ) : (
-                              <div className="px-2">
+                              <div
+                                className="px-2"
+                                onClick={() =>
+                                  navigate("/editalbum", {
+                                    state: { context: context },
+                                  })
+                                }
+                              >
                                 <img
                                   src={"http://localhost:8000/uploads/" + idx}
                                   className="h-24 max-w-none"

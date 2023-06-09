@@ -105,6 +105,43 @@ app.post("/getptcardsbydate", (req, res) => {
   }
 });
 
+// get patient card by patient ID for alubm
+app.post("/getptcardbypatientid", (req, res) => {
+  const patientID = req.body.patientID;
+
+  db.query(
+    `SELECT * from pt_cards WHERE patientid = ?`,
+    [patientID],
+    (err, rows) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.status(200).json({ data: rows });
+      }
+    }
+  );
+});
+
+// remove selected album image
+app.post("/removealbumimage", (req, res) => {
+  const { cardID, rmImgName } = req.body;
+  const rmImgNameStr = ", " + rmImgName;
+
+  db.query(
+    `UPDATE pt_cards SET album = REPLACE(album, ?, '') WHERE album LIKE CONCAT('%', ?, '%') AND cardid = ?`,
+    [rmImgNameStr, rmImgNameStr, cardID],
+    (err, rows) => {
+      if (err) {
+        res
+          .status(500)
+          .json({ message: "remove album image failed!" + err.message });
+      } else {
+        res.status(200).json({ message: "remove album image successfully!" });
+      }
+    }
+  );
+});
+
 // get patient history
 app.post("/getpthistory", (req, res) => {
   const { patientID, doctorID } = req.body;
