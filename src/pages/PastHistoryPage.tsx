@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../assets/color";
 
@@ -13,19 +13,39 @@ import Header from "../components/Header";
 import PatientResultItem from "../components/patient/PatientResultItem";
 
 const PastHistoryPage: FC = () => {
-  const temp_data = {
-    name: "陳小明",
-    newdiease: true,
-    telephone: "671234561",
-    age: 52,
-    sex: 1,
-    doctor: "黃文智醫師",
-    date: "9-9-2022",
-    content: "既往史：有高血压病、冠心病病史。",
-  };
+  const location = useLocation();
+  const context = location.state.context;
+  console.log("pasthistory -> ", context);
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [contentText, setContentText] = useState(temp_data.content);
+  const [contentText, setContentText] = useState("");
+  const [contentDate, setContentDate] = useState("");
+
+  const getPatientPastHistory = async () => {
+    const cardid = context.cardid;
+    const data = { cardid };
+    await fetch("http://localhost:8000/getptcardsbyid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get Patient Card Information successfully!");
+        console.log("--", data.data[0]);
+        if (data.data.length > 0) {
+          setContentText(data.data[0].pasthistory);
+          setContentDate(data.data[0].pasthistorydate);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+    setIsEditMode(false);
+  };
 
   const navigate = useNavigate();
   // Hook for User Authentication
@@ -35,8 +55,42 @@ const PastHistoryPage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      getPatientPastHistory();
     }
   }, [navigate]);
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
+  };
+
+  const updatePatientHistoryHandler = async () => {
+    const cardid = context.cardid;
+    const historydata = contentText;
+    const historydate = getOnlyDate1(new Date());
+    const data = { cardid, historydata, historydate };
+    await fetch("http://localhost:8000/updateptcardpasthistory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Patient Past History successfully!");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+    setIsEditMode(false);
+  };
 
   return (
     <div className="relative">
@@ -52,12 +106,13 @@ const PastHistoryPage: FC = () => {
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <div>
-                {temp_data.name}({temp_data.sex == 1 ? "男" : "女"})
+                {context ? context.name : ""} (
+                {context ? (context.sex == 1 ? "男" : "女") : ""})
               </div>
-              <div className="pl-3">{temp_data.age}歲</div>
+              <div className="pl-3">{context ? context.age : ""}歲</div>
             </div>
             <div className="text-sm text-[#0C2036] text-opacity-80">
-              {temp_data.date}
+              {context ? getOnlyDate1(new Date().toString()) : ""}
             </div>
           </div>
           {/* Content */}
@@ -85,7 +140,7 @@ const PastHistoryPage: FC = () => {
               </div>
               <div
                 className="grow rounded-lg bg-[#64B3EC] p-2 text-white ml-4"
-                onClick={() => setIsEditMode(false)}
+                onClick={() => updatePatientHistoryHandler()}
               >
                 Confirm
               </div>
@@ -102,7 +157,8 @@ const PastHistoryPage: FC = () => {
                 className="pt-3 text-right text-[15px]"
                 style={{ color: Theme.COLOR_DEFAULT }}
               >
-                最後更新：12-8-2022
+                最後更新：
+                {contentDate}
               </div>
             </div>
           )}

@@ -132,6 +132,10 @@ const ReceiptPage: FC = () => {
       });
   };
 
+  const printHandler = () => {
+    window.print();
+  };
+
   return (
     <div className="relative">
       <div className="relative h-screen overflow-y-auto">
@@ -259,7 +263,7 @@ const ReceiptPage: FC = () => {
           <div className="p-3" onClick={() => navigate("/receipt")}>
             <img src={shareIcon} className="max-w-none" />
           </div>
-          <div className="p-3" onClick={() => navigate("/recipe")}>
+          <div className="p-3" onClick={() => printHandler()}>
             <img src={printIcon} className="max-w-none" />
           </div>
         </div>

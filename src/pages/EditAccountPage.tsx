@@ -182,7 +182,6 @@ const EditAccountPage: FC = () => {
     if (!token) {
       // Redirect to login page if token is not present
       navigate("/");
-    } else {
     }
   }, [navigate]);
 

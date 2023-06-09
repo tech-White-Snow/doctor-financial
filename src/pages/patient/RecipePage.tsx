@@ -131,6 +131,10 @@ const RecipePage: FC = () => {
     return formattedDate;
   };
 
+  const printHandler = () => {
+    window.print();
+  };
+
   return (
     <div className="relative">
       <div className="h-screen overflow-y-auto bg-[#FAFCFF]">
@@ -259,7 +263,7 @@ const RecipePage: FC = () => {
           <div className="p-3" onClick={() => console.log("Share")}>
             <img src={shareIcon} className="max-w-none" />
           </div>
-          <div className="p-3" onClick={() => console.log("Print")}>
+          <div className="p-3" onClick={() => printHandler()}>
             <img src={printIcon} className="max-w-none" />
           </div>
         </div>

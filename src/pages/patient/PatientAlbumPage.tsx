@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -63,6 +63,51 @@ const PatientAlbumPage: FC = () => {
     ).slice(-2)}-${date.getFullYear()}`;
 
     return formattedDate;
+  };
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [error, setError] = useState<string>("");
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  const handleCapture = () => {
+    if (videoRef.current && canvasRef.current) {
+      const context = canvasRef.current.getContext("2d");
+      if (context) {
+        canvasRef.current.width = videoRef.current.videoWidth;
+        canvasRef.current.height = videoRef.current.videoHeight;
+        context.drawImage(videoRef.current, 0, 0);
+        canvasRef.current.toBlob(
+          (blob: any) => {
+            if (blob) {
+              const file = new File([blob], "photo.jpg", {
+                type: "image/jpeg",
+              });
+              const filesArray = [file];
+              const shareData = {
+                files: filesArray,
+              };
+              navigator.share(shareData);
+            }
+          },
+          "image/jpeg",
+          1
+        );
+      }
+    }
+  };
+
+  const captureCameraImageHandler = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        setIsCapturing(true);
+        handleCapture();
+      }
+    } catch (error) {
+      setError("Error accessing camera");
+    }
   };
 
   return (
@@ -134,8 +179,21 @@ const PatientAlbumPage: FC = () => {
                       <div className="px-1 pb-1">
                         <img src={uploadIcon} className="max-w-none" />
                       </div>
-                      <div className="px-1">
+                      <div
+                        className="px-1"
+                        onClick={() => captureCameraImageHandler()}
+                      >
+                        {error && <p>{error}</p>}
+
                         <img src={cameraIcon} className="max-w-none" />
+                        {isCapturing ? (
+                          <div>
+                            <video ref={videoRef} autoPlay></video>
+                            <canvas ref={canvasRef}></canvas>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </div>
                   ) : (
