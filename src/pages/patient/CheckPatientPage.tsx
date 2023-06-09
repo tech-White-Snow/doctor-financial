@@ -62,7 +62,8 @@ const CheckPatient: FC = () => {
 
   const getPatientHistory = async () => {
     const patientID = context.patientid;
-    const data = { patientID };
+    const doctorID = context.doctorid;
+    const data = { patientID, doctorID };
     await fetch("http://localhost:8000/getpthistory", {
       method: "POST",
       headers: {
@@ -97,8 +98,6 @@ const CheckPatient: FC = () => {
         console.log(idx);
       });
       setAlbumImages(albumImgText);
-      console.log("albumImgText -> ", albumImgText);
-      console.log("QQQ -> ", Array.isArray(albumImgText));
     }
   }, [navigate]);
 
@@ -329,7 +328,7 @@ const CheckPatient: FC = () => {
                     <div className="flex flex-row">
                       {curHistoryViewState > 0 ? (
                         <div
-                          className="flex flex-col justify-center"
+                          className="flex flex-col justify-center p-1"
                           onClick={() =>
                             setCurHistoryViewState(
                               curHistoryViewState > 0
@@ -366,7 +365,7 @@ const CheckPatient: FC = () => {
                       )}
                       {curHistoryViewState < patientHistory.length - 1 ? (
                         <div
-                          className="flex flex-col justify-center"
+                          className="flex flex-col justify-center p-1"
                           onClick={() =>
                             setCurHistoryViewState(
                               curHistoryViewState < patientHistory.length - 1

@@ -107,17 +107,32 @@ app.post("/getptcardsbydate", (req, res) => {
 
 // get patient history
 app.post("/getpthistory", (req, res) => {
-  db.query(
-    "SELECT * FROM pt_history WHERE id = ?",
-    req.body.patientID,
-    (err, rows) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.status(200).json({ data: rows });
+  const { patientID, doctorID } = req.body;
+  if (doctorID == "") {
+    db.query(
+      "SELECT * FROM pt_history WHERE id = ?",
+      [patientID],
+      (err, rows) => {
+        if (err) {
+          res.status(500).send(err.message);
+        } else {
+          res.status(200).json({ data: rows });
+        }
       }
-    }
-  );
+    );
+  } else {
+    db.query(
+      "SELECT * FROM pt_history WHERE id = ? AND doctorid = ?",
+      [patientID, doctorID],
+      (err, rows) => {
+        if (err) {
+          res.status(500).send(err.message);
+        } else {
+          res.status(200).json({ data: rows });
+        }
+      }
+    );
+  }
 });
 
 // add new patient

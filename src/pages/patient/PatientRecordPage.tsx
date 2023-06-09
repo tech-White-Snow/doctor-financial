@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
@@ -51,11 +51,43 @@ const PatientRecordPage: FC = () => {
     },
   ];
 
-  const [currentSelected, setCurrentSelected] = useState(temp_data.length - 1);
+  const location = useLocation();
+
+  const _context = location.state.context;
+  console.log("patient record -> ", _context);
+
+  const [ptCardList, setPtCardList] = useState([]);
+  const [currentSelected, setCurrentSelected] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearched, setIsSearched] = useState(false);
 
   const navigate = useNavigate();
+
+  const getPatientMedicalHistory = async () => {
+    const patientID = _context.patientid;
+    const doctorID = "";
+    console.log("patientID -> ", patientID);
+    const data = { patientID, doctorID };
+    await fetch("http://localhost:8000/getpthistory", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get Patient Detail by ID successfully!");
+        if (data.data.length > 0) {
+          setPtCardList(data.data);
+          setCurrentSelected(data.data.length - 1);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
 
   // Hook for User Authentication
   useEffect(() => {
@@ -64,6 +96,7 @@ const PatientRecordPage: FC = () => {
       // Redirect to login page if token is not present
       navigate("/");
     } else {
+      if (_context) getPatientMedicalHistory();
     }
   }, [navigate]);
 
@@ -76,6 +109,16 @@ const PatientRecordPage: FC = () => {
   const showCurrentSearchSelectedHandle = (context: any, idx: any) => {
     setIsSearched(false);
     setCurrentSelected(idx);
+  };
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
   };
 
   return (
@@ -92,10 +135,10 @@ const PatientRecordPage: FC = () => {
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <div>
-                {temp_data[currentSelected].name}(
-                {temp_data[currentSelected].sex == 1 ? "男" : "女"})
+                {_context ? _context.name : ""} (
+                {_context ? (_context.sex == 1 ? "男" : "女") : ""})
               </div>
-              <div className="pl-3">{temp_data[currentSelected].age}歲</div>
+              <div className="pl-3">{_context ? _context.age : ""}歲</div>
             </div>
             {isSearched ? (
               <div className="text-sm text-[#25617B] text-opacity-80">
@@ -103,7 +146,9 @@ const PatientRecordPage: FC = () => {
               </div>
             ) : (
               <div className="text-sm text-[#0C2036] text-opacity-80">
-                {temp_data[currentSelected].date}
+                {ptCardList && ptCardList.length > 0
+                  ? getOnlyDate1((ptCardList[currentSelected] as any).date)
+                  : ""}
               </div>
             )}
           </div>
@@ -128,15 +173,19 @@ const PatientRecordPage: FC = () => {
               ) : (
                 <div className="w-12"></div>
               )}
-              <div>{temp_data[currentSelected].content}</div>
-              {currentSelected < temp_data.length - 1 ? (
+              <div>
+                {ptCardList && ptCardList.length > 0
+                  ? (ptCardList[currentSelected] as any).detail
+                  : ""}
+              </div>
+              {currentSelected < ptCardList.length - 1 ? (
                 <div
                   className="w-12 px-2 flex items-center justify-right"
                   onClick={() =>
                     setCurrentSelected(
-                      currentSelected < temp_data.length - 1
+                      currentSelected < ptCardList.length - 1
                         ? currentSelected + 1
-                        : temp_data.length - 1
+                        : ptCardList.length - 1
                     )
                   }
                 >
@@ -149,21 +198,23 @@ const PatientRecordPage: FC = () => {
           ) : (
             // Searched Result Boxes
             <div className="w-full p-4">
-              <div className="relative">
-                {temp_data.map((idx: any, kkk: any) => (
-                  <div
-                    className="absolute p-4 rounded-xl border border-[#D3E7F6] shadow-lg bg-white"
-                    key={idx.date + kkk}
-                    style={{ top: kkk * 75 + 20, zIndex: kkk }}
-                    onClick={() => showCurrentSearchSelectedHandle(idx, kkk)}
-                  >
-                    <div>
-                      診症日期：
-                      <span className="px-1">{idx.date}</span>
+              <div className="relative hover:cursor-pointer">
+                {ptCardList
+                  .filter((idx: any) => idx.detail.includes(searchTerm))
+                  .map((idx: any, kkk: any) => (
+                    <div
+                      className="absolute p-4 rounded-xl border border-[#D3E7F6] shadow-lg bg-white w-full"
+                      key={idx.date + kkk}
+                      style={{ top: kkk * 75 + 20, zIndex: kkk }}
+                      onClick={() => showCurrentSearchSelectedHandle(idx, kkk)}
+                    >
+                      <div>
+                        診症日期：
+                        <span className="px-1">{getOnlyDate1(idx.date)}</span>
+                      </div>
+                      <div className="p-3">{idx.detail}</div>
                     </div>
-                    <div className="p-2">{idx.content}</div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           )}
