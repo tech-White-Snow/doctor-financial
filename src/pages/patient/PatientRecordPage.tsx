@@ -161,7 +161,7 @@ const PatientRecordPage: FC = () => {
             >
               {currentSelected > 0 ? (
                 <div
-                  className="w-12 px-2 flex items-center justify-left"
+                  className="px-2 flex items-center justify-left"
                   onClick={() =>
                     setCurrentSelected(
                       currentSelected > 0 ? currentSelected - 1 : 0
@@ -173,14 +173,14 @@ const PatientRecordPage: FC = () => {
               ) : (
                 <div className="w-12"></div>
               )}
-              <div>
+              <div className="grow text-center break-normal">
                 {ptCardList && ptCardList.length > 0
                   ? (ptCardList[currentSelected] as any).detail
                   : ""}
               </div>
               {currentSelected < ptCardList.length - 1 ? (
                 <div
-                  className="w-12 px-2 flex items-center justify-right"
+                  className="px-2 flex items-center justify-right"
                   onClick={() =>
                     setCurrentSelected(
                       currentSelected < ptCardList.length - 1

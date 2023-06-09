@@ -164,7 +164,11 @@ const PastPatientRecordedPage: FC = () => {
                     <div className="w-1/2 flex flex-row">
                       <div
                         className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
-                        onClick={() => navigate("/patientrecord")}
+                        onClick={() =>
+                          navigate("/patientrecord", {
+                            state: { context: context },
+                          })
+                        }
                       >
                         View
                       </div>
