@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const mysql = require("mysql");
 const multer = require("multer");
 const app = express();
@@ -29,13 +30,7 @@ db.connect((err) => {
 // Able to Access and Get Image
 app.use("/uploads", express.static("uploads"));
 
-// app.get("/api/images/:filename", (req, res) => {
-//   const { filename } = req.params;
-//   const publicUrl = `${req.protocol}://${req.get("host")}/uploads/${filename}`;
-//   res.json({ url: publicUrl });
-// });
-
-// user authentication - login/signup
+// ----------------------------- user authentication - login/signup/password reset ---------------------------------
 app.post("/login", (req, res) => {
   db.query(
     "SELECT * FROM users WHERE email = ?",
@@ -70,6 +65,90 @@ app.post("/login", (req, res) => {
     }
   );
 });
+
+// Generate a JWT token for password reset
+function generateResetToken(email) {
+  return jwt.sign({ email }, "secret-key", { expiresIn: "1h" });
+}
+
+// Send password reset email
+function sendPasswordResetEmail(email, token) {
+  const transporter = nodemailer.createTransport({
+    // Configure the email transporter (e.g., Gmail, SMTP server)
+    // ...
+    host: "smtp.ethereal.email",
+    port: 587,
+    auth: {
+      user: "friedrich28@ethereal.email",
+      pass: "733VNm94YbTd5rRkSj",
+    },
+  });
+
+  const mailOptions = {
+    from: "your-email@example.com",
+    to: email,
+    subject: "Password Reset",
+    text: `Click the following link to reset your password: http://localhost:3000/resetpassword/${token}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+}
+
+// API endpoint for password reset request
+app.post("/resetpassword", (req, res) => {
+  const { resetEmail } = req.body;
+  if (!resetEmail) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  db.query("SELECT * FROM users WHERE email = ?", [resetEmail], (err, rows) => {
+    if (err) {
+      res.status(500).send(err.message);
+    } else {
+      if (rows.length == 0) {
+        return res
+          .status(400)
+          .json({ message: "No Verified Email not found!", status: false });
+      } else {
+        const token = generateResetToken(resetEmail);
+        // user.resetToken = token;
+        sendPasswordResetEmail(resetEmail, token);
+
+        res
+          .status(200)
+          .json({ message: "Password reset email sent", status: true });
+      }
+    }
+  });
+});
+
+// API endpoint for password update
+app.post("/updatepassword", (req, res) => {
+  const { email, token, password } = req.body;
+  if (!email || !token || !password) {
+    return res
+      .status(400)
+      .json({ message: "Email, token, and password are required" });
+  }
+
+  const user = users[email];
+  if (!user || user.resetToken !== token) {
+    return res.status(404).json({ message: "Invalid token" });
+  }
+
+  // Update the user's password in the database
+  user.password = password;
+  delete user.resetToken;
+
+  res.json({ message: "Password updated successfully" });
+});
+
+// -----------------------------------------------------------------------------------------------------
 
 // get patient cards
 app.post("/getptcards", (req, res) => {

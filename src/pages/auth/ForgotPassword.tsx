@@ -8,9 +8,37 @@ import closeIcon from "../../assets/close_ico.svg";
 import warningImage from "../../assets/warning_img.svg";
 
 const ForgotPassword: FC = () => {
-  const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);
-
   const navigate = useNavigate();
+
+  const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
+
+  const sendResetLinkHandler = async () => {
+    const data = { resetEmail };
+    await fetch("http://localhost:8000/resetpassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data -> ", data);
+        if (data.status)
+          setStatusMessage(
+            "Password reset email sent! Check your email to verify it!"
+          );
+        else setStatusMessage(data.message);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+        setStatusMessage("Password reset email sent failed!");
+      });
+    // navigate("/resetpassword");
+  };
 
   return (
     <div className="relative">
@@ -22,9 +50,6 @@ const ForgotPassword: FC = () => {
             <div className="font-bold text-center text-5xl text-[#64B3EC]">
               福氣堂
             </div>
-            <div className="font-bold text-center text-lg text-[#6D7D8B] tracking-[1rem] pt-2 pl-4">
-              忠醫診所
-            </div>
             <div className="font-bold text-center text-lg text-[#0C2036] pt-6 pl-4">
               請輸入Email重設密碼
             </div>
@@ -35,11 +60,20 @@ const ForgotPassword: FC = () => {
           <div className="grow flex flex-col justify-center">
             <div className="text-[12px] text-600 text-[#64B3EC]">Email</div>
             <div className="pt-2">
-              <input className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2" />
+              <input
+                className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2"
+                value={resetEmail}
+                onChange={(ev) => setResetEmail(ev.target.value)}
+              />
             </div>
+            {statusMessage != "" ? (
+              <div className="py-1 text-red-500">{statusMessage}</div>
+            ) : (
+              <></>
+            )}
             <div
               className="rounded-[10px] bg-[#64B3EC] hover:bg-[#D3E7F6] text-white text-center text-sm p-3 mt-6"
-              onClick={() => navigate("/resetpassword")}
+              onClick={() => sendResetLinkHandler()}
             >
               Send Reset Link
             </div>

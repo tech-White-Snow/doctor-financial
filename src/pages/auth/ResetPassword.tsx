@@ -1,16 +1,38 @@
 import { FC, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Header from "../../components/Header";
 
 import closeIcon from "../../assets/close_ico.svg";
 import warningImage from "../../assets/warning_img.svg";
 
-const ResetPassword: FC = () => {
-  const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);
+interface RouteParams {
+  [key: string]: string | undefined;
+}
 
+const ResetPassword: FC = () => {
   const navigate = useNavigate();
+
+  const token = useParams<{ token?: string }>().token;
+
+  const [showWrongPasswordModal, setShowWrongPasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [confirmedPassword, setConfirmedPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const updatePassword = async () => {
+    console.log("currentPassword -> ", currentPassword);
+    console.log("token -> ", token);
+  };
+
+  const resetPasswordHandler = () => {
+    if (currentPassword != confirmedPassword)
+      setErrorMessage("Password doesn't match! Please re-try again!");
+    else {
+      updatePassword();
+    }
+  };
 
   return (
     <div className="relative">
@@ -54,7 +76,7 @@ const ResetPassword: FC = () => {
             </div>
             <div
               className="rounded-[10px] bg-[#64B3EC] hover:bg-[#D3E7F6] text-white text-center text-sm p-3 mt-6"
-              onClick={() => console.log("Reset Password clicked!")}
+              onClick={() => resetPasswordHandler()}
             >
               Reset Password
             </div>
