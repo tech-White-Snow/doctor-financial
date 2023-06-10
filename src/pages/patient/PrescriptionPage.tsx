@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -46,7 +47,7 @@ const PrescriptionPage: FC = () => {
   const getPrescriptionData = async () => {
     const cardid = context.cardid;
     const data = { cardid };
-    await fetch("http://localhost:8000/getptcardsbyid", {
+    await fetch(BACKEND_URL + "/getptcardsbyid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +80,7 @@ const PrescriptionPage: FC = () => {
 
   const getCompanyInfo = async () => {
     //  get company info
-    await fetch("http://localhost:8000/getcompanyinfo", {
+    await fetch(BACKEND_URL + "/getcompanyinfo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +116,7 @@ const PrescriptionPage: FC = () => {
     // update backend data
     const cardid = context.cardid;
     const data = { cardid, curPrescription };
-    await fetch("http://localhost:8000/updateptcardprescription", {
+    await fetch(BACKEND_URL + "/updateptcardprescription", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

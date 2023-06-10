@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import nextIcon from "../../assets/icons/next_ico.svg";
 import tickBlueIcon from "../../assets/icons/tick_blue_ico.svg";
@@ -72,7 +73,7 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
   const removePaidCardHandler = async () => {
     // update backend for paid
     const data = { cardid };
-    await fetch("http://localhost:8000/updatecardpaid", {
+    await fetch(BACKEND_URL + "/updatecardpaid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

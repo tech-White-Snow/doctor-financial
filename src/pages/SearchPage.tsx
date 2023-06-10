@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Theme from "../assets/color";
+import { BACKEND_URL } from "../constants";
 
 import Avatar1 from "../assets/avatar1.svg";
 import DashBack from "../assets/img/alert_board.png";
@@ -35,7 +36,7 @@ const SearchPage: FC = () => {
   const viewSearchResultHandler = async () => {
     const curDate = updateDateTimeFormat(new Date());
     const data = { searchText, curDate };
-    await fetch("http://localhost:8000/getptcardpayment", {
+    await fetch(BACKEND_URL + "/getptcardpayment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

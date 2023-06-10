@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -16,41 +17,6 @@ import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";
 
 const PatientRecordPage: FC = () => {
-  const temp_data = [
-    {
-      name: "陳小明",
-      age: 52,
-      sex: 1,
-      date: "3-2-2022",
-      content:
-        "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史",
-    },
-    {
-      name: "陳小明",
-      age: 52,
-      sex: 1,
-      date: "5-6-2022",
-      content:
-        "现病史：患者于4日前无明显诱因于黎明前发作剧烈脘腹痛，持续约1小时缓解，4日来日日如此，多项检查（腹部超声、CT、生化检查等）均无明显异常，西医治疗无从入手，而求诊于中医。",
-    },
-    {
-      name: "陳小明",
-      age: 52,
-      sex: 1,
-      date: "8-9-2022",
-      content:
-        "這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史，這是既往史",
-    },
-    {
-      name: "陳小明",
-      age: 52,
-      sex: 1,
-      date: "10-12-2022",
-      content:
-        "现病史：患者于4日前无明显诱因于黎明前发作剧烈脘腹痛，持续约1小时缓解，4日来日日如此，多项检查（腹部超声、CT、生化检查等）均无明显异常，西医治疗无从入手，而求诊于中医。",
-    },
-  ];
-
   const location = useLocation();
 
   const _context = location.state.context;
@@ -68,7 +34,7 @@ const PatientRecordPage: FC = () => {
     const doctorID = "";
     console.log("patientID -> ", patientID);
     const data = { patientID, doctorID };
-    await fetch("http://localhost:8000/getpthistory", {
+    await fetch(BACKEND_URL + "/getpthistory", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

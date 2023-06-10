@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+import { BACKEND_URL } from "../../constants";
+
 import closeIcon from "../../assets/icons/close_ico1.svg";
 import subMenuItemIcon from "../../assets/icons/submenu_item_ico.svg";
 
@@ -75,7 +77,7 @@ ${
   const deleteThumbnailHanlder = async () => {
     // call backend for delete current thumbnail
     const data = { context };
-    await fetch("http://localhost:8000/deleteptcard", {
+    await fetch(BACKEND_URL + "/deleteptcard", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

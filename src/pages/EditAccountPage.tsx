@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../assets/color";
+import { BACKEND_URL } from "../constants";
 
 import nextIcon from "../assets/icons/next_ico.svg";
 import editIcon from "../assets/icons/edit_ico.svg";
@@ -80,7 +81,7 @@ const EditAccountPage: FC = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch("http://localhost:8000/uploadavatar", {
+    const response = await fetch(BACKEND_URL + "/uploadavatar", {
       method: "POST",
       body: formData,
     });
@@ -104,7 +105,7 @@ const EditAccountPage: FC = () => {
           doctorID,
         };
         // call backend for updating account information
-        await fetch("http://localhost:8000/addaccount", {
+        await fetch(BACKEND_URL + "/addaccount", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -136,7 +137,7 @@ const EditAccountPage: FC = () => {
           doctorID,
         };
         // call backend for updating account information
-        await fetch("http://localhost:8000/updateaccount", {
+        await fetch(BACKEND_URL + "/updateaccount", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -156,7 +157,7 @@ const EditAccountPage: FC = () => {
         // Update Company Profile
         const data = { companyLogo, companyAddress, companyTelephone };
         // call backend for updating account information
-        await fetch("http://localhost:8000/updatecompanyprofile", {
+        await fetch(BACKEND_URL + "/updatecompanyprofile", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -226,7 +227,7 @@ const EditAccountPage: FC = () => {
                   <img
                     src={
                       context.avatar == loadFile
-                        ? "http://localhost:8000/uploads/" + loadFile
+                        ? BACKEND_URL + "/uploads/" + loadFile
                         : loadFile
                     }
                     className="w-12 h-12 max-w-none rounded-full"

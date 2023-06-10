@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+import { BACKEND_URL } from "../../constants";
+
 import Header from "../../components/Header";
 
 import closeIcon from "../../assets/close_ico.svg";
@@ -16,7 +18,7 @@ const ForgotPassword: FC = () => {
 
   const sendResetLinkHandler = async () => {
     const data = { resetEmail };
-    await fetch("http://localhost:8000/resetpassword", {
+    await fetch(BACKEND_URL + "/resetpassword", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

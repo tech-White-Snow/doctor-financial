@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Theme from "../assets/color";
+import { BACKEND_URL } from "../constants";
 
 import nextIcon from "../assets/icons/next_ico.svg";
 import editIcon from "../assets/icons/edit_ico.svg";
@@ -36,7 +37,7 @@ const ViewAccountPage: FC = () => {
 
   // get User accounts
   const getAccountsList = async () => {
-    await fetch("http://localhost:8000/getaccounts", {
+    await fetch(BACKEND_URL + "/getaccounts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +53,7 @@ const ViewAccountPage: FC = () => {
       });
 
     //  get company info
-    await fetch("http://localhost:8000/getcompanyinfo", {
+    await fetch(BACKEND_URL + "/getcompanyinfo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

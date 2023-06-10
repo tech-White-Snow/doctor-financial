@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -40,7 +41,7 @@ const AddAppointment: FC = () => {
 
   const searchPatientHandler = async () => {
     const data = { searchText };
-    await fetch("http://localhost:8000/findpatients", {
+    await fetch(BACKEND_URL + "/findpatients", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

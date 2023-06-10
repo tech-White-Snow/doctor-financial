@@ -2,6 +2,8 @@ import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
+import { BACKEND_URL } from "../../constants";
+
 import jwt_decode from "jwt-decode";
 
 import Header from "../../components/Header";
@@ -20,7 +22,7 @@ const Signin: FC = () => {
 
   const loginHandler = async () => {
     const data = { currentEmail, currentPassword };
-    await fetch("http://localhost:8000/login", {
+    await fetch(BACKEND_URL + "/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

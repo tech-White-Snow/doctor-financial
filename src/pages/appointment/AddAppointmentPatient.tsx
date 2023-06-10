@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -17,27 +18,6 @@ import Header from "../../components/Header";
 import PatientThumbnail from "../../components/patient/PatientThumbnail";
 
 const AddAppointmentPatient: FC = () => {
-  const temp_db = [
-    {
-      name: "陳小明",
-      newdiease: true,
-      telephone: "A123456(7)",
-      age: 22,
-      sex: 1,
-      doctor: "黃文智醫師",
-      date: "9-9-2022",
-    },
-    {
-      name: "小明陳",
-      newdiease: false,
-      telephone: "671234562",
-      age: 19,
-      sex: 1,
-      doctor: "黃文智醫",
-      date: "9-9-2022",
-    },
-  ];
-
   const navigate = useNavigate();
 
   type PatientDataType = {
@@ -82,7 +62,7 @@ const AddAppointmentPatient: FC = () => {
   };
 
   const addNewPatientHandler = async () => {
-    await fetch("http://localhost:8000/addnewpatient", {
+    await fetch(BACKEND_URL + "/addnewpatient", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

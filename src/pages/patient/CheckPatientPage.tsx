@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import nextIcon from "../../assets/icons/next_ico.svg";
 import editIcon from "../../assets/icons/edit_ico.svg";
@@ -41,8 +42,6 @@ const CheckPatient: FC = () => {
     JSON.parse(_context.medicines)
   );
 
-  console.log("-->", _context);
-
   const [currentSelect, setCurrentSelect] = useState(0);
 
   type PatientHistoryType = {
@@ -64,7 +63,7 @@ const CheckPatient: FC = () => {
     const patientID = context.patientid;
     const doctorID = context.doctorid;
     const data = { patientID, doctorID };
-    await fetch("http://localhost:8000/getpthistory", {
+    await fetch(BACKEND_URL + "/getpthistory", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +86,7 @@ const CheckPatient: FC = () => {
     // update album data
     const cardid = _context.cardid;
     const data = { cardid };
-    await fetch("http://localhost:8000/getptcardsbyid", {
+    await fetch(BACKEND_URL + "/getptcardsbyid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -150,7 +149,7 @@ const CheckPatient: FC = () => {
     const originPtHistory = originPatientHistory[0].detail;
     const newPtHistory = patientHistory[0].detail;
     const data = { cardID, originPtHistory, newPtHistory };
-    await fetch("http://localhost:8000/updatelastpthistory", {
+    await fetch(BACKEND_URL + "/updatelastpthistory", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -443,7 +442,7 @@ const CheckPatient: FC = () => {
                                 }
                               >
                                 <img
-                                  src={"http://localhost:8000/uploads/" + idx}
+                                  src={BACKEND_URL + "/uploads/" + idx}
                                   className="h-24 max-w-none"
                                 />
                               </div>

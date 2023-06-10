@@ -9,6 +9,7 @@ import "rc-time-picker/assets/index.css";
 import moment from "moment";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -89,7 +90,7 @@ const ScheduleAppointment = () => {
 
     // add new appointment to backend database
     const data = { doctorName, doctorID, patientID, dateTime };
-    await fetch("http://localhost:8000/addnewappointment", {
+    await fetch(BACKEND_URL + "/addnewappointment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../constants";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -35,7 +36,7 @@ const PatientList: FC = () => {
     const doctorID = user.doctorid;
     // fetch scheduled cards of selected date
     const data = { doctorID, viewDate };
-    await fetch("http://localhost:8000/getptcardsbydate", {
+    await fetch(BACKEND_URL + "/getptcardsbydate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

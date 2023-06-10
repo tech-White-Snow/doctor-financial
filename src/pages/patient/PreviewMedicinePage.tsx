@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -52,7 +53,7 @@ const PreviewMedicinePage: FC = () => {
 
   const getCompanyInfo = async () => {
     //  get company info
-    await fetch("http://localhost:8000/getcompanyinfo", {
+    await fetch(BACKEND_URL + "/getcompanyinfo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +108,7 @@ const PreviewMedicinePage: FC = () => {
     formData.append("cardid", context.cardid);
 
     try {
-      const response = await fetch("http://localhost:8000/upload", {
+      const response = await fetch(BACKEND_URL + "/upload", {
         method: "POST",
         body: formData,
       });
@@ -130,7 +131,7 @@ const PreviewMedicinePage: FC = () => {
 
     // -- update extra check patient data
     const data = { context };
-    await fetch("http://localhost:8000/updatecheckpatient", {
+    await fetch(BACKEND_URL + "/updatecheckpatient", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

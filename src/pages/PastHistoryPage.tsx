@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../assets/color";
+import { BACKEND_URL } from "../constants";
 
 import Avatar1 from "../assets/avatar1.svg";
 import DashBack from "../assets/img/alert_board.png";
@@ -24,7 +25,7 @@ const PastHistoryPage: FC = () => {
   const getPatientPastHistory = async () => {
     const cardid = context.cardid;
     const data = { cardid };
-    await fetch("http://localhost:8000/getptcardsbyid", {
+    await fetch(BACKEND_URL + "/getptcardsbyid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +75,7 @@ const PastHistoryPage: FC = () => {
     const historydata = contentText;
     const historydate = getOnlyDate1(new Date());
     const data = { cardid, historydata, historydate };
-    await fetch("http://localhost:8000/updateptcardpasthistory", {
+    await fetch(BACKEND_URL + "/updateptcardpasthistory", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

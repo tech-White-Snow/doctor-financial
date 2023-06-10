@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Theme from "../assets/color";
+import { BACKEND_URL } from "../constants";
 
 import Avatar1 from "../assets/avatar1.svg";
 import AvatarSample from "../assets/img/profile_sample.jpeg";
@@ -37,7 +38,7 @@ const Home: FC = () => {
     const doctorID = user.doctorid;
     const curDate = updateDateTimeFormat(new Date());
     const data = { doctorID, curDate };
-    await fetch("http://localhost:8000/getptcards", {
+    await fetch(BACKEND_URL + "/getptcards", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +60,7 @@ const Home: FC = () => {
 
   const getCompanyInfo = async () => {
     //  get company info
-    await fetch("http://localhost:8000/getcompanyinfo", {
+    await fetch(BACKEND_URL + "/getcompanyinfo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

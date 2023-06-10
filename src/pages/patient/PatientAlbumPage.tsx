@@ -3,6 +3,7 @@ import { FC, useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -25,7 +26,7 @@ const PatientAlbumPage: FC = () => {
   const getPatientAlbumHistory = async () => {
     const patientID = context.patientid;
     const data = { patientID };
-    await fetch("http://localhost:8000/getptcardbypatientid", {
+    await fetch(BACKEND_URL + "/getptcardbypatientid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -155,7 +156,7 @@ const PatientAlbumPage: FC = () => {
                         kkkk != 0 ? (
                           <div className="px-2" key={"kkkk" + kkkk}>
                             <img
-                              src={"http://localhost:8000/uploads/" + idxx}
+                              src={BACKEND_URL + "/uploads/" + idxx}
                               className="h-24 max-w-none"
                             />
                           </div>

@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -58,7 +59,7 @@ const UpdateAlbumPage: FC = () => {
     // update album data
     const cardid = context.cardid;
     const data = { cardid };
-    await fetch("http://localhost:8000/getptcardsbyid", {
+    await fetch(BACKEND_URL + "/getptcardsbyid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +87,7 @@ const UpdateAlbumPage: FC = () => {
     const rmImgName = albumData.album.split(", ")[currentSelect];
     // remove on backend
     const data = { cardID, rmImgName };
-    await fetch("http://localhost:8000/removealbumimage", {
+    await fetch(BACKEND_URL + "/removealbumimage", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -160,7 +161,8 @@ const UpdateAlbumPage: FC = () => {
                 {albumData && albumData.album ? (
                   <img
                     src={
-                      "http://localhost:8000/uploads/" +
+                      BACKEND_URL +
+                      "/uploads/" +
                       albumData.album.split(", ")[currentSelect]
                     }
                     className="max-w-none w-full"

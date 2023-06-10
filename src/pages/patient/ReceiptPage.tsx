@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -47,7 +48,7 @@ const ReceiptPage: FC = () => {
   const getReceiptData = async () => {
     const cardid = context.cardid;
     const data = { cardid };
-    await fetch("http://localhost:8000/getptcardsbyid", {
+    await fetch(BACKEND_URL + "/getptcardsbyid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +81,7 @@ const ReceiptPage: FC = () => {
 
   const getCompanyInfo = async () => {
     //  get company info
-    await fetch("http://localhost:8000/getcompanyinfo", {
+    await fetch(BACKEND_URL + "/getcompanyinfo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +116,7 @@ const ReceiptPage: FC = () => {
     // update backend data
     const cardid = context.cardid;
     const data = { cardid, curReceipt };
-    await fetch("http://localhost:8000/updateptcardreceipt", {
+    await fetch(BACKEND_URL + "/updateptcardreceipt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

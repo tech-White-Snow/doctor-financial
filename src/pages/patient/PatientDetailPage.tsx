@@ -3,6 +3,7 @@ import { FC, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
+import { BACKEND_URL } from "../../constants";
 
 import Avatar1 from "../../assets/avatar1.svg";
 import DashBack from "../../assets/img/alert_board.png";
@@ -26,7 +27,7 @@ const PatientDetailPage: FC = () => {
   const getPatientData = async () => {
     const cardid = context.cardid;
     const data = { cardid };
-    await fetch("http://localhost:8000/getptcardsbyid", {
+    await fetch(BACKEND_URL + "/getptcardsbyid", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
