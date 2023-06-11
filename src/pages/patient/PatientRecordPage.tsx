@@ -20,7 +20,6 @@ const PatientRecordPage: FC = () => {
   const location = useLocation();
 
   const _context = location.state.context;
-  console.log("patient record -> ", _context);
 
   const [ptCardList, setPtCardList] = useState([]);
   const [currentSelected, setCurrentSelected] = useState(0);
@@ -32,7 +31,6 @@ const PatientRecordPage: FC = () => {
   const getPatientMedicalHistory = async () => {
     const patientID = _context.patientid;
     const doctorID = "";
-    console.log("patientID -> ", patientID);
     const data = { patientID, doctorID };
     await fetch(BACKEND_URL + "/getpthistory", {
       method: "POST",
@@ -67,7 +65,6 @@ const PatientRecordPage: FC = () => {
   }, [navigate]);
 
   const searchPatientRecordHandle = () => {
-    if (searchTerm == "") return;
     // show search result
     setIsSearched(true);
   };
@@ -108,7 +105,12 @@ const PatientRecordPage: FC = () => {
             </div>
             {isSearched ? (
               <div className="text-sm text-[#25617B] text-opacity-80">
-                4 項搜尋結果
+                {
+                  ptCardList.filter((idx: any) =>
+                    idx.detail.includes(searchTerm)
+                  ).length
+                }{" "}
+                項搜尋結果
               </div>
             ) : (
               <div className="text-sm text-[#0C2036] text-opacity-80">
@@ -137,9 +139,9 @@ const PatientRecordPage: FC = () => {
                   <img src={prevvIcon} className="max-w-none" />
                 </div>
               ) : (
-                <div className="w-12"></div>
+                <div className="w-7"></div>
               )}
-              <div className="grow text-center break-normal">
+              <div className="w-2/3" style={{ overflowWrap: "break-word" }}>
                 {ptCardList && ptCardList.length > 0
                   ? (ptCardList[currentSelected] as any).detail
                   : ""}
@@ -158,13 +160,13 @@ const PatientRecordPage: FC = () => {
                   <img src={nexttIcon} className="max-w-none" />
                 </div>
               ) : (
-                <div className="w-12"></div>
+                <div className="w-7"></div>
               )}
             </div>
           ) : (
             // Searched Result Boxes
             <div className="w-full p-4">
-              <div className="relative hover:cursor-pointer">
+              <div className="relative hover:cursor-pointer text-[#0C2036] text-opacity-80">
                 {ptCardList
                   .filter((idx: any) => idx.detail.includes(searchTerm))
                   .map((idx: any, kkk: any) => (
@@ -178,7 +180,12 @@ const PatientRecordPage: FC = () => {
                         診症日期：
                         <span className="px-1">{getOnlyDate1(idx.date)}</span>
                       </div>
-                      <div className="p-3">{idx.detail}</div>
+                      <div
+                        className="p-3"
+                        style={{ width: "100%", overflowWrap: "break-word" }}
+                      >
+                        {idx.detail}
+                      </div>
                     </div>
                   ))}
               </div>

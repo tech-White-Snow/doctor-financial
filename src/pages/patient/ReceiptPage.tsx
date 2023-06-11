@@ -65,6 +65,7 @@ const ReceiptPage: FC = () => {
           setCurDiagnosis(temp.diagnosis);
           setCurDoctorID(temp.doctorid);
           setCurReceipt(temp.receipt ? temp.receipt : "");
+          setCurToll(temp.toll);
         }
       })
       .catch((error) => {
@@ -115,7 +116,7 @@ const ReceiptPage: FC = () => {
     setIsEditMode(false);
     // update backend data
     const cardid = context.cardid;
-    const data = { cardid, curReceipt };
+    const data = { cardid, curReceipt, curToll };
     await fetch(BACKEND_URL + "/updateptcardreceipt", {
       method: "POST",
       headers: {
@@ -170,7 +171,7 @@ const ReceiptPage: FC = () => {
                     className="focus:outline-none"
                     value={curDate}
                     onChange={(ev) => setCurDate(ev.target.value)}
-                    readOnly={!isEditMode}
+                    readOnly={true}
                   />
                 </span>
               </div>
@@ -182,6 +183,7 @@ const ReceiptPage: FC = () => {
                     className="focus:outline-none"
                     value={curName}
                     onChange={(ev) => setCurName(ev.target.value)}
+                    readOnly={true}
                   />
                 </span>
               </div>
@@ -193,18 +195,23 @@ const ReceiptPage: FC = () => {
                     className="focus:outline-none"
                     value={curDiagnosis}
                     onChange={(ev) => setCurDiagnosis(ev.target.value)}
+                    readOnly={true}
                   />
                 </span>
               </div>
               <div className="py-1">
                 <span style={{ color: Theme.COLOR_DEFAULT }}>收費:</span>
                 <span className="pl-2 text-black text-opacity-60">
+                  <span>$ </span>
                   <input
-                    type="text"
-                    className="focus:outline-none"
-                    value={"$"}
-                    // value={curToll}
-                    // onChange={(ev: any) => setCurToll(ev.target.value)}
+                    type="number"
+                    className={
+                      "focus:outline-none p-1 border-[#64B3EC] resize-none rounded-md focus-outline-none " +
+                      (isEditMode ? "border" : "border-none")
+                    }
+                    value={curToll}
+                    onChange={(ev: any) => setCurToll(ev.target.value)}
+                    readOnly={!isEditMode}
                   />
                 </span>
               </div>
@@ -217,9 +224,9 @@ const ReceiptPage: FC = () => {
                       (isEditMode ? "border" : "border-none")
                     }
                     style={{ color: Theme.COLOR_GRAY }}
-                    readOnly={!isEditMode}
                     value={curReceipt}
                     onChange={(ev) => setCurReceipt(ev.target.value)}
+                    readOnly={!isEditMode}
                   />
                 </div>
                 <div className="h-32">醫師簽名：</div>
@@ -232,6 +239,7 @@ const ReceiptPage: FC = () => {
                     className="focus:outline-none"
                     value={curDoctorID}
                     onChange={(ev) => setCurDoctorID(ev.target.value)}
+                    readOnly={true}
                   />
                 </span>
               </div>
@@ -261,7 +269,10 @@ const ReceiptPage: FC = () => {
           <div className="p-3" onClick={() => setIsEditMode(true)}>
             <img src={editIcon} className="max-w-none" />
           </div>
-          <div className="p-3" onClick={() => navigate("/receipt")}>
+          <div
+            className="p-3"
+            onClick={() => console.log("Share on Email and WhatsApp!")}
+          >
             <img src={shareIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => printHandler()}>

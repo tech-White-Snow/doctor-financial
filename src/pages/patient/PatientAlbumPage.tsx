@@ -37,7 +37,6 @@ const PatientAlbumPage: FC = () => {
       .then((data) => {
         console.log("Get Patient Detail by patientID successfully!");
         if (data.data.length > 0) setPatientCardList(data.data);
-        console.log("patient album info -->", data.data);
       })
       .catch((error) => {
         console.error(error);

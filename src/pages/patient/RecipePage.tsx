@@ -261,7 +261,10 @@ const RecipePage: FC = () => {
           >
             <img src={editIcon} className="max-w-none" />
           </div>
-          <div className="p-3" onClick={() => console.log("Share")}>
+          <div
+            className="p-3"
+            onClick={() => console.log("Share on Email and WhatsApp!")}
+          >
             <img src={shareIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => printHandler()}>

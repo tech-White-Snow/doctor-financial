@@ -85,6 +85,7 @@ const PastHistoryPage: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Update Patient Past History successfully!");
+        setContentDate(historydate);
       })
       .catch((error) => {
         console.error(error);
@@ -118,11 +119,11 @@ const PastHistoryPage: FC = () => {
           </div>
           {/* Content */}
           <div
-            className="text-xs pt-8 px-3"
+            className="text-xs pt-4 px-3"
             style={{ color: Theme.COLOR_DEFAULT }}
           >
             <textarea
-              className="w-full h-[240px] resize-h-none focus:outline-none p-2 rounded-lg"
+              className="w-full h-[240px] resize-h-none focus:outline-none p-2 rounded-lg border border-[#64B3EC]"
               value={contentText}
               onChange={(ev) => setContentText(ev.target.value)}
               readOnly={!isEditMode}

@@ -258,7 +258,10 @@ const PrescriptionPage: FC = () => {
               <div className="p-3" onClick={() => setIsEditMode(true)}>
                 <img src={editIcon} className="max-w-none" />
               </div>
-              <div className="p-3" onClick={() => navigate("/receipt")}>
+              <div
+                className="p-3"
+                onClick={() => console.log("Share on Email and WhatsApp!")}
+              >
                 <img src={shareIcon} className="max-w-none" />
               </div>
               <div className="p-3" onClick={() => printHandler()}>

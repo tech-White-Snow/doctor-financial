@@ -171,7 +171,7 @@ app.post("/getptcardsbydate", (req, res) => {
   const { doctorID, viewDate } = req.body;
   if (doctorID && doctorID != undefined && viewDate && viewDate != undefined) {
     db.query(
-      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.id WHERE pt_cards.doctorid = ? AND pt_cards.date LIKE CONCAT('%', ?, '%')",
+      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.doctorid = ? AND pt_cards.date LIKE CONCAT('%', ?, '%')",
       [doctorID, viewDate],
       (err, rows) => {
         if (err) {
@@ -533,7 +533,7 @@ app.post("/updatecheckpatient", (req, res) => {
   if (!context || !context.cardid) return;
 
   // update card information
-  const sql = `UPDATE pt_cards SET albumtext = ?, disease = ?, diagnosis = ?, syndromes = ?, medicines = ?, remark = ? WHERE cardid = ?`;
+  const sql = `UPDATE pt_cards SET albumtext = ?, disease = ?, diagnosis = ?, syndromes = ?, medicines = ?, remark = ?, pasthistory = ?, pasthistorydate =? WHERE cardid = ?`;
   const values = [
     context.albumtext,
     context.disease,
@@ -541,6 +541,8 @@ app.post("/updatecheckpatient", (req, res) => {
     context.syndromes,
     context.medicines,
     context.remark,
+    context.pasthistory,
+    context.pasthistorydate,
     context.cardid,
   ];
 
@@ -619,10 +621,10 @@ app.post("/getptcardsbyid", (req, res) => {
 
 // --------------------------------- Receipt, Recipe, Prescription -------------------------------
 app.post("/updateptcardreceipt", (req, res) => {
-  const { cardid, curReceipt } = req.body;
+  const { cardid, curReceipt, curToll } = req.body;
   db.query(
-    `UPDATE pt_cards SET receipt = ? WHERE cardid = ?`,
-    [curReceipt, cardid],
+    `UPDATE pt_cards SET receipt = ?, toll = ? WHERE cardid = ?`,
+    [curReceipt, curToll, cardid],
     (err, rows) => {
       if (err) res.status(500).send(err.message);
       else res.status(200).send({ data: rows });

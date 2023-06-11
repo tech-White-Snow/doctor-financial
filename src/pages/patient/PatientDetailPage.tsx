@@ -186,7 +186,12 @@ const PatientDetailPage: FC = () => {
                           View
                         </span>
                       </div>
-                      <div className="grow">
+                      <div
+                        className="grow"
+                        onClick={() =>
+                          console.log("Share on Email and Whatspp!")
+                        }
+                      >
                         <img src={shareIcon} className="max-w-none" />
                       </div>
                       <div className="grow" onClick={() => printHandler()}>

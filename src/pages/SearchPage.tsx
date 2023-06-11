@@ -17,6 +17,7 @@ const SearchPage: FC = () => {
   const navigate = useNavigate();
 
   const [searchText, setSearchText] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Hook for User Authentication
   useEffect(() => {
@@ -47,7 +48,9 @@ const SearchPage: FC = () => {
       .then((data) => {
         console.log("Get searched patient card for payment successfully!");
         console.log("ptcardspayment -> ", data);
-        navigate("/searchresult", { state: { context: data.data } });
+        if (data.data.length > 0)
+          navigate("/searchresult", { state: { context: data.data } });
+        else setErrorMessage("Search data not found!");
       })
       .catch((error) => {
         console.error(error);
@@ -78,6 +81,7 @@ const SearchPage: FC = () => {
                 <img src={searchIcon} className="max-w-none" />
               </div>
             </div>
+            <div className="py-2 text-center text-red-500">{errorMessage}</div>
           </div>
         </div>
         <div className="absolute w-full bottom-[80px] px-3">

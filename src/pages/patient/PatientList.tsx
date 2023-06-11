@@ -28,7 +28,10 @@ const PatientList: FC = () => {
 
   const getOnlyDate = (dateString: any) => {
     const date = new Date(dateString);
-    const formattedDate = date.toISOString().split("T")[0];
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
   };
 
@@ -45,6 +48,7 @@ const PatientList: FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("cardarray -> ", data.data);
         setCardsArray(data.data);
       })
       .catch((error) => {
@@ -79,7 +83,10 @@ const PatientList: FC = () => {
           <div className="flex pt-2 text-sm text-[#0C2036] font-bold justify-center">
             <DatePicker
               selected={selectedDate}
-              onChange={(date: Date | null) => setSelectedDate(date)}
+              onChange={(date: Date | null) => {
+                console.log("currentselect date -> ", date);
+                setSelectedDate(date);
+              }}
               dateFormat="MM-dd-yyyy"
               className="px-3 py-2 rounded-md border-gray-300 flex text-center focus:outline-none"
             />

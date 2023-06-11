@@ -39,7 +39,7 @@ const CheckPatient: FC = () => {
   const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
   const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
-    JSON.parse(_context.medicines)
+    _context.medicines ? JSON.parse(_context.medicines) : []
   );
 
   const [currentSelect, setCurrentSelect] = useState(0);
@@ -96,12 +96,10 @@ const CheckPatient: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.data.length > 0) {
+          if (!data.data[0].remark) data.data[0].remark = "@@@@@@@@@@";
           setContext(data.data[0]);
           // analyze album images
           const albumImgText: string[] = data.data[0].album.split(", ");
-          albumImgText.map((idx) => {
-            console.log(idx);
-          });
           setAlbumImages(albumImgText);
         }
       })
@@ -144,6 +142,7 @@ const CheckPatient: FC = () => {
   };
 
   const updateCurrentPatientHistory = async () => {
+    console.log("---");
     // update backend
     const cardID = _context.cardid;
     const originPtHistory = originPatientHistory[0].detail;
@@ -271,13 +270,24 @@ const CheckPatient: FC = () => {
                     {patientHistory && patientHistory.length > 0 ? (
                       <textarea
                         className="w-full h-full focus:outline-none p-1 bg-transparent resize-none"
-                        value={patientHistory[0].detail}
+                        value={
+                          context && context.pasthistory
+                            ? context.pasthistory
+                            : ""
+                        }
                         onChange={(ev) => {
                           const newDetail = ev.target.value;
-                          setPatientHistory((prevHistory) => [
-                            { ...prevHistory[0], detail: newDetail },
-                            ...prevHistory.slice(1),
-                          ]);
+                          // setPatientHistory((prevHistory) => [
+                          //   { ...prevHistory[0], detail: newDetail },
+                          //   ...prevHistory.slice(1),
+                          // ]);
+                          setContext((prevContext: any) => ({
+                            ...prevContext,
+                            pasthistory: ev.target.value,
+                            pasthistorydate: getOnlyDate1(
+                              new Date().toString()
+                            ),
+                          }));
                         }}
                         readOnly={!isPastHistoryEditMode}
                       />
@@ -295,7 +305,10 @@ const CheckPatient: FC = () => {
                           <img src={editIcon2} className="max-w-none" />
                         </div>
                         <div className="pt-2 self-end">
-                          Last update: {getOnlyDate(patientHistory[0].date)}
+                          Last update:{" "}
+                          {context && context.pasthistorydate
+                            ? getOnlyDate(context.pasthistorydate)
+                            : ""}
                         </div>
                       </>
                     ) : (
@@ -318,7 +331,7 @@ const CheckPatient: FC = () => {
                         className="grow p-3 ml-2 rounded-lg text-center text-white bg-[#64B3EC]"
                         onClick={() => {
                           setIsPastHistoryEditMode(false);
-                          updateCurrentPatientHistory();
+                          // updateCurrentPatientHistory();
                         }}
                       >
                         Confirm
@@ -431,7 +444,7 @@ const CheckPatient: FC = () => {
                         {albumImages ? (
                           albumImages.map((idx, kkk) =>
                             kkk == 0 ? (
-                              <></>
+                              <div key={"albumImg" + kkk}></div>
                             ) : (
                               <div
                                 className="px-2"
@@ -440,6 +453,7 @@ const CheckPatient: FC = () => {
                                     state: { context: context },
                                   })
                                 }
+                                key={"albumImg" + kkk}
                               >
                                 <img
                                   src={BACKEND_URL + "/uploads/" + idx}
@@ -737,7 +751,13 @@ const CheckPatient: FC = () => {
                         <span className="px-1">
                           <input
                             className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
-                            value={context.remark.split("@@")[0]}
+                            value={
+                              context &&
+                              context.remark &&
+                              context.remark.split("@@").length > 0
+                                ? context.remark.split("@@")[0]
+                                : ""
+                            }
                             onChange={(ev) => {
                               setContext((prevContext: any) => ({
                                 ...prevContext,
@@ -754,7 +774,13 @@ const CheckPatient: FC = () => {
                         <span className="px-1">
                           <input
                             className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
-                            value={context.remark.split("@@")[1]}
+                            value={
+                              context &&
+                              context.remark &&
+                              context.remark.split("@@").length > 0
+                                ? context.remark.split("@@")[1]
+                                : ""
+                            }
                             onChange={(ev) => {
                               setContext((prevContext: any) => ({
                                 ...prevContext,
@@ -771,7 +797,13 @@ const CheckPatient: FC = () => {
                         <span className="px-1">
                           <input
                             className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
-                            value={context.remark.split("@@")[2]}
+                            value={
+                              context &&
+                              context.remark &&
+                              context.remark.split("@@").length > 0
+                                ? context.remark.split("@@")[2]
+                                : ""
+                            }
                             onChange={(ev) => {
                               setContext((prevContext: any) => ({
                                 ...prevContext,
@@ -790,7 +822,13 @@ const CheckPatient: FC = () => {
                         <span className="px-1">
                           <input
                             className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
-                            value={context.remark.split("@@")[3]}
+                            value={
+                              context &&
+                              context.remark &&
+                              context.remark.split("@@").length > 0
+                                ? context.remark.split("@@")[3]
+                                : ""
+                            }
                             onChange={(ev) => {
                               setContext((prevContext: any) => ({
                                 ...prevContext,
@@ -807,7 +845,13 @@ const CheckPatient: FC = () => {
                         <span className="px-1">
                           <input
                             className="w-12 focus:outline-none border-b border-b-[#25617B] bg-transparent"
-                            value={context.remark.split("@@")[4]}
+                            value={
+                              context &&
+                              context.remark &&
+                              context.remark.split("@@").length > 0
+                                ? context.remark.split("@@")[4]
+                                : ""
+                            }
                             onChange={(ev) => {
                               setContext((prevContext: any) => ({
                                 ...prevContext,
@@ -838,6 +882,7 @@ const CheckPatient: FC = () => {
           className="p-3 text-center text-white rounded-xl"
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
           onClick={() => {
+            console.log("updated context -> ", context);
             navigate("/previewmedicine", {
               state: { context: context, files: files },
             });

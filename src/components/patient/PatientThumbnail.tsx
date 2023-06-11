@@ -6,6 +6,7 @@ import { BACKEND_URL } from "../../constants";
 
 import closeIcon from "../../assets/icons/close_ico1.svg";
 import subMenuItemIcon from "../../assets/icons/submenu_item_ico.svg";
+import newPatientIcon from "../../assets/icons/new_patient_ico.svg";
 
 import Theme from "../../assets/color";
 
@@ -101,13 +102,27 @@ ${
     <div className={isItemDeleted ? "hidden" : "block"}>
       <div
         className="px-2 py-4 my-3 shadow-lg rounded-xl hover:bg-[#D3E7F6]"
-        onClick={() => setIsCheckPatientOpen(true)}
+        onClick={() => {
+          if (isOpenItemMenu) setIsOpenItemMenu(false);
+          else setIsCheckPatientOpen(true);
+        }}
       >
         <div className="relative h-32 flex">
           {/* Image */}
           <div className="w-1/3 flex flex-col justify-center text-center">
             <div className="flex justify-center">
-              <img src={patientThumbnailIcon} className="max-w-none" />
+              <div className="relative flex">
+                <img src={patientThumbnailIcon} className="max-w-none" />
+                {context.pasthistorydate && context.pasthistorydate != "" ? (
+                  <></>
+                ) : (
+                  <div className="absolute flex justify-center items-center inset-0">
+                    <div className="flex justify-center items-center">
+                      <img src={newPatientIcon} className="max-w-none" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <div
               className="text-sm pt-2"
@@ -119,7 +134,9 @@ ${
               className="text-xs pt-1"
               style={{ color: Theme.COLOR_SELECTED }}
             >
-              {context.newdiease ? "新症" : ""}
+              {context.pasthistorydate && context.pasthistorydate != ""
+                ? ""
+                : "新症"}
             </div>
           </div>
           {/* Content */}
