@@ -139,12 +139,17 @@ const Home: FC = () => {
               最近的預約病人
             </div>
             <div className="pb-[75px]">
-              {cardsArray.map((idx: any) => (
-                <PatientThumbnail
-                  key={idx.name + idx.telephone + idx.doctor}
-                  context={idx}
-                />
-              ))}
+              {cardsArray
+                .sort(
+                  (a: any, b: any) =>
+                    new Date(a.date).getTime() - new Date(b.date).getTime()
+                )
+                .map((idx: any) => (
+                  <PatientThumbnail
+                    key={idx.name + idx.telephone + idx.doctor}
+                    context={idx}
+                  />
+                ))}
             </div>
           </div>
         </div>

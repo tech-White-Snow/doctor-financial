@@ -73,19 +73,24 @@ const SearchResultPage: FC = () => {
           {/* Scheduled Patient List */}
           <div className="w-full">
             <div className="pb-[75px]">
-              {context.map((idx: any) => (
-                <PatientResultItem
-                  key={idx.name + idx.telephone + idx.doctor}
-                  cardid={idx.cardid}
-                  name={idx.name}
-                  newdiease={idx.newdiease}
-                  telephone={idx.telephone}
-                  age={idx.age}
-                  sex={idx.sex}
-                  doctor={idx.doctor}
-                  date={idx.date}
-                />
-              ))}
+              {context
+                .sort(
+                  (a: any, b: any) =>
+                    new Date(b.date).getTime() - new Date(a.date).getTime()
+                )
+                .map((idx: any) => (
+                  <PatientResultItem
+                    key={idx.name + idx.telephone + idx.doctor}
+                    cardid={idx.cardid}
+                    name={idx.name}
+                    newdiease={idx.newdiease}
+                    telephone={idx.telephone}
+                    age={idx.age}
+                    sex={idx.sex}
+                    doctor={idx.doctor}
+                    date={idx.date}
+                  />
+                ))}
             </div>
           </div>
         </div>
