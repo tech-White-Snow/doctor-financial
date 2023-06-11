@@ -4,12 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import Theme from "../../assets/color";
 
-import Avatar1 from "../../assets/avatar1.svg";
-import DashBack from "../../assets/img/alert_board.png";
-
-import shareIcon from "../../assets/icons/share_ico.svg";
-import printIcon from "../../assets/icons/print_ico.svg";
-
 import NavBar from "../../components/NavBar";
 import Header from "../../components/Header";
 import PatientResultItem from "../../components/patient/PatientResultItem";

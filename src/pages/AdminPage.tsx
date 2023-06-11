@@ -25,7 +25,7 @@ const AdminPage: FC = () => {
 
   const viewSearchResultHandler = async () => {
     const curDate = updateDateTimeFormat(new Date());
-    const searchText = "";
+    const searchText = null;
     const data = { searchText, curDate };
     await fetch(BACKEND_URL + "/getptcardpayment", {
       method: "POST",
@@ -38,6 +38,7 @@ const AdminPage: FC = () => {
       .then((data) => {
         console.log("Get searched patient card for payment successfully!");
         setContext(data.data);
+        console.log("--->", data.data);
       })
       .catch((error) => {
         console.error(error);

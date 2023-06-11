@@ -5,8 +5,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Theme from "../../assets/color";
 import { BACKEND_URL } from "../../constants";
 
-import Avatar1 from "../../assets/avatar1.svg";
-import DashBack from "../../assets/img/alert_board.png";
 import editIcon from "../../assets/icons/edit_ico1.svg";
 import shareIcon from "../../assets/icons/share_ico.svg";
 import printIcon from "../../assets/icons/print_ico.svg";

@@ -218,6 +218,26 @@ const CheckPatient: FC = () => {
     }
   };
 
+  const [file, setFile] = useState<File>();
+
+  const handlePhotoCapture = async () => {
+    console.log("camera capture clicked!");
+    const mediaDevices = navigator.mediaDevices as any;
+    const stream = await mediaDevices.getUserMedia({ video: true });
+    const video = document.createElement("video");
+    video.srcObject = stream;
+    video.play();
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext("2d")!;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg");
+    const blob = await fetch(dataUrl).then((res) => res.blob());
+    setFile(new File([blob], "photo.jpg", { type: "image/jpeg" }));
+    stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+  };
+
   return (
     <div className="relative">
       <div className="relative h-screen overflow-y-auto">
@@ -495,7 +515,10 @@ const CheckPatient: FC = () => {
                             multiple
                           />
                         </div>
-                        <div className="px-1">
+                        <div
+                          className="px-1"
+                          onClick={() => handlePhotoCapture()}
+                        >
                           <img src={cameraIcon} className="max-w-none" />
                         </div>
                       </div>

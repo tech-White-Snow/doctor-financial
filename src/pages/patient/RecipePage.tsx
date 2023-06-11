@@ -5,8 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Theme from "../../assets/color";
 import { BACKEND_URL } from "../../constants";
 
-import Avatar1 from "../../assets/avatar1.svg";
-import DashBack from "../../assets/img/alert_board.png";
 import editIcon from "../../assets/icons/edit_ico1.svg";
 import shareIcon from "../../assets/icons/share_ico.svg";
 import printIcon from "../../assets/icons/print_ico.svg";
@@ -25,6 +23,11 @@ interface CompanyInfoType {
   logo: string;
   address: string;
   tel: string;
+}
+
+interface Props {
+  email: string;
+  phone: string;
 }
 
 const RecipePage: FC = () => {
@@ -134,6 +137,19 @@ const RecipePage: FC = () => {
 
   const printHandler = () => {
     window.print();
+  };
+
+  const shareOnSocialHandler = async () => {
+    // share on Email or WhatsApp
+    // const email = "dannyboy05240@gmail.com";
+    // const currentUrl = window.location.href;
+    // const emailBody = `Check out this page: ${currentUrl}`;
+    // const emailSubject = "Sharing a page with you";
+    // const emailLink = `mailto:${email}?subject=${emailSubject}&body=${emailBody}`;
+    // window.location.href = emailLink;
+    // const currentUrl = window.location.href;
+    // const whatsappLink = `https://api.whatsapp.com/send?text=${currentUrl}`;
+    // window.open(whatsappLink, "_blank");
   };
 
   return (
@@ -261,10 +277,7 @@ const RecipePage: FC = () => {
           >
             <img src={editIcon} className="max-w-none" />
           </div>
-          <div
-            className="p-3"
-            onClick={() => console.log("Share on Email and WhatsApp!")}
-          >
+          <div className="p-3" onClick={() => shareOnSocialHandler()}>
             <img src={shareIcon} className="max-w-none" />
           </div>
           <div className="p-3" onClick={() => printHandler()}>

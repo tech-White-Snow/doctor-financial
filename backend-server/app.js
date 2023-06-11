@@ -587,30 +587,44 @@ app.post("/uploadavatar", upload.single("file"), (req, res) => {
 // ------------------------------ Search Patient Card for Payment ---------------------------------
 app.post("/getptcardpayment", (req, res) => {
   const { searchText, curDate } = req.body;
-  db.query(
-    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND pt_cards.paid = 0 AND (pt_cards.albumtext LIKE ? OR pt_cards.disease LIKE ? OR pt_cards.diagnosis LIKE ? OR pt_cards.syndromes LIKE ? OR pt_cards.medicines LIKE ?)",
-    [
-      curDate,
-      `%${searchText}%`,
-      `%${searchText}%`,
-      `%${searchText}%`,
-      `%${searchText}%`,
-      `%${searchText}%`,
-    ],
-    (err, rows) => {
-      if (err) {
-        res.status(500).send(err.message);
-      } else {
-        res.status(200).json({ data: rows });
+  if (searchText) {
+    db.query(
+      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND pt_cards.paid = 0 AND (COALESCE(pt_cards.albumtext, '') LIKE ? OR COALESCE(pt_cards.disease, '') LIKE ? OR COALESCE(pt_cards.diagnosis, '') LIKE ? OR COALESCE(pt_cards.syndromes, '') LIKE ? OR COALESCE(pt_cards.medicines, '') LIKE ?)",
+      [
+        curDate,
+        `%${searchText}%`,
+        `%${searchText}%`,
+        `%${searchText}%`,
+        `%${searchText}%`,
+        `%${searchText}%`,
+      ],
+      (err, rows) => {
+        if (err) {
+          res.status(500).send(err.message);
+        } else {
+          res.status(200).json({ data: rows });
+        }
       }
-    }
-  );
+    );
+  } else {
+    db.query(
+      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND pt_cards.paid = 0",
+      [curDate],
+      (err, rows) => {
+        if (err) {
+          res.status(500).send(err.message);
+        } else {
+          res.status(200).json({ data: rows });
+        }
+      }
+    );
+  }
 });
 
 app.post("/checkptcardpaymentstate", (req, res) => {
   const cardid = req.body.cardid;
   db.query(
-    "SELECT * FROM pt_cards WHERE cardid = ? AND paid = 1",
+    "SELECT * FROM pt_cards WHERE cardid = ? AND paid = 0",
     [cardid],
     (err, rows) => {
       if (err) {
