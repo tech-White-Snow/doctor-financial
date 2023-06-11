@@ -146,7 +146,7 @@ const Home: FC = () => {
                 )
                 .map((idx: any) => (
                   <PatientThumbnail
-                    key={idx.name + idx.telephone + idx.doctor}
+                    key={idx.cardid + idx.name + idx.telephone + idx.doctor}
                     context={idx}
                   />
                 ))}

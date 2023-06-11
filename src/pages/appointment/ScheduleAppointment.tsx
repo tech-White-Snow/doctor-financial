@@ -26,12 +26,10 @@ const ScheduleAppointment = () => {
   const location = useLocation();
   const context = location.state.context;
 
-  console.log("context --> ", context);
-
   const [recordStatus, setRecordStatus] = useState<boolean[]>([]);
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState(moment().format("HH:mm"));
 
   useEffect(() => {
     setRecordStatus(Array(recordStatus.length).fill(false));
@@ -75,9 +73,6 @@ const ScheduleAppointment = () => {
   };
 
   const addNewAppointmentHandler = async () => {
-    console.log("date -> ", formatDate(selectedDate));
-    console.log("time -> ", selectedTime);
-
     // get patient card information
     const token = localStorage.getItem("authToken");
     if (!token) return;
@@ -85,7 +80,7 @@ const ScheduleAppointment = () => {
 
     const doctorID = _user.doctorid;
     const doctorName = _user.username;
-    const patientID = context[0].id;
+    const patientID = context[0].patientid;
     const dateTime = formatDate(selectedDate) + " " + selectedTime;
 
     // add new appointment to backend database
@@ -101,6 +96,31 @@ const ScheduleAppointment = () => {
       .then((data) => {
         console.log("Add New Appointment succeed!");
         navigate("/patient");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  const viewPastHistoryHandler = async (idx: any) => {
+    const patientid = context[idx].patientid;
+    const data = { patientid };
+    await fetch(BACKEND_URL + "/getptcardsbypatientid", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.data.length > 0)
+          navigate("/pastpatientrecord", {
+            state: {
+              context: data.data[0],
+            },
+          });
       })
       .catch((error) => {
         console.error(error);
@@ -144,19 +164,7 @@ const ScheduleAppointment = () => {
                 </div>
                 <div
                   className="border-b border-[#B6DBF5]"
-                  onClick={() =>
-                    navigate("/pastpatientrecord", {
-                      state: {
-                        name: "張小梅",
-                        newdiease: true,
-                        telephone: "A12345678(9)",
-                        age: 38,
-                        sex: 1,
-                        doctor: "張大玉",
-                        date: "9-9-2022",
-                      },
-                    })
-                  }
+                  onClick={() => viewPastHistoryHandler(kkk)}
                 >
                   view
                 </div>

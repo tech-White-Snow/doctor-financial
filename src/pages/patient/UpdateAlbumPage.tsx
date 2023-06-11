@@ -24,8 +24,8 @@ const UpdateAlbumPage: FC = () => {
 
   // get requested data
   const context = location.state.context;
+  const context_extra = location.state.context_extra;
   // const _albumdata = location.state.album;
-  console.log("context -> ", context);
 
   const [currentSelect, setCurrentSelect] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -119,10 +119,27 @@ const UpdateAlbumPage: FC = () => {
               style={{ color: Theme.COLOR_DEFAULT }}
             >
               <div>
-                {context ? context.name : ""} (
-                {context ? (context.sex == 1 ? "男" : "女") : ""})
+                {context
+                  ? context.name
+                    ? context.name
+                    : context_extra.name
+                  : ""}{" "}
+                (
+                {context
+                  ? context.sex
+                    ? context.sex == 1
+                      ? "男"
+                      : "女"
+                    : context_extra.sex == 1
+                    ? "男"
+                    : "女"
+                  : ""}
+                )
               </div>
-              <div className="pl-3">{context ? context.age : ""}歲</div>
+              <div className="pl-3">
+                {context ? (context.age ? context.age : context_extra.age) : ""}
+                歲
+              </div>
             </div>
             <div className="text-sm text-[#0C2036] text-opacity-80">
               {context ? getOnlyDate1(context.date) : ""}
@@ -138,12 +155,16 @@ const UpdateAlbumPage: FC = () => {
                 {/* <div>
                   <img src={editIcon} className="max-w-none" />
                 </div> */}
-                <div
-                  className="pl-3"
-                  onClick={() => removeCurrentAlbumImageHandler()}
-                >
-                  <img src={removeIcon} className="max-w-none" />
-                </div>
+                {context && context.name ? (
+                  <div
+                    className="pl-3"
+                    onClick={() => removeCurrentAlbumImageHandler()}
+                  >
+                    <img src={removeIcon} className="max-w-none" />
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="flex flex-row justify-center w-full justify-between overflow-x-auto items-center">

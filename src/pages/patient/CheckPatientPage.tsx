@@ -99,8 +99,10 @@ const CheckPatient: FC = () => {
           if (!data.data[0].remark) data.data[0].remark = "@@@@@@@@@@";
           setContext(data.data[0]);
           // analyze album images
-          const albumImgText: string[] = data.data[0].album.split(", ");
-          setAlbumImages(albumImgText);
+          if (data.data[0].album) {
+            const albumImgText: string[] = data.data[0].album.split(", ");
+            setAlbumImages(albumImgText);
+          }
         }
       })
       .catch((error) => {
@@ -142,7 +144,6 @@ const CheckPatient: FC = () => {
   };
 
   const updateCurrentPatientHistory = async () => {
-    console.log("---");
     // update backend
     const cardID = _context.cardid;
     const originPtHistory = originPatientHistory[0].detail;
@@ -885,7 +886,6 @@ const CheckPatient: FC = () => {
           className="p-3 text-center text-white rounded-xl"
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
           onClick={() => {
-            console.log("updated context -> ", context);
             navigate("/previewmedicine", {
               state: { context: context, files: files },
             });

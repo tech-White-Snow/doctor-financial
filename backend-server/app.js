@@ -279,7 +279,7 @@ app.post("/addnewpatient", (req, res) => {
     engname,
     birthday,
     sex,
-    id,
+    patientid,
     telephone,
     address,
     emergency,
@@ -298,7 +298,7 @@ app.post("/addnewpatient", (req, res) => {
     engname,
     formattedBirthday,
     sex == "男" ? "1" : "0",
-    id,
+    patientid,
     telephone,
     address,
     emergency,
@@ -531,7 +531,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
   const filename = req.file.filename;
 
   // save in sql database
-  const sql = `UPDATE pt_cards SET album = CONCAT(album, ?) WHERE cardid = ?`;
+  const sql = `UPDATE pt_cards SET album = CONCAT(COALESCE(album, ''), ?) WHERE cardid = ?`;
   const values = [", " + filename, cardid];
 
   db.query(sql, values, (err, rows) => {
@@ -644,6 +644,22 @@ app.post("/getptcardsbyid", (req, res) => {
   db.query(
     "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.cardid = ?",
     [cardid],
+    (err, rows) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        res.status(200).json({ data: rows });
+      }
+    }
+  );
+});
+
+// get patient cards by patientid
+app.post("/getptcardsbypatientid", (req, res) => {
+  const { patientid } = req.body;
+  db.query(
+    "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.patientid = ?",
+    [patientid],
     (err, rows) => {
       if (err) {
         res.status(500).send(err.message);
