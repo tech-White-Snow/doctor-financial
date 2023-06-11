@@ -49,7 +49,9 @@ const SearchPage: FC = () => {
         console.log("Get searched patient card for payment successfully!");
         console.log("ptcardspayment -> ", data);
         if (data.data.length > 0)
-          navigate("/searchresult", { state: { context: data.data } });
+          navigate("/searchresult", {
+            state: { context: data.data, searchtext: searchText },
+          });
         else setErrorMessage("Search data not found!");
       })
       .catch((error) => {

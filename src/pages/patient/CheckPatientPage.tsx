@@ -387,7 +387,10 @@ const CheckPatient: FC = () => {
                             color: Theme.COLOR_DARKGREEN,
                           }}
                         >
-                          <div>
+                          <div
+                            className="w-full"
+                            style={{ overflowWrap: "break-word" }}
+                          >
                             {patientHistory[curHistoryViewState].detail}
                           </div>
                           <div className="pt-2 self-end">
@@ -741,7 +744,7 @@ const CheckPatient: FC = () => {
                 <div className="p-3">
                   <div className="font-sans flex flex-row">
                     <div
-                      className="w-full h-[80px] p-4"
+                      className="w-full p-4"
                       style={{
                         backgroundColor: Theme.COLOR_LIGHTBLUE,
                         color: Theme.COLOR_DARKGREEN,

@@ -449,6 +449,25 @@ app.post("/updateaccount", (req, res) => {
   });
 });
 
+// delete account
+app.post("/deleteaccount", (req, res) => {
+  const email = req.body.email;
+
+  const sql = `DELETE FROM users WHERE email = ?`;
+
+  const values = [email];
+  // Execute the query
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: "Error deleting account : " + err });
+    } else {
+      res.status(200).json({ message: "Deleting Account Successfully!" });
+    }
+  });
+});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // find patients by patientid and telephone number
 app.post("/findpatients", (req, res) => {
   const searchtext = req.body.searchText;
@@ -583,6 +602,22 @@ app.post("/getptcardpayment", (req, res) => {
         res.status(500).send(err.message);
       } else {
         res.status(200).json({ data: rows });
+      }
+    }
+  );
+});
+
+app.post("/checkptcardpaymentstate", (req, res) => {
+  const cardid = req.body.cardid;
+  db.query(
+    "SELECT * FROM pt_cards WHERE cardid = ? AND paid = 1",
+    [cardid],
+    (err, rows) => {
+      if (err) {
+        res.status(500).send(err.message);
+      } else {
+        if (rows.length > 0) res.status(200).json({ status: "true" });
+        else res.status(200).json({ status: "false" });
       }
     }
   );

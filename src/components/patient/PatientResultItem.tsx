@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -38,12 +38,6 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
     navigate("/patientdetail", {
       state: {
         cardid: cardid,
-        // name: name,
-        // newdiease: newdiease,
-        // telephone: telephone,
-        // age: age,
-        // sex: sex,
-        // doctor: doctor,
         date: date,
       },
     });
@@ -100,6 +94,37 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
 
     return formattedDate;
   };
+
+  const checkPaymentCardExist = async () => {
+    const data = { cardid };
+    await fetch(BACKEND_URL + "/checkptcardpaymentstate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get searched patient card for payment successfully!");
+        if (data.status == "true") setIsHideCard(true);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      // Redirect to login page if token is not present
+      navigate("/");
+    } else {
+      // update search result
+      checkPaymentCardExist();
+    }
+  }, [navigate]);
 
   return !isHideCard ? (
     <div

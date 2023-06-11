@@ -1,8 +1,9 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Theme from "../assets/color";
+import { BACKEND_URL } from "../constants";
 
 import Avatar1 from "../assets/avatar1.svg";
 import DashBack from "../assets/img/alert_board.png";
@@ -15,13 +16,50 @@ const SearchResultPage: FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const context = location.state.context;
+  const _context = location.state.context;
+  const _searchText = location.state.searchtext;
+
+  const [context, setContext] = useState(_context);
+
+  const updateDateTimeFormat = (dateTimeString: any) => {
+    const isoString = dateTimeString.toISOString();
+    const formattedDate = isoString.replace("T", " ").replace(/\.\d+Z$/, "");
+    return formattedDate;
+  };
+
+  const getSearchResultForPayment = async () => {
+    const curDate = updateDateTimeFormat(new Date());
+    const searchText = _searchText ? _searchText : "";
+    const data = { searchText, curDate };
+    await fetch(BACKEND_URL + "/getptcardpayment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Get searched patient card for payment successfully!");
+        if (data.data.length > 0) {
+          setContext(data.data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
       // Redirect to login page if token is not present
       navigate("/");
+    } else {
+      // update search result
+      getSearchResultForPayment();
     }
   }, [navigate]);
 

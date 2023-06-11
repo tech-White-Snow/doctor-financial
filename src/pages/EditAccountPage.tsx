@@ -73,8 +73,8 @@ const EditAccountPage: FC = () => {
   };
 
   const uploadAvatarHandler = async (): Promise<string> => {
-    console.log("handleUpload");
-    if (!file) {
+    console.log("handleUpload", file);
+    if (!file || file.name == "") {
       return "";
     }
 
@@ -177,6 +177,27 @@ const EditAccountPage: FC = () => {
     }
   };
 
+  const deleteAccountHandler = async () => {
+    const email = context.email;
+    const data = { email };
+    await fetch(BACKEND_URL + "/deleteaccount", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+        navigate("/viewaccount");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -214,7 +235,7 @@ const EditAccountPage: FC = () => {
           <div
             className={
               "relative w-full mt-3 text-xs font-medium text-black text-opacity-70 " +
-              (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[120px]")
+              (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[170px]")
             }
           >
             <div className="relative flex flex-row p-3 my-2 border-t border-b border-opacity-50">
@@ -356,6 +377,16 @@ const EditAccountPage: FC = () => {
                 >
                   Confirm
                 </div>
+                {accountMode != 3 ? (
+                  <div
+                    className="mt-3 p-3 text-center text-black rounded-xl bg-[#979797]"
+                    onClick={() => deleteAccountHandler()}
+                  >
+                    Delete
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             ) : (
               <></>
@@ -365,7 +396,7 @@ const EditAccountPage: FC = () => {
           <div
             className={
               "relative w-full mt-3 text-xs font-medium text-black text-opacity-70 " +
-              (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[120px]")
+              (accountMode == 1 && !isEditMode ? "pb-[60px]" : "pb-[170px]")
             }
           >
             <div className="relative flex flex-row p-3 my-2 border-t border-b border-opacity-50">
