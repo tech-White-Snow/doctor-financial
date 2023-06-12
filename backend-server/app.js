@@ -72,32 +72,39 @@ function generateResetToken(email) {
 }
 
 // Send password reset email
-function sendPasswordResetEmail(email, token) {
-  const transporter = nodemailer.createTransport({
-    // Configure the email transporter (e.g., Gmail, SMTP server)
-    // ...
-    host: "smtp.ethereal.email",
-    port: 587,
-    auth: {
-      user: "friedrich28@ethereal.email",
-      pass: "733VNm94YbTd5rRkSj",
-    },
-  });
+async function sendPasswordResetEmail(email, token) {
+  try {
+    const transporter = nodemailer.createTransport({
+      // Configure the email transporter (e.g., Gmail, SMTP server)
+      // ...
+      // host: "smtp.ethereal.email",
+      // port: 587,
+      // secure: false,
+      // auth: {
+      //   user: "friedrich28@ethereal.email",
+      //   pass: "733VNm94YbTd5rRkSj",
+      // },
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "dannyboy05240@gmail.com",
+        pass: "rnckvejtbbgleegq",
+      },
+    });
+  
+    const mailOptions = {
+      from: "info@doctor.com",
+      to: email,
+      subject: "Password Reset",
+      text: `Click the following link to reset your password: http://95.216.251.189:3000/resetpassword/${token}`,
+    };
 
-  const mailOptions = {
-    from: "your-email@example.com",
-    to: email,
-    subject: "Password Reset",
-    text: `Click the following link to reset your password: http://localhost:3000/resetpassword/${token}`,
-  };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.messageId);
+  } catch (error) {
+    console.error("Error sending password reset email : ", error);
+  }
 }
 
 // API endpoint for password reset request

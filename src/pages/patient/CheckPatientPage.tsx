@@ -5,12 +5,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Theme from "../../assets/color";
 import { BACKEND_URL } from "../../constants";
 
-import nextIcon from "../../assets/icons/next_ico.svg";
-import editIcon from "../../assets/icons/edit_ico.svg";
-import editIcon1 from "../../assets/icons/edit_ico1.svg";
 import editIcon2 from "../../assets/icons/edit_ico2.svg";
 import downIcon from "../../assets/icons/down_ico.svg";
-import profileImage from "../../assets/img/profile_sample.jpeg";
 import prevvIcon from "../../assets/icons/prevv_ico.svg";
 import nexttIcon from "../../assets/icons/nextt_ico.svg";
 import blankImage from "../../assets/img/blank_image.svg";
@@ -20,7 +16,6 @@ import backwardIcon from "../../assets/icons/backward1_ico.svg";
 import additemIcon from "../../assets/icons/additem_ico.svg";
 import removeitemIcon from "../../assets/icons/removeitem_ico.svg";
 
-import Header from "../../components/Header";
 import NavBar from "../../components/NavBar";
 
 interface MedicineInfo {
@@ -36,7 +31,6 @@ const CheckPatient: FC = () => {
   const [context, setContext] = useState(_context);
 
   const [isPastHistoryEditMode, setIsPastHistoryEditMode] = useState(false);
-  const [isAccountTypeOpen, setIsAccountTypeOpen] = useState(false);
 
   const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
     _context.medicines ? JSON.parse(_context.medicines) : []
@@ -218,25 +212,27 @@ const CheckPatient: FC = () => {
     }
   };
 
-  const [file, setFile] = useState<File>();
+  // const [file, setFile] = useState<File>();
+  // const [tipMessage, setTipMessage] = useState("");
 
-  const handlePhotoCapture = async () => {
-    console.log("camera capture clicked!");
-    const mediaDevices = navigator.mediaDevices as any;
-    const stream = await mediaDevices.getUserMedia({ video: true });
-    const video = document.createElement("video");
-    video.srcObject = stream;
-    video.play();
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext("2d")!;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const dataUrl = canvas.toDataURL("image/jpeg");
-    const blob = await fetch(dataUrl).then((res) => res.blob());
-    setFile(new File([blob], "photo.jpg", { type: "image/jpeg" }));
-    stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
-  };
+  // const handlePhotoCapture = async () => {
+  //   console.log("camera capture clicked!");
+  //   setTipMessage("---");
+  //   const mediaDevices = navigator.mediaDevices as any;
+  //   const stream = await mediaDevices.getUserMedia({ video: true });
+  //   const video = document.createElement("video");
+  //   video.srcObject = stream;
+  //   video.play();
+  //   const canvas = document.createElement("canvas");
+  //   canvas.width = video.videoWidth;
+  //   canvas.height = video.videoHeight;
+  //   const context = canvas.getContext("2d")!;
+  //   context.drawImage(video, 0, 0, canvas.width, canvas.height);
+  //   const dataUrl = canvas.toDataURL("image/jpeg");
+  //   const blob = await fetch(dataUrl).then((res) => res.blob());
+  //   setFile(new File([blob], "photo.jpg", { type: "image/jpeg" }));
+  //   stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+  // };
 
   return (
     <div className="relative">
@@ -515,12 +511,13 @@ const CheckPatient: FC = () => {
                             multiple
                           />
                         </div>
-                        <div
+                        {/* <div
                           className="px-1"
                           onClick={() => handlePhotoCapture()}
                         >
                           <img src={cameraIcon} className="max-w-none" />
                         </div>
+                        <div className="py-1">{tipMessage}</div> */}
                       </div>
                     </div>
                   </div>
@@ -707,6 +704,7 @@ const CheckPatient: FC = () => {
                           <span className="p-2 ml-2 bg-[#EAF4FB]">
                             <input
                               className="w-1/4 bg-[#EAF4FB] outline-none"
+                              type="number"
                               value={idx.amount}
                               onChange={(ev) => {
                                 setStoreMedicineInfo((prevState) => {

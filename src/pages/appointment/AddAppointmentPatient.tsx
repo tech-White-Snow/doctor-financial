@@ -25,7 +25,7 @@ const AddAppointmentPatient: FC = () => {
     engname: string;
     birthday: Date;
     sex: string;
-    id: string;
+    patientid: string;
     telephone: string;
     address: string;
     emergency: string;
@@ -37,7 +37,7 @@ const AddAppointmentPatient: FC = () => {
     engname: "",
     birthday: new Date(),
     sex: "男",
-    id: "",
+    patientid: "",
     telephone: "",
     address: "",
     emergency: "",
@@ -72,7 +72,7 @@ const AddAppointmentPatient: FC = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data.message);
-        navigate("/scheduleappointment");
+        navigate("/scheduleappointment", {state:{context: [newPatient]}});
       })
       .catch((error) => {
         console.error(error);
@@ -239,11 +239,11 @@ const AddAppointmentPatient: FC = () => {
             <div>
               <input
                 className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] text-xs p-2 pr-8"
-                value={newPatient.id}
+                value={newPatient.patientid}
                 onChange={(ev) => {
                   setNewPatient((prevPatient: any) => ({
                     ...prevPatient,
-                    id: ev.target.value,
+                    patientid: ev.target.value,
                   }));
                 }}
               />

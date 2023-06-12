@@ -156,8 +156,8 @@ const PatientDetailPage: FC = () => {
                 className="w-full rounded-[10px] p-3 text-white text-sm flex flex-row"
                 style={{ backgroundColor: Theme.COLOR_DEFAULT }}
               >
-                <div className="grow">Document</div>
-                <div className="grow">Action</div>
+                <div className="w-1/2">Document</div>
+                <div className="w-1/2">Action</div>
               </div>
               <div className="text-xs px-3">
                 {docHistory.map((idx: any) => (
@@ -183,7 +183,7 @@ const PatientDetailPage: FC = () => {
                           View
                         </span>
                       </div>
-                      <div
+                      {/* <div
                         className="grow"
                         onClick={() =>
                           console.log("Share on Email and Whatspp!")
@@ -193,7 +193,7 @@ const PatientDetailPage: FC = () => {
                       </div>
                       <div className="grow" onClick={() => printHandler()}>
                         <img src={printIcon} className="max-w-none" />
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 ))}
@@ -207,8 +207,8 @@ const PatientDetailPage: FC = () => {
                   過往紀錄
                 </div>
                 <div className="w-full rounded-[10px] p-3 text-[#64B3EC] bg-[#D3E7F6] flex flex-row">
-                  <div className="grow">Document</div>
-                  <div className="grow">Action</div>
+                  <div className="w-1/2">Document</div>
+                  <div className="w-1/2">Action</div>
                 </div>
                 <div className="px-3">
                   <div className="py-1.5 my-1 flex flex-row">
@@ -217,7 +217,7 @@ const PatientDetailPage: FC = () => {
                     </div>
                     <div className="w-1/2 flex flex-row">
                       <div
-                        className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
+                        className="border-b border-b-[#25747B] text-[#25747B] hover:cursor-pointer"
                         onClick={() =>
                           navigate("/pasthistory", {
                             state: {
@@ -236,7 +236,7 @@ const PatientDetailPage: FC = () => {
                     </div>
                     <div className="w-1/2 flex flex-row">
                       <div
-                        className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
+                        className="border-b border-b-[#25747B] text-[#25747B] hover:cursor-pointer"
                         onClick={() =>
                           navigate("/patientrecord", {
                             state: {
@@ -255,7 +255,7 @@ const PatientDetailPage: FC = () => {
                     </div>
                     <div className="w-1/2 flex flex-row">
                       <div
-                        className="border-b border-b-[#25747B] text-[#25747B] ml-2 hover:cursor-pointer"
+                        className="border-b border-b-[#25747B] text-[#25747B] hover:cursor-pointer"
                         onClick={() =>
                           navigate("/patientalbum", {
                             state: {
