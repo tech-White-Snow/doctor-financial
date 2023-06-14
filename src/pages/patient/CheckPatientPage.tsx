@@ -35,6 +35,7 @@ const CheckPatient: FC = () => {
   const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
     _context.medicines ? JSON.parse(_context.medicines) : []
   );
+  const [curPastHistory, setCurPastHistory] = useState(_context.pasthistory ? _context.pasthistory : "");
 
   const [currentSelect, setCurrentSelect] = useState(0);
 
@@ -46,12 +47,23 @@ const CheckPatient: FC = () => {
   const [patientHistory, setPatientHistory] = useState<PatientHistoryType[]>(
     []
   );
+  const [presentIllness, setPresentIllness] = useState("");
   const [originPatientHistory, setOriginPatientHistory] = useState<
     PatientHistoryType[]
   >([]);
   const [curHistoryViewState, setCurHistoryViewState] = useState(0);
 
   const [albumImages, setAlbumImages] = useState<string[]>([]);
+
+  const getOnlyDate1 = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const formattedDate = `${("0" + (date.getMonth() + 1)).slice(-2)}-${(
+      "0" + date.getDate()
+    ).slice(-2)}-${date.getFullYear()}`;
+
+    return formattedDate;
+  };
 
   const getPatientHistory = async () => {
     const patientID = context.patientid;
@@ -69,6 +81,9 @@ const CheckPatient: FC = () => {
         setCurHistoryViewState(data.data.length - 1);
         setPatientHistory(data.data);
         setOriginPatientHistory(data.data);
+        // show present illness
+        if (new Date(data.data[data.data.length-1].date).toISOString().substring(0, 10) == new Date().toISOString().substring(0, 10))
+          setPresentIllness(data.data[data.data.length-1].detail);
       })
       .catch((error) => {
         console.error(error);
@@ -92,6 +107,7 @@ const CheckPatient: FC = () => {
         if (data.data.length > 0) {
           if (!data.data[0].remark) data.data[0].remark = "@@@@@@@@@@";
           setContext(data.data[0]);
+          setCurPastHistory(data.data[0].pasthistory ? data.data[0].pasthistory : "");
           // analyze album images
           if (data.data[0].album) {
             const albumImgText: string[] = data.data[0].album.split(", ");
@@ -172,16 +188,8 @@ const CheckPatient: FC = () => {
 
     return formattedDate;
   };
-  const getOnlyDate = (dateString: any) => {
-    const date = new Date(dateString);
-
-    const formattedDate = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()}`;
-
-    return formattedDate;
-  };
-  const getOnlyDate1 = (dateString: any) => {
+ 
+  const getOnlyDate2 = (dateString: any) => {
     const date = new Date(dateString);
 
     const day = ("0" + date.getUTCDate()).slice(-2); // using getUTCDate to avoid timezone issues
@@ -287,24 +295,9 @@ const CheckPatient: FC = () => {
                     {patientHistory && patientHistory.length > 0 ? (
                       <textarea
                         className="w-full h-full focus:outline-none p-1 bg-transparent resize-none"
-                        value={
-                          context && context.pasthistory
-                            ? context.pasthistory
-                            : ""
-                        }
+                        value={curPastHistory}
                         onChange={(ev) => {
-                          const newDetail = ev.target.value;
-                          // setPatientHistory((prevHistory) => [
-                          //   { ...prevHistory[0], detail: newDetail },
-                          //   ...prevHistory.slice(1),
-                          // ]);
-                          setContext((prevContext: any) => ({
-                            ...prevContext,
-                            pasthistory: ev.target.value,
-                            pasthistorydate: getOnlyDate1(
-                              new Date().toString()
-                            ),
-                          }));
+                          setCurPastHistory(ev.target.value);
                         }}
                         readOnly={!isPastHistoryEditMode}
                       />
@@ -324,7 +317,7 @@ const CheckPatient: FC = () => {
                         <div className="pt-2 self-end">
                           Last update:{" "}
                           {context && context.pasthistorydate
-                            ? getOnlyDate(context.pasthistorydate)
+                            ? context.pasthistorydate
                             : ""}
                         </div>
                       </>
@@ -340,6 +333,7 @@ const CheckPatient: FC = () => {
                         onClick={() => {
                           setIsPastHistoryEditMode(false);
                           setPatientHistory(originPatientHistory);
+                          setCurPastHistory(context.pasthistory ? context.pasthistory : "");
                         }}
                       >
                         Cancel
@@ -349,6 +343,12 @@ const CheckPatient: FC = () => {
                         onClick={() => {
                           setIsPastHistoryEditMode(false);
                           // updateCurrentPatientHistory();
+                          setContext((prevContext: any) => ({
+                            ...prevContext,
+                            pasthistory: curPastHistory,
+                            pasthistorydate: 
+                              getOnlyDate2(new Date().toString()),
+                          }));
                         }}
                       >
                         Confirm
@@ -394,7 +394,7 @@ const CheckPatient: FC = () => {
                           <img src={prevvIcon} className="max-w-none" />
                         </div>
                       ) : (
-                        <div className="w-8"></div>
+                        <div className="w-[20px]"></div>
                       )}
                       {patientHistory && patientHistory[curHistoryViewState] ? (
                         <div
@@ -434,12 +434,22 @@ const CheckPatient: FC = () => {
                           <img src={nexttIcon} className="max-w-none" />
                         </div>
                       ) : (
-                        <div className="w-8"></div>
+                        <div className="w-[20px]"></div>
                       )}
                     </div>
                   ) : (
                     <></>
                   )}
+                  {/* Today Update 現病史 */}
+                  <div className="px-[20px] py-2">
+                    <textarea
+                        className="w-full h-24 p-2 focus:outline-none bg-[#D3E7F6] text-[#25617B] resize-none"
+                        value={presentIllness}
+                        onChange={(ev) => {
+                          setPresentIllness(ev.target.value);
+                        }}
+                      />
+                  </div>
                 </div>
               ) : (
                 <></>
@@ -558,7 +568,7 @@ const CheckPatient: FC = () => {
               )}
             </div>
             {/* 病名/證型 */}
-            <div>
+            {/* <div>
               <div
                 className="flex flex-row justify-between p-3 my-2 border-t border-b border-opacity-50 transform scale-y-10"
                 onClick={() => setCurrentSelect(4)}
@@ -592,7 +602,7 @@ const CheckPatient: FC = () => {
               ) : (
                 <></>
               )}
-            </div>
+            </div> */}
             {/* 診斷 */}
             <div>
               <div
@@ -614,7 +624,7 @@ const CheckPatient: FC = () => {
                       <textarea
                         className="w-full h-[80px] resize-none focus:outline-none p-2 rounded-lg"
                         style={{ backgroundColor: Theme.COLOR_LIGHTBLUE }}
-                        value={context.diagnosis}
+                        value={context.diagnosis ? context.diagnosis : ""}
                         onChange={(ev) => {
                           setContext((prevContext: any) => ({
                             ...prevContext,
@@ -908,7 +918,7 @@ const CheckPatient: FC = () => {
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
           onClick={() => {
             navigate("/previewmedicine", {
-              state: { context: context, files: files },
+              state: { context: context, files: files, presentillness: presentIllness, presentillnessdate: new Date().toISOString().substring(0, 10) },
             });
           }}
         >

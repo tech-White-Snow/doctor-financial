@@ -29,6 +29,8 @@ const PreviewMedicinePage: FC = () => {
   // load requested data
   const context = location.state.context;
   const files = location.state.files;
+  const presentillness = location.state.presentillness;
+  const presentillnessdate = location.state.presentillnessdate;
 
   const [curMedicines, setCurMedicines] = useState<MedicineType[]>([]);
   const [chunkMedicines, setChunkMedicines] = useState<MedicineType[][]>([]);
@@ -126,7 +128,7 @@ const PreviewMedicinePage: FC = () => {
     files.map((idx: File) => handleUpload(idx));
 
     // -- update extra check patient data
-    const data = { context };
+    const data = { context, presentillness, presentillnessdate };
     await fetch(BACKEND_URL + "/updatecheckpatient", {
       method: "POST",
       headers: {
@@ -192,7 +194,7 @@ const PreviewMedicinePage: FC = () => {
                 </span>
               </div>
               <div className="py-1">
-                <div style={{ color: Theme.COLOR_DEFAULT }}>診斷:</div>
+                <div style={{ color: Theme.COLOR_DEFAULT }}>診斷: <span className="pl-1">{context.diagnosis}</span></div>
                 <div className="p-2 h-48 text-black text-xs">
                   <table className="table w-11/12 mx-auto border-collapse border border-black">
                     <tbody>

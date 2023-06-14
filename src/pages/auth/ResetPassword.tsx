@@ -1,6 +1,10 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
+
+import jwt_decode from "jwt-decode";
+
+import { BACKEND_URL } from "../../constants";
 
 import Header from "../../components/Header";
 
@@ -20,19 +24,47 @@ const ResetPassword: FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [confirmedPassword, setConfirmedPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [updatedEmail, setUpdatedEmail] = useState("");
 
   const updatePassword = async () => {
-    console.log("currentPassword -> ", currentPassword);
-    console.log("token -> ", token);
+    const email = updatedEmail;
+    const password = currentPassword;
+    const data = { email, password };
+    await fetch(BACKEND_URL + "/updatemailpassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Password Successfully!");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Updating Password Error : ", error);
+        // handle error
+      });
   };
 
   const resetPasswordHandler = () => {
     if (currentPassword != confirmedPassword)
       setErrorMessage("Password doesn't match! Please re-try again!");
     else {
-      updatePassword();
+      if (currentPassword == "")
+        setErrorMessage("Password is empty!");
+      else updatePassword();
     }
   };
+
+  useEffect(() => {
+    if (token) {
+      const decoded_token: { email?: string } = jwt_decode(token);
+      if (!decoded_token || !decoded_token.email) navigate("/");
+      else setUpdatedEmail(decoded_token ? decoded_token.email : "");
+    } 
+  }, [token])
 
   return (
     <div className="relative">
@@ -60,6 +92,8 @@ const ResetPassword: FC = () => {
                 <input
                   type="password"
                   className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2"
+                  value={currentPassword}
+                  onChange={(ev) => setCurrentPassword(ev.target.value)}
                 />
               </div>
             </div>
@@ -71,9 +105,16 @@ const ResetPassword: FC = () => {
                 <input
                   type="password"
                   className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] p-2"
+                  value={confirmedPassword}
+                  onChange={(ev) => setConfirmedPassword(ev.target.value)}
                 />
               </div>
             </div>
+            {
+              errorMessage != "" ?
+                <div className="py-2 text-red-500">{errorMessage}</div>
+              : <></>
+            }
             <div
               className="rounded-[10px] bg-[#64B3EC] hover:bg-[#D3E7F6] text-white text-center text-sm p-3 mt-6"
               onClick={() => resetPasswordHandler()}

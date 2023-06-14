@@ -38,7 +38,7 @@ const Router: FC = () => {
           {/* Authentication */}
           {/* <Route path="/" element={<Splash />} /> */}
           <Route path="/" element={<Signin />} />
-          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           {/* Main Page */}
           <Route path="/viewaccount" element={<ViewAccountPage />} />

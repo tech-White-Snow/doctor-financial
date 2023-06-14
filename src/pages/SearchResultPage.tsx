@@ -30,7 +30,8 @@ const SearchResultPage: FC = () => {
   const getSearchResultForPayment = async () => {
     const curDate = updateDateTimeFormat(new Date());
     const searchText = _searchText ? _searchText : "";
-    const data = { searchText, curDate };
+    const paidMode = 0;
+    const data = { searchText, curDate, paidMode };
     await fetch(BACKEND_URL + "/getptcardpayment", {
       method: "POST",
       headers: {
@@ -78,9 +79,10 @@ const SearchResultPage: FC = () => {
                   (a: any, b: any) =>
                     new Date(b.date).getTime() - new Date(a.date).getTime()
                 )
-                .map((idx: any) => (
+                .map((idx: any, kkk: any) => (
                   <PatientResultItem
-                    key={idx.name + idx.telephone + idx.doctor}
+                    key={"searchresult"+kkk}
+                    mode={2}
                     cardid={idx.cardid}
                     name={idx.name}
                     newdiease={idx.newdiease}

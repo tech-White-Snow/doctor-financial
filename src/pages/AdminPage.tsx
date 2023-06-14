@@ -26,7 +26,8 @@ const AdminPage: FC = () => {
   const viewSearchResultHandler = async () => {
     const curDate = updateDateTimeFormat(new Date());
     const searchText = null;
-    const data = { searchText, curDate };
+    const paidMode = 1;
+    const data = { searchText, curDate, paidMode };
     await fetch(BACKEND_URL + "/getptcardpayment", {
       method: "POST",
       headers: {
@@ -38,7 +39,6 @@ const AdminPage: FC = () => {
       .then((data) => {
         console.log("Get searched patient card for payment successfully!");
         setContext(data.data);
-        console.log("--->", data.data);
       })
       .catch((error) => {
         console.error(error);
@@ -72,10 +72,11 @@ const AdminPage: FC = () => {
                   (a: any, b: any) =>
                     new Date(b.date).getTime() - new Date(a.date).getTime()
                 )
-                .map((idx: any) => (
+                .map((idx: any, kkk: any) => (
                   <PatientResultItem
-                    key={idx.name + idx.telephone + idx.doctor}
-                    cardid={1}
+                    key={"adminlist"+kkk}
+                    mode={1}
+                    cardid={idx.cardid}
                     name={idx.name}
                     newdiease={idx.newdiease}
                     telephone={idx.telephone}

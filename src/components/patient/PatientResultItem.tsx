@@ -12,6 +12,7 @@ import PatientResultItemIcon from "../../assets/icons/patient_thumbnail.svg";
 import SelectedResultItemIcon from "../../assets/icons/selected_ico.svg";
 
 interface PatientResultItemProps {
+  mode: number; // 1 : searchresult, 2 : admin page
   cardid: number;
   name: string;
   newdiease: boolean;
@@ -23,6 +24,7 @@ interface PatientResultItemProps {
 }
 
 const PatientResultItem: FC<PatientResultItemProps> = ({
+  mode,
   cardid,
   name,
   newdiease,
@@ -50,11 +52,13 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
   let timeout: NodeJS.Timeout;
 
   const handleMouseDown = () => {
-    if (!isLongClick) {
-      // setIsLongClick(false);
-      timeout = setTimeout(() => {
-        setIsLongClick(true);
-      }, 1000); // set the duration of the long click here
+    if (mode == 1) {
+      if (!isLongClick) {
+        // setIsLongClick(false);
+        timeout = setTimeout(() => {
+          setIsLongClick(true);
+        }, 1000); // set the duration of the long click here
+      }
     }
   };
 
@@ -107,7 +111,7 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
       .then((response) => response.json())
       .then((data) => {
         console.log("Get searched patient card for payment successfully!");
-        if (data.status == "true") setIsHideCard(true);
+        if (data.status == "false") setIsHideCard(true);
       })
       .catch((error) => {
         console.error(error);
@@ -122,7 +126,9 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
       navigate("/");
     } else {
       // update search result
-      checkPaymentCardExist();
+      if (mode == 1) {
+        checkPaymentCardExist();
+      }
     }
   }, [navigate]);
 
@@ -147,8 +153,10 @@ const PatientResultItem: FC<PatientResultItemProps> = ({
               isPaidClick ? (
                 <div
                   onClick={() => {
-                    setIsPaidClick(false);
-                    setIsLongClick(false);
+                    if (mode == 1) {
+                      setIsPaidClick(false);
+                      setIsLongClick(false);
+                    }
                   }}
                   className="w-[61px] h-[61px] bg-[#64B3EC] rounded-full m-1 flex justify-center items-center"
                 >

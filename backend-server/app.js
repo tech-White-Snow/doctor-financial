@@ -88,8 +88,8 @@ async function sendPasswordResetEmail(email, token) {
       port: 587,
       secure: false,
       auth: {
-        user: "dannyboy05240@gmail.com",
-        pass: "rnckvejtbbgleegq",
+        user: "ngyentuandev@gmail.com",
+        pass: "flztqkcsxpgxgdtc",
       },
     });
   
@@ -135,24 +135,25 @@ app.post("/resetpassword", (req, res) => {
 });
 
 // API endpoint for password update
-app.post("/updatepassword", (req, res) => {
-  const { email, token, password } = req.body;
-  if (!email || !token || !password) {
+app.post("/updatemailpassword", (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res
       .status(400)
-      .json({ message: "Email, token, and password are required" });
+      .json({ message: "Email, and password are required" });
   }
 
-  const user = users[email];
-  if (!user || user.resetToken !== token) {
-    return res.status(404).json({ message: "Invalid token" });
-  }
-
-  // Update the user's password in the database
-  user.password = password;
-  delete user.resetToken;
-
-  res.json({ message: "Password updated successfully" });
+  db.query(
+    `UPDATE users SET password = ? WHERE email = ?`,
+    [password, email],
+    (err, rows) => {
+      if (err) {
+        res.status(500).json({message: err.message});
+      } else {
+        res.status(200).json({message: "Email Reset Password Successfully!"});
+      }
+    }
+  )
 });
 
 // -----------------------------------------------------------------------------------------------------
@@ -554,12 +555,12 @@ app.post("/upload", upload.single("file"), (req, res) => {
 
 // update check patient detail
 app.post("/updatecheckpatient", (req, res) => {
-  const context = req.body.context;
+  const {context, presentillness, presentillnessdate} = req.body;
 
   if (!context || !context.cardid) return;
 
   // update card information
-  const sql = `UPDATE pt_cards SET albumtext = ?, disease = ?, diagnosis = ?, syndromes = ?, medicines = ?, remark = ?, pasthistory = ?, pasthistorydate =? WHERE cardid = ?`;
+  let sql = `UPDATE pt_cards SET albumtext = ?, disease = ?, diagnosis = ?, syndromes = ?, medicines = ?, remark = ?, pasthistory = ?, pasthistorydate =? WHERE cardid = ?`;
   const values = [
     context.albumtext,
     context.disease,
@@ -574,14 +575,39 @@ app.post("/updatecheckpatient", (req, res) => {
 
   db.query(sql, values, (err, rows) => {
     if (err) {
-      res.status(500).json({
+      return res.status(500).json({
         message: "Updating Check Patient Card Detail failed : " + err,
       });
-    } else {
-      res
-        .status(200)
-        .json({ message: "Updating Check Patient Card Detail succeed!" });
     }
+
+    // update present illness history
+    sql = `SELECT * from pt_history WHERE date = ?`;
+    db.query(sql, [presentillnessdate], (err, rows) => {
+      if (err) {
+        return res.status(500).json({
+          message: "Found present illness error : " + err,
+        });
+      } 
+
+      if (rows.length == 0) {
+        const tsql = `INSERT INTO pt_history (id, detail, date, doctorid) VALUES (?,?,?,?)`;
+        db.query(tsql, [context.patientid, presentillness, presentillnessdate, context.doctorid], (err, rows) => {
+          if (err) {
+            return res.status(500).json({message: "Updating present illness error : " + err});
+          } 
+          res.status(200).json({message: "Updating present illness succeed!"});
+        });
+      } else {
+        const tsql = `UPDATE pt_history SET detail = ? WHERE date = ?`;
+        db.query(tsql, [presentillness, presentillnessdate], (err, rows) => {
+          if (err) {
+            res.status(500).json({message: "Updating present illness error : " + err});
+          } else {
+            res.status(200).json({message: "Updating present illness succeed!"});
+          }
+        });
+      }
+    });
   });
 });
 
@@ -593,10 +619,10 @@ app.post("/uploadavatar", upload.single("file"), (req, res) => {
 
 // ------------------------------ Search Patient Card for Payment ---------------------------------
 app.post("/getptcardpayment", (req, res) => {
-  const { searchText, curDate } = req.body;
+  const { searchText, curDate, paidMode } = req.body;
   if (searchText) {
     db.query(
-      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND pt_cards.paid = 0 AND (COALESCE(pt_cards.albumtext, '') LIKE ? OR COALESCE(pt_cards.disease, '') LIKE ? OR COALESCE(pt_cards.diagnosis, '') LIKE ? OR COALESCE(pt_cards.syndromes, '') LIKE ? OR COALESCE(pt_cards.medicines, '') LIKE ?)",
+      `SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND (COALESCE(pt_cards.albumtext, '') LIKE ? OR COALESCE(pt_cards.disease, '') LIKE ? OR COALESCE(pt_cards.diagnosis, '') LIKE ? OR COALESCE(pt_cards.syndromes, '') LIKE ? OR COALESCE(pt_cards.medicines, '') LIKE ?)`,
       [
         curDate,
         `%${searchText}%`,
@@ -615,7 +641,7 @@ app.post("/getptcardpayment", (req, res) => {
     );
   } else {
     db.query(
-      "SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ? AND pt_cards.paid = 0",
+      `SELECT pt_cards.*, patients.* FROM pt_cards JOIN patients ON pt_cards.patientid = patients.patientid WHERE pt_cards.date < ?${paidMode == 1 ? "AND pt_cards.paid = 0 " : ""}`,
       [curDate],
       (err, rows) => {
         if (err) {
