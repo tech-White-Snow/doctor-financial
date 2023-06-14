@@ -74,7 +74,7 @@ const AddAppointment: FC = () => {
           <div className="text-right">{getCurrentDate()}</div>
           <div className="px-4 py-2">
             <div className="font-semibold">電話號碼 或 身份證號碼</div>
-            <div className="pt-2 relative">
+            <div className="py-2 relative">
               <input
                 className="w-full focus:outline-none h-[50px] border border-[#25617B] rounded-[10px] text-xs p-2 pr-8"
                 placeholder="請輸入關鍵字"
@@ -88,7 +88,21 @@ const AddAppointment: FC = () => {
                 <img src={searchIcon} className="max-w-none" />
               </div>
             </div>
+            {errorMessage != "" ? (
+              <div className="text-red-600 p-3 text-center">{errorMessage}</div>
+            ) : (
+              <></>
+            )}
+            {/* Search Patient */}
+            <div
+              className="rounded-lg w-full p-3 text-white text-center"
+              style={{ background: Theme.COLOR_DEFAULT }}
+              onClick={() => searchPatientHandler()}
+            >
+              搜尋病人
+            </div>
             <div className="font-semibold text-center py-2">或</div>
+            {/* Add New Patient */}
             <div
               className="rounded-lg w-full p-3 text-white text-center"
               style={{ background: Theme.COLOR_DEFAULT }}
@@ -96,11 +110,6 @@ const AddAppointment: FC = () => {
             >
               新增病人
             </div>
-            {errorMessage != "" ? (
-              <div className="text-red-600 p-3 text-center">{errorMessage}</div>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         {/* NavBar */}

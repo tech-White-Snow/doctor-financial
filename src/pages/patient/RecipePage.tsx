@@ -45,6 +45,7 @@ const RecipePage: FC = () => {
   const [curDoctorID, setCurDoctorID] = useState("");
   const [curMedicines, setCurMedicines] = useState<MedicineType[]>([]);
   const [chunkMedicines, setChunkMedicines] = useState<MedicineType[][]>([]);
+  const [remarks, setRemarks] = useState([]);
 
   const chunkArray = (arr: MedicineType[], chunkSize: number) => {
     const chunks = [];
@@ -70,6 +71,8 @@ const RecipePage: FC = () => {
         if (data.data.length > 0) {
           // update current receipt
           setContext(data.data[0]);
+          console.log("context -> ", data.data[0]);
+
           const temp = data.data[0];
           setCurName(temp.name);
           setCurDiagnosis(temp.diagnosis);
@@ -79,6 +82,7 @@ const RecipePage: FC = () => {
           setChunkMedicines(
             temp.medicines ? chunkArray(JSON.parse(temp.medicines), 3) : []
           );
+          setRemarks(temp.remark.split("@@").length == 6 ? temp.remark.split("@@") : [])
         }
       })
       .catch((error) => {
@@ -221,7 +225,7 @@ const RecipePage: FC = () => {
                 </span>
               </div>
               <div className="py-1">
-                <div style={{ color: Theme.COLOR_DEFAULT }}>診斷:</div>
+                <div style={{ color: Theme.COLOR_DEFAULT }}>診斷: <span className="pl-1">{curDiagnosis}</span></div>
                 <div className="p-2 h-48 text-black text-xs">
                   <table className="table w-11/12 mx-auto border-collapse border border-black">
                     <tbody>
@@ -241,13 +245,13 @@ const RecipePage: FC = () => {
                   </table>
                 </div>
                 <div className="text-center text-xs text-[#666666]">
-                  <span className="px-4">日藥/每日</span>
-                  <span className="px-4">次/共</span>
-                  <span className="px-4">包</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[0] : ""}</span><span className="px-1">日藥/每日</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[1] : ""}</span><span className="px-1">次/共</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[2] : ""}</span><span className="px-1">包</span>
                 </div>
                 <div className="text-xs text-[#666666] pt-3">
-                  <span>餐</span>
-                  <span className="pl-3">服</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[3] : ""}</span><span className="px-1">餐</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[4] : ""}</span><span className="px-1">服</span>
                 </div>
               </div>
               {/* Diagnosis */}

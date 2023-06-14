@@ -32,6 +32,8 @@ const PreviewMedicinePage: FC = () => {
   const presentillness = location.state.presentillness;
   const presentillnessdate = location.state.presentillnessdate;
 
+  const remarks = (context && context.remark && context.remark.split("@@").length == 6 ? context.remark.split("@@") : []);
+
   const [curMedicines, setCurMedicines] = useState<MedicineType[]>([]);
   const [chunkMedicines, setChunkMedicines] = useState<MedicineType[][]>([]);
 
@@ -214,13 +216,13 @@ const PreviewMedicinePage: FC = () => {
                   </table>
                 </div>
                 <div className="text-center text-xs text-[#666666]">
-                  <span className="px-4">日藥/每日</span>
-                  <span className="px-4">次/共</span>
-                  <span className="px-4">包</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[0] : ""}</span><span className="px-1">日藥/每日</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[1] : ""}</span><span className="px-1">次/共</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[2] : ""}</span><span className="px-1">包</span>
                 </div>
                 <div className="text-xs text-[#666666] pt-3">
-                  <span>餐</span>
-                  <span className="pl-3">服</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[3] : ""}</span><span className="px-1">餐</span>
+                  <span className="text-black">{remarks.length > 0 ? remarks[4] : ""}</span><span className="px-1">服</span>
                 </div>
               </div>
               {/* Diagnosis */}
