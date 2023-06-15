@@ -146,7 +146,7 @@ const UpdateAlbumPage: FC = () => {
             </div>
           </div>
           {/* Image */}
-          <div className="relative w-full bg-[#F6F9FC] flex flex-col justify-center">
+          <div className="relative w-full flex flex-col justify-center">
             <div className="absolute w-full p-2 top-2 flex flex-row justify-between items-center">
               <div onClick={() => navigate(-1)}>
                 <img src={closeIcon} className="max-w-none" />

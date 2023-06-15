@@ -77,13 +77,6 @@ async function sendPasswordResetEmail(email, token) {
     const transporter = nodemailer.createTransport({
       // Configure the email transporter (e.g., Gmail, SMTP server)
       // ...
-      // host: "smtp.ethereal.email",
-      // port: 587,
-      // secure: false,
-      // auth: {
-      //   user: "friedrich28@ethereal.email",
-      //   pass: "733VNm94YbTd5rRkSj",
-      // },
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
@@ -741,6 +734,36 @@ app.post("/updateptcardprescription", (req, res) => {
     }
   );
 });
+
+
+// --------------------------------- Social Share Function -------------------------------
+async function sendPasswordResetEmail(email, token) {
+  try {
+    const transporter = nodemailer.createTransport({
+      // Configure the email transporter (e.g., Gmail, SMTP server)
+      // ...
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "ngyentuandev@gmail.com",
+        pass: "flztqkcsxpgxgdtc",
+      },
+    });
+  
+    const mailOptions = {
+      from: "info@doctor.com",
+      to: email,
+      subject: "Password Reset",
+      text: `Click the following link to reset your password: http://95.216.251.189:3000/resetpassword/${token}`,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.messageId);
+  } catch (error) {
+    console.error("Error sending password reset email : ", error);
+  }
+}
 
 // Server running
 app.listen(8000, () => {

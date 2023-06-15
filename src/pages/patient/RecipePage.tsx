@@ -146,45 +146,18 @@ const RecipePage: FC = () => {
   const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
 
   const shareOnSocialHandler = async () => {
-    // share on Email or WhatsApp
-    // const email = "dannyboy05240@gmail.com";
-    // const currentUrl = window.location.href;
-    // const emailBody = `Check out this page: ${currentUrl}`;
-    // const emailSubject = "Sharing Recipe to you";
-    // const emailLink = `mailto:${email}?subject=${emailSubject}&body=${emailBody}`;
-    // window.location.href = emailLink;
-    // const currentUrl = window.location.href;
-    // const whatsappLink = `https://api.whatsapp.com/send?text=${currentUrl}`;
-    // window.open(whatsappLink, "_blank");
-    // Scroll to the top of the webpage
-  window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
-  // Wait for a brief delay to allow the scroll to complete
-  await new Promise((resolve) => setTimeout(resolve, 500));
+    // Wait for a brief delay to allow the scroll to complete
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Capture screenshot using html2canvas library
-  const canvas = await html2canvas(document.body);
+    // Capture screenshot using html2canvas library
+    const canvas = await html2canvas(document.body);
 
-  // Convert the canvas to a data URL
-  const screenshot = canvas.toDataURL('image/png');
+    // Convert the canvas to a data URL
+    const screenshot = canvas.toDataURL('image/png');
 
-  // Compose the email content
-  const recipient = 'example@example.com';
-  const subject = 'Sharing Recipe with Screenshot';
-
-  // Compose the email body with the screenshot as an attachment
-  const emailBody = `Please find the attached screenshot for the recipe.
-  
-    (Attached screenshot will be displayed as an attachment, not as an embedded image)`;
-
-  // Create a data URL for the screenshot attachment
-  const attachmentDataUrl = screenshot.replace('data:image/png;base64,', '');
-
-  // Compose the mailto link with recipient, subject, body, and attachment
-  const emailLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}&attachment=screenshot.png;base64,${encodeURIComponent(attachmentDataUrl)}`;
-
-  // Open the email client with the mailto link
-  window.location.href = emailLink;
+    
   };
 
   return (

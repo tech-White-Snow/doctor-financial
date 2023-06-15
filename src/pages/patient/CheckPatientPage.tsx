@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Theme from "../../assets/color";
 import { BACKEND_URL } from "../../constants";
 
+import editIcon from "../../assets/icons/edit_ico1.svg";
 import editIcon2 from "../../assets/icons/edit_ico2.svg";
 import downIcon from "../../assets/icons/down_ico.svg";
 import prevvIcon from "../../assets/icons/prevv_ico.svg";
@@ -17,10 +18,17 @@ import additemIcon from "../../assets/icons/additem_ico.svg";
 import removeitemIcon from "../../assets/icons/removeitem_ico.svg";
 
 import NavBar from "../../components/NavBar";
+import Header from "../../components/Header";
 
 interface MedicineInfo {
   name: string;
   amount: number;
+}
+
+interface CompanyInfoType {
+  logo: string;
+  address: string;
+  tel: string;
 }
 
 const CheckPatient: FC = () => {
@@ -30,11 +38,22 @@ const CheckPatient: FC = () => {
 
   const [context, setContext] = useState(_context);
 
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+
   const [isPastHistoryEditMode, setIsPastHistoryEditMode] = useState(false);
 
   const [storeMedicineInfo, setStoreMedicineInfo] = useState<MedicineInfo[]>(
     _context.medicines ? JSON.parse(_context.medicines) : []
   );
+
+  const chunkArray = (arr: MedicineInfo[], chunkSize: number) => {
+    const chunks = [];
+    for (let i = 0; i < arr.length; i += chunkSize) {
+      chunks.push(arr.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+  
   const [curPastHistory, setCurPastHistory] = useState(_context.pasthistory ? _context.pasthistory : "");
 
   const [currentSelect, setCurrentSelect] = useState(0);
@@ -65,10 +84,23 @@ const CheckPatient: FC = () => {
     return formattedDate;
   };
 
+  const getOnlyDate = (dateString: any) => {
+    const date = new Date(dateString);
+
+    const day = ("0" + date.getUTCDate()).slice(-2); // using getUTCDate to avoid timezone issues
+    const month = ("0" + (date.getUTCMonth() + 1)).slice(-2); // using getUTCMonth to avoid timezone issues
+    const year = date.getUTCFullYear(); // using getUTCFullYear to avoid timezone issues
+
+    const formattedDate = `${day}-${month}-${year}`;
+
+    return formattedDate;
+  };
+
   const getPatientHistory = async () => {
     const patientID = context.patientid;
     const doctorID = context.doctorid;
     const data = { patientID, doctorID };
+    console.log("pthistory patientID -> ", patientID, " doctorID -> ", doctorID);
     await fetch(BACKEND_URL + "/getpthistory", {
       method: "POST",
       headers: {
@@ -78,12 +110,14 @@ const CheckPatient: FC = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setCurHistoryViewState(data.data.length - 1);
-        setPatientHistory(data.data);
-        setOriginPatientHistory(data.data);
-        // show present illness
-        if (new Date(data.data[data.data.length-1].date).toISOString().substring(0, 10) == new Date().toISOString().substring(0, 10))
-          setPresentIllness(data.data[data.data.length-1].detail);
+        if (data.data.length > 0) {
+          setCurHistoryViewState(data.data.length - 1);
+          setPatientHistory(data.data);
+          setOriginPatientHistory(data.data);
+          // show present illness
+          if (new Date(data.data[data.data.length-1].date).toISOString().substring(0, 10) == new Date().toISOString().substring(0, 10))
+            setPresentIllness(data.data[data.data.length-1].detail);
+          }
       })
       .catch((error) => {
         console.error(error);
@@ -121,6 +155,31 @@ const CheckPatient: FC = () => {
       });
   };
 
+  // get company information
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfoType>({
+    logo: "",
+    address: "",
+    tel: "",
+  });
+
+  const getCompanyInfo = async () => {
+    //  get company info
+    await fetch(BACKEND_URL + "/getcompanyinfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCompanyInfo(data.data[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   // Hook for User Authentication
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -132,6 +191,8 @@ const CheckPatient: FC = () => {
       getPatientHistory();
       // upate patient card context
       updateAlbumDataHandler();
+      // get company profile data
+      getCompanyInfo();
     }
   }, [navigate]);
 
@@ -242,7 +303,65 @@ const CheckPatient: FC = () => {
   //   stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
   // };
 
+  const handleUpload = async (file: any) => {
+    console.log("handleUpload");
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("cardid", context.cardid);
+
+    try {
+      const response = await fetch(BACKEND_URL + "/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Album Image Uploaded Successfully");
+      } else {
+        console.error("Failed to upload Album Image");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateCheckPatientHandler = async () => {
+    // Update Check Patient Information
+
+    // -- load album images
+    files.map((idx: File) => handleUpload(idx));
+
+    console.log("patientillness -> ", presentIllness, " -> ", new Date().toISOString().substring(0, 10));
+
+    const presentillness = presentIllness;
+    const presentillnessdate = new Date().toISOString().substring(0, 10);
+
+    // -- update extra check patient data
+    const data = { context, presentillness, presentillnessdate };
+    await fetch(BACKEND_URL + "/updatecheckpatient", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Update Check Patient Detail successfully!");
+        navigate("/admin");
+      })
+      .catch((error) => {
+        console.error(error);
+        // handle error
+      });
+  };
+
   return (
+    !isPreviewMode ?
     <div className="relative">
       <div className="relative h-screen overflow-y-auto">
         {/* Header */}
@@ -284,29 +403,23 @@ const CheckPatient: FC = () => {
                 </div>
               </div>
               {currentSelect == 1 ? (
-                <div className="p-3 font-sans">
+                <div className="p-4 font-sans">
                   <div
-                    className="flex flex-col p-4"
+                    className="flex flex-col p-2"
                     style={{
                       backgroundColor: Theme.COLOR_LIGHTBLUE,
                       color: Theme.COLOR_DARKGREEN,
                     }}
                   >
-                    {patientHistory && patientHistory.length > 0 ? (
-                      <textarea
-                        className="w-full h-full focus:outline-none p-1 bg-transparent resize-none"
-                        value={curPastHistory}
-                        onChange={(ev) => {
-                          setCurPastHistory(ev.target.value);
-                        }}
-                        readOnly={!isPastHistoryEditMode}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                    {patientHistory &&
-                    patientHistory.length > 0 &&
-                    !isPastHistoryEditMode ? (
+                    <textarea
+                      className="w-full h-full focus:outline-none p-1 bg-transparent resize-none"
+                      value={curPastHistory}
+                      onChange={(ev) => {
+                        setCurPastHistory(ev.target.value);
+                      }}
+                      readOnly={!isPastHistoryEditMode}
+                    />
+                    {!isPastHistoryEditMode ? (
                       <>
                         <div
                           className="pt-2 self-end"
@@ -917,9 +1030,10 @@ const CheckPatient: FC = () => {
           className="p-3 text-center text-white rounded-xl"
           style={{ backgroundColor: Theme.COLOR_DEFAULT }}
           onClick={() => {
-            navigate("/previewmedicine", {
-              state: { context: context, files: files, presentillness: presentIllness, presentillnessdate: new Date().toISOString().substring(0, 10) },
-            });
+            // navigate("/previewmedicine", {
+            //   state: { context: context, files: files, presentillness: presentIllness, presentillnessdate: new Date().toISOString().substring(0, 10) },
+            // });
+            setIsPreviewMode(true);
           }}
         >
           Confirm
@@ -928,6 +1042,112 @@ const CheckPatient: FC = () => {
       {/* NavBar */}
       <NavBar status={2} />
     </div>
+    : <div className="relative">
+    <div className="h-screen overflow-y-auto bg-[#FAFCFF]">
+      {/* Header */}
+      <Header title="到診證明書" />
+      {/* Main Page */}
+      <div className="m-4 p-3 mb-[160px] rounded-lg shadow-lg">
+        {/* Title */}
+        <div className="text-center">
+          <div
+            className="font-bold font-sans text-5xl"
+            style={{ color: Theme.COLOR_DEFAULT }}
+          >
+            {companyInfo.logo}
+          </div>
+          <div
+            className="font-bold text-lg pt-6"
+            style={{ color: Theme.COLOR_DEFAULT }}
+          >
+            <span className="border-b border-b-[#64B3EC]">處方</span>
+          </div>
+        </div>
+        {/* User Info */}
+        <div>
+          <div className="text-sm p-2 mt-3 pb-5 border-b border-b-[#64B3EC]">
+            <div className="py-1 flex justify-between">
+              <div>
+                <span style={{ color: Theme.COLOR_DEFAULT }}>診症日期:</span>
+                <span className="pl-2 text-black text-opacity-60">
+                  {getOnlyDate(context.date)}
+                </span>
+              </div>
+              <div
+                onClick={() =>
+                  // navigate("/checkpatient", { state: { context: context } })
+                  setIsPreviewMode(false)
+                }
+              >
+                <img src={editIcon} className="max-w-none" />
+              </div>
+            </div>
+            <div className="py-1">
+              <span style={{ color: Theme.COLOR_DEFAULT }}>病人姓名:</span>
+              <span className="pl-2 text-black text-opacity-60">
+                {context.name}
+              </span>
+            </div>
+            <div className="py-1">
+              <div style={{ color: Theme.COLOR_DEFAULT }}>診斷: <span className="pl-1">{context.diagnosis}</span></div>
+              <div className="p-2 h-48 text-black text-xs">
+                <table className="table w-11/12 mx-auto border-collapse border border-black">
+                  <tbody>
+                    {
+                    context.medicines ?
+                    chunkArray(JSON.parse(context.medicines), 3).map((chunk: any, i: any) => (
+                      <tr key={i}>
+                        {chunk.map((medicine: any, j: any) => (
+                          <td
+                            key={j}
+                            className="border border-black p-1 text-center w-1/3"
+                          >
+                            {medicine.name} {medicine.amount}g
+                          </td>
+                        ))}
+                      </tr>
+                    )) : <></>}
+                  </tbody>
+                </table>
+              </div>
+              <div className="text-center text-xs text-[#666666]">
+                <span className="text-black">{context && context.remark && context.remark.split("@@").length > 0 ? context.remark.split("@@")[0] : ""}</span><span className="px-1">日藥/每日</span>
+                <span className="text-black">{context && context.remark && context.remark.split("@@").length > 0 ? context.remark.split("@@")[1] : ""}</span><span className="px-1">次/共</span>
+                <span className="text-black">{context && context.remark && context.remark.split("@@").length > 0 ? context.remark.split("@@")[2] : ""}</span><span className="px-1">包</span>
+              </div>
+              <div className="text-xs text-[#666666] pt-3">
+                <span className="text-black">{context && context.remark && context.remark.split("@@").length > 0 ? context.remark.split("@@")[3] : ""}</span><span className="px-1">餐</span>
+                <span className="text-black">{context && context.remark && context.remark.split("@@").length > 0 ? context.remark.split("@@")[4] : ""}</span><span className="px-1">服</span>
+              </div>
+            </div>
+            {/* Diagnosis */}
+            <div className="py-1 pt-3 text-black text-opacity-60">
+              <span>醫師編號:</span>
+              <span className="pl-2">{context.doctorid}</span>
+            </div>
+          </div>
+          <div
+            className="p-3 text-xs flex flex-row justify-between"
+            style={{ color: Theme.COLOR_DEFAULT }}
+          >
+            <div>地址: {companyInfo.address}</div>
+            <div>電話: {companyInfo.tel}</div>
+          </div>
+        </div>
+      </div>
+      <div className="absolute w-full px-5 py-3 bottom-[80px]">
+        <div
+          className="p-3 text-center text-white rounded-xl"
+          style={{ backgroundColor: Theme.COLOR_DEFAULT }}
+          onClick={() => updateCheckPatientHandler()}
+        >
+          Confirm
+        </div>
+      </div>
+      {/* NavBar */}
+      <NavBar status={4} />
+    </div>
+  </div>
   );
 };
 

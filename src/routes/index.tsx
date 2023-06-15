@@ -67,7 +67,7 @@ const Router: FC = () => {
           <Route path="/recipe" element={<RecipePage />} />
           <Route path="/checkpatient" element={<CheckPatientPage />} />
           <Route path="/editalbum" element={<UpdateAlbumPage />} />
-          <Route path="/previewmedicine" element={<PreviewMedicinePage />} />
+          {/* <Route path="/previewmedicine" element={<PreviewMedicinePage />} /> */}
           <Route path="/patientrecord" element={<PatientRecordPage />} />
           <Route
             path="/pastpatientrecord"
