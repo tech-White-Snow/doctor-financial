@@ -81,6 +81,7 @@ const EditAccountPage: FC = () => {
     const formData = new FormData();
     formData.append("file", file);
 
+    console.log(formData)
     const response = await fetch(BACKEND_URL + "/uploadavatar", {
       method: "POST",
       body: formData,

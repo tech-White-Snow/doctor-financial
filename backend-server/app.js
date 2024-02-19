@@ -607,6 +607,8 @@ app.post("/updatecheckpatient", (req, res) => {
 // upload Avatar
 app.post("/uploadavatar", upload.single("file"), (req, res) => {
   const filename = req.file.filename;
+  console.log(req.file)
+  
   res.status(200).json({ filename: filename });
 });
 

@@ -29,6 +29,7 @@ import PastPatientRecordedPage from "pages/patient/PastPatientRecordedPage";
 import ScheduleAppointment from "pages/appointment/ScheduleAppointment";
 import AddAppointment from "pages/appointment/AddAppointment";
 import AddAppointmentPatient from "pages/appointment/AddAppointmentPatient";
+import { RFC_2822 } from "moment";
 
 const Router: FC = () => {
   return (
